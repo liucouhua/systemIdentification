@@ -20,6 +20,9 @@ import recutil.VectorData;
 import recutil.VectorMathod;
 import recutil.WeatherSystems;
 public class MainTest {
+	
+	static String test_data_root= "D:/develop/java/";
+	
 	public static void main(String[] args) throws Exception
 	{
 		
@@ -29,7 +32,7 @@ public class MainTest {
 		//id.writeToFile("E:/java/coldair/newId.txt");
 		
 		
-		//鎵�鏈夌被鍨嬬郴缁熻瘑鍒殑娴嬭瘯绋嬪簭鍏ュ彛
+		//閹碉拷閺堝琚崹瀣兇缂佺喕鐦戦崚顐ゆ畱濞村鐦粙瀣碍閸忋儱褰�
 		//southAsiaHighTest();
 		//hLCentreTest();
 		vortexCentreTest();
@@ -41,9 +44,9 @@ public class MainTest {
 		
 	}
 	
-	// 娴嬭瘯鍗椾簹楂樺帇璇嗗埆鐨勭▼搴�
+	// 濞村鐦崡妞剧肮妤傛ê甯囩拠鍡楀焼閻ㄥ嫮鈻兼惔锟�
 	private static void southAsiaHighTest(){
-		int[] level = new int[]{100};  //鍗椾簹楂樺帇涓昏鍏虫敞100hpa
+		int[] level = new int[]{100};  //閸楁ぞ绨规妯哄竾娑撴槒顩﹂崗铏暈100hpa
 		Calendar start = Calendar.getInstance();
 		start.set(2015, 6, 20,8,0);
 		Calendar end =Calendar.getInstance();
@@ -66,10 +69,10 @@ public class MainTest {
 		}
 	}
 	
-	// 娴嬭瘯鍓儹甯﹂珮鍘嬭瘑鍒殑绋嬪簭
+	// 濞村鐦崜顖滃劰鐢箓鐝崢瀣槕閸掝偆娈戠粙瀣碍
 	private static void SubtropicalHighTest() {
 		// TODO Auto-generated method stub
-		int[] level = new int[]{500};  // 鍓儹甯﹂珮鍘嬩富瑕佸叧娉�500hpa
+		int[] level = new int[]{500};  // 閸擃垳鍎圭敮锕傜彯閸樺瀵岀憰浣稿彠濞夛拷500hpa
 		Calendar start = Calendar.getInstance();
 		start.set(2017, 9, 20,8,0);
 		Calendar end =Calendar.getInstance();
@@ -91,9 +94,9 @@ public class MainTest {
 		}
 	}
 	
-	// 娴嬭瘯涓綆灞傞珮浣庡帇鍖鸿瘑鍒殑绋嬪簭
+	// 濞村鐦稉顓濈秵鐏炲倿鐝担搴″竾閸栭缚鐦戦崚顐ゆ畱缁嬪绨�
 	private static void hLCentreTest() {
-		int[] level = new int[]{500};  // 涓�鑸殑楂樹綆鍘嬪尯涓昏鍏虫敞涓綆灞�
+		int[] level = new int[]{500};  // 娑擄拷閼割剛娈戞妯圭秵閸樺灏稉鏄忣洣閸忚櫕鏁炴稉顓濈秵鐏烇拷
 		Calendar start = Calendar.getInstance();
 		start.set(2018, 4, 16,8,0);
 		Calendar end =Calendar.getInstance();
@@ -116,21 +119,21 @@ public class MainTest {
 		}
 	}
 
-	//娴嬭瘯娑℃棆璇嗗埆鐨勭▼搴�  
+	//濞村鐦☉鈩冩鐠囧棗鍩嗛惃鍕柤鎼达拷  
 	private static void vortexCentreTest() {
 		// TODO Auto-generated method stub
-		int[] level = new int[]{850};   // 娑℃棆鍏虫敞涓眰鍜屼綆灞�
+		int[] level = new int[]{850};   // 濞戔剝妫嗛崗铏暈娑擃厼鐪伴崪灞肩秵鐏烇拷
 		Calendar start = Calendar.getInstance();
 		start.set(2010, 6, 3,2,0);
 		
 		Calendar end =Calendar.getInstance();
-		end.set(2011, 6, 4,8,0);
+		end.set(2010, 6, 4,8,0);
 		for(int i=0; i< level.length;i++){
 			Calendar time= (Calendar) start.clone();
 			while(time.before(end)){
 				String fileName =MyMath.getFileNameFromCalendar(time);
 				time.add(Calendar.HOUR, 6);
-				VectorData wind=new VectorData("D:/develop/java/201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/"+level[i]+"/"+fileName.substring(2,10)+".000");
+				VectorData wind=new VectorData(test_data_root+"201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/"+level[i]+"/"+fileName.substring(2,10)+".000");
 				wind.u.smooth(1); wind.v.smooth(1);
 				int nlon = wind.gridInfo.nlon * 2 - 1;
 				int nlat = wind.gridInfo.nlat * 2 - 1;
@@ -140,24 +143,24 @@ public class MainTest {
 				wind025.v.linearIntepolatedFrom(wind.v);
 				wind = wind025;
 				GridData cor = VectorMathod.getCurvatureVor(wind);
-				wind.writeToFile("D:/develop/java/201905-weahter_identification/output/wind.txt", "2019060108");
+				wind.writeToFile(test_data_root+"201905-weahter_identification/output/wind.txt", "2019060108");
 				cor.smooth(5);
-				cor.writeToFile("D:/develop/java/201905-weahter_identification/output/cor.txt", "2019060108");
+				cor.writeToFile(test_data_root+"201905-weahter_identification/output/cor.txt", "2019060108");
 				
-				wind.writeToFile("D:/develop/java/201905-weahter_identification/output/wind/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
+				wind.writeToFile(test_data_root+"201905-weahter_identification/output/wind/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
 				WeatherSystems vorCentres = SVortex.getVortexCentres(wind,level[i],2.0f);
-				vorCentres.writeIds("D:/develop/java/201905-weahter_identification/output/ids/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
-				vorCentres.writeFeatures("D:/develop/java/201905-weahter_identification/output/features/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
-				vorCentres.writeValues("D:/develop/java/201905-weahter_identification/output/values/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
+				vorCentres.writeIds(test_data_root+"201905-weahter_identification/output/ids/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
+				vorCentres.writeFeatures(test_data_root+"201905-weahter_identification/output/features/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
+				vorCentres.writeValues(test_data_root+"201905-weahter_identification/output/values/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
 				System.out.println(fileName);
 			}
 		}
 	}
 
-	//娴嬭瘯涓眰瑗块鐜祦涓剨绾胯瘑鍒殑绋嬪簭
+	//濞村鐦稉顓炵湴鐟楀潡顥撻悳顖涚ウ娑擃叀鍓ㄧ痪鑳槕閸掝偆娈戠粙瀣碍
 	private static void ridgeTest() { 
 		// TODO Auto-generated method stub
-		int[] level = new int[]{500};                     // 鑴婄嚎涓昏鍏虫敞500hpa
+		int[] level = new int[]{500};                     // 閼村﹦鍤庢稉鏄忣洣閸忚櫕鏁�500hpa
 		Calendar start = Calendar.getInstance();
 		start.set(2017, 9, 20,8,0);
 		Calendar end =Calendar.getInstance();
@@ -179,10 +182,10 @@ public class MainTest {
 		}
 	}
 	
-	//娴嬭瘯涓眰妲界嚎璇嗗埆鐨勭▼搴�
+	//濞村鐦稉顓炵湴濡茬晫鍤庣拠鍡楀焼閻ㄥ嫮鈻兼惔锟�
 	private static void troughTest() {
 		// TODO Auto-generated method stub
-		int[] level = new int[]{500};                  // 妲界嚎涔熶富瑕佸叧娉�500hpa
+		int[] level = new int[]{500};                  // 濡茬晫鍤庢稊鐔跺瘜鐟曚礁鍙у▔锟�500hpa
 		Calendar start = Calendar.getInstance();
 		start.set(2017, 9, 20,8,0);
 		Calendar end =Calendar.getInstance();
@@ -204,10 +207,10 @@ public class MainTest {
 		}
 	}
 	
-	//娴嬭瘯鎬ユ祦璇嗗埆鐨勭▼搴�
+	//濞村鐦幀銉︾ウ鐠囧棗鍩嗛惃鍕柤鎼达拷
 	private static void jetLineTest() {
 		// TODO Auto-generated method stub
-		int[] level = new int[]{850,700,500,200,100};       // 鎬ユ祦杞寸嚎鍚勫眰閮芥湁鍏虫敞锛屼笉鍚屽眰娆℃湁涓嶅悓鐨勯閫熼槇鍊兼爣鍑�
+		int[] level = new int[]{850,700,500,200,100};       // 閹儲绁︽潪瀵稿殠閸氬嫬鐪伴柈鑺ユ箒閸忚櫕鏁為敍灞肩瑝閸氬苯鐪板▎鈩冩箒娑撳秴鎮撻惃鍕棑闁喖妲囬崐鍏肩垼閸戯拷
 		Calendar start = Calendar.getInstance();
 		start.set(2017, 9, 20,8,0);
 		Calendar end =Calendar.getInstance();
@@ -230,10 +233,10 @@ public class MainTest {
 	}
 	
 	
-	//娴嬭瘯涓綆灞傚垏鍙樼嚎璇嗗埆鐨勭▼搴�
+	//濞村鐦稉顓濈秵鐏炲倸鍨忛崣妯煎殠鐠囧棗鍩嗛惃鍕柤鎼达拷
 	private static void shearLineTest() throws Exception {
 		// TODO Auto-generated method stub
-		int[] level = new int[]{850,700};                          // 鍒囧彉绾夸富瑕佸叧娉�850hpa 鍜�700hpa
+		int[] level = new int[]{850,700};                          // 閸掑洤褰夌痪澶稿瘜鐟曚礁鍙у▔锟�850hpa 閸滐拷700hpa
 		Calendar start = Calendar.getInstance();
 		start.set(2017, 9,20,8,0);
 		Calendar end =Calendar.getInstance();
