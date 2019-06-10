@@ -3,12 +3,15 @@ package recutil;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 /**
- * 娑�
+ * 濞戯拷
  */
 public class SVortex{
 
-	public static WeatherSystems getVortexCentres1(VectorData wind, int level, float scale) {
+	static String test_data_root= "D:/develop/java/";
+	
+	public static WeatherSystems getVortexCentres(VectorData wind, int level, float scale) {
 		// TODO Auto-generated method stub
 		
 		//
@@ -17,35 +20,35 @@ public class SVortex{
 		//get_cents_by_flow(wind,scale);
 		
 		//wind.u.smooth(10); wind.v.smooth(10);
-		GridData marker = getMarker(wind.u,wind.v,scale);  // 璁＄畻娑℃棆鍖猴紙marker鍙栧�间负1鐨勯儴鍒嗭級
-		GridData cycle = GetCycleStrenth(wind.u,wind.v,scale);  //绉垎寰楃幆娴佸己搴�
+		GridData marker = getCenter(wind);  // 鐠侊紕鐣诲☉鈩冩閸栫尨绱檓arker閸欐牕锟介棿璐�1閻ㄥ嫰鍎撮崚鍡礆
+		GridData cycle = GetCycleStrenth(wind.u,wind.v,scale);  //缁夘垰鍨庡妤冨箚濞翠礁宸辨惔锟�
 		cycle.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output/cycle.txt");
 		
-		cycle = cycle.mutiply(marker);                            // 淇濈暀娑℃棆鍖虹殑鐜祦寮哄害
+		cycle = cycle.mutiply(marker);                            // 娣囨繄鏆�濞戔剝妫嗛崠铏规畱閻滎垱绁﹀鍝勫
 		marker.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output/marker.txt");
-		GridData ids = SystemIdentification.getCuttedRegion(cycle);  //瀹氫箟娑℃棆绯荤粺锛岃缃浉搴斿彉閲忥紝骞堕�氳繃reset鍑芥暟璁＄畻娑℃棆鐨勪腑蹇冧綅缃拰鐩稿叧灞炴��
+		GridData ids = SystemIdentification.getCuttedRegion(cycle);  //鐎规矮绠熷☉鈩冩缁崵绮洪敍宀冾啎缂冾喚娴夋惔鏂垮綁闁插骏绱濋獮鍫曪拷姘崇箖reset閸戣姤鏆熺拋锛勭暬濞戔剝妫嗛惃鍕厬韫囧啩缍呯純顔兼嫲閻╃鍙х仦鐐达拷锟�
 		WeatherSystems vc = new WeatherSystems("vortex",level);
-		vc.setValue(cycle);
+		vc.setValue(marker);
 		vc.setIds(ids);
 		vc.reset();
 		return vc;
 	}
 	  public static GridData GetCycleStrenth(GridData gdUwnd, GridData gdVwnd, double minScale)
       {
-          //鏍囧織杈撳嚭鍦�
+          //閺嶅洤绻旀潏鎾冲毉閸︼拷
           GridData output = gdUwnd.copy();
           output.setValue(0.0f);
-          //鏈�灏忔丁鏃嬪昂搴�
+          //閺堬拷鐏忓繑涓侀弮瀣槀鎼达拷
           int xn = (int)(minScale/gdUwnd.gridInfo.dlon);
           int yn = (int)(minScale/gdUwnd.gridInfo.dlat);
-          //閬嶅巻姣忎釜鐐瑰惊鐜�
+          //闁秴宸诲В蹇庨嚋閻愮懓鎯婇悳锟�
           for (int j = 0; j < gdUwnd.gridInfo.nlat; j++)
           {
               for (int i = 0; i < gdUwnd.gridInfo.nlon; i++)
               {
-                  //鏄惁鏋勬垚娑℃棆鐨勬爣蹇�
+                  //閺勵垰鎯侀弸鍕灇濞戔剝妫嗛惃鍕垼韫囷拷
                   double flag = 0;
-                  //涓嬭竟鐣岀Н鍒�
+                  //娑撳绔熼悾宀�袧閸掞拷
                   for (int ii = i - xn; ii <= i + xn; ii++)
                   {
                       int jj = j - yn;
@@ -54,7 +57,7 @@ public class SVortex{
                           flag = flag + gdUwnd.dat[ii][ jj];
                       }
                   }
-                  //鍙宠竟鐣岀Н鍒�
+                  //閸欏疇绔熼悾宀�袧閸掞拷
                   for (int jj = j - yn; jj <= j + yn; jj++)
                   {
                       int ii = i + xn;
@@ -63,7 +66,7 @@ public class SVortex{
                           flag = flag + gdVwnd.dat[ii][ jj];
                       }
                   }
-                  //涓婅竟鐣岀Н鍒�
+                  //娑撳﹨绔熼悾宀�袧閸掞拷
                   for (int ii = i + xn; ii >= i - xn; ii--)
                   {
                       int jj = j + yn;
@@ -72,7 +75,7 @@ public class SVortex{
                           flag = flag + (-gdUwnd.dat[ii][ jj]);
                       }
                   }
-                  //宸﹁竟鐣岀Н鍒�
+                  //瀹革箒绔熼悾宀�袧閸掞拷
                   for (int jj = j + yn; jj >= j - yn; jj--)
                   {
                       int ii = i - xn;
@@ -88,23 +91,93 @@ public class SVortex{
           return output;
       }
 
-	
+	public static GridData getCenter(VectorData wind) {
+		GridData output = new GridData(wind.gridInfo);
+		float slon = wind.gridInfo.startlon;
+		float dlon = wind.gridInfo.dlon;
+		float slat = wind.gridInfo.startlat;
+		float dlat = wind.gridInfo.dlat;
+		float[] point0 = new float[2],point1= new float[2],uv = new float[2];
+		float dx,dy,dis,vor;
+        for (int j = 3; j < wind.gridInfo.nlat-3; j++)
+        {
+            for (int i = 3; i < wind.gridInfo.nlon-3; i++)
+            {
+            	
+            	output.dat[i][j] = 2;
+            	point0[0] = slon + i * dlon;
+            	point0[1] = slat + j * dlat;
+            	
+            	for(int d = 1;d<3;d++) {
+            		dis = d * wind.gridInfo.dlon;
+            		
+            		
+            
+            		boolean isCycle = true;
+            		for (int s = 0; s< 360; s += 5) {
+            			dx = (float) (dis * Math.cos(s * 3.1416/ 180));
+            			dy = (float) (dis * Math.sin(s * 3.1416/ 180));
+            			point1[0] = point0[0] + dx;
+            			point1[1] = point0[1] + dy;
+            			uv = VectorMathod.getValue(wind, point1);
+            			vor = dx * uv[1] - dy *uv[0];
+            			if (vor <0) {
+            				isCycle = false;
+            				output.dat[i][j] -= 1;
+            				break;
+            			}
+            		}
+            	}
+            	
+            }
+        }
+		
+        
+        //相邻9点和小于3的部分抹除
+        GridData sum = new GridData(output.gridInfo);
+        for (int j = 3; j < wind.gridInfo.nlat-3; j++)
+        {
+            for (int i = 3; i < wind.gridInfo.nlon-3; i++)
+            {
+            	
+            	for(int p = -1;p<2;p++) {
+            		for(int q =-1;q <2;q++) {
+            			sum.dat[i][j] += output.dat[i][j];
+            		}
+            	}
+            	if (sum.dat[i][j] < 3) {
+            		output.dat[i][j] = 0;
+            	}
+            }
+        }
+        
+        //设置一个宽度为4乘4的窗口，以output的权重计算出涡旋的中心
+        
+        
+        //以涡旋中心
+        
+        
+		
+		return output;
+	}
+	  
+	  
     public static GridData getMarker(GridData gdUwnd, GridData gdVwnd, double minScale)
     {
-        //鏍囧織杈撳嚭鍦�
+        //閺嶅洤绻旀潏鎾冲毉閸︼拷
         GridData output = gdUwnd.copy();
         output.setValue(0);
-        //鏈�灏忔丁鏃嬪昂搴�
+        //閺堬拷鐏忓繑涓侀弮瀣槀鎼达拷
         int xn = (int)(minScale/gdUwnd.gridInfo.dlon);
         int yn = (int)(minScale / gdUwnd.gridInfo.dlat);
-        //閬嶅巻姣忎釜鐐瑰惊鐜�
+        //闁秴宸诲В蹇庨嚋閻愮懓鎯婇悳锟�
         for (int j = 0; j < gdUwnd.gridInfo.nlat; j++)
         {
             for (int i = 0; i < gdUwnd.gridInfo.nlon; i++)
             {
-                //鏄惁鏋勬垚娑℃棆鐨勬爣蹇�
+                //閺勵垰鎯侀弸鍕灇濞戔剝妫嗛惃鍕垼韫囷拷
                 int flag = 0;
-                //涓嬭竟鐣岀Н鍒�
+                //娑撳绔熼悾宀�袧閸掞拷
                 for (int ii = i - xn; ii <= i + xn; ii++)
                 {
                     int jj = j - yn;
@@ -124,7 +197,7 @@ public class SVortex{
                         flag = flag + 1;
                     }
                 }
-                //鍙宠竟鐣岀Н鍒�
+                //閸欏疇绔熼悾宀�袧閸掞拷
                 for (int jj = j - yn; jj <= j + yn; jj++)
                 {
                     int ii = i + xn;
@@ -144,7 +217,7 @@ public class SVortex{
                         flag = flag + 1;
                     }
                 }
-                //涓婅竟鐣岀Н鍒�
+                //娑撳﹨绔熼悾宀�袧閸掞拷
                 for (int ii = i + xn; ii >= i - xn; ii--)
                 {
                     int jj = j + yn;
@@ -164,7 +237,7 @@ public class SVortex{
                         flag = flag + 1;
                     }
                 }
-                //宸﹁竟鐣岀Н鍒�
+                //瀹革箒绔熼悾宀�袧閸掞拷
                 for (int jj = j + yn; jj >= j - yn; jj--)
                 {
                     int ii = i - xn;
@@ -184,7 +257,7 @@ public class SVortex{
                         flag = flag + 1;
                     }
                 }
-                //鐢辩嚎绉垎鍒ゆ柇鏄惁鏄丁鏃�
+                //閻㈣京鍤庣粔顖氬瀻閸掋倖鏌囬弰顖氭儊閺勵垱涓侀弮锟�
                 if (flag == 0)
                 {
                     output.dat[i][ j] = 1.0f;
@@ -194,8 +267,190 @@ public class SVortex{
         return output;
     }
 	
+    public static WeatherSystems getVortexCentres3(VectorData wind,int level,float scale) {
+
+    	StaData sta_index = new StaData(wind.gridInfo.nlon*wind.gridInfo.nlat,9);
+    	int m= 0;
+		int nlon=wind.gridInfo.nlon,nlat=wind.gridInfo.nlat;
+		float slon=wind.gridInfo.startlon,slat=wind.gridInfo.startlat;
+		float dlon=wind.gridInfo.dlon,dlat=wind.gridInfo.dlat;
+		float elon = wind.gridInfo.endlon,elat = wind.gridInfo.endlat;
+		//
+    	for(int i=0;i<wind.gridInfo.nlon;i++) {
+    		for(int j=0;j<wind.gridInfo.nlat;j++) {
+    			sta_index.dat[m][0]=i*1000+j;
+    			sta_index.dat[m][1]=slon+i*dlon;
+    			sta_index.dat[m][2]=slat+j*dlat;
+    			sta_index.dat[m][3]=i;
+    			sta_index.dat[m][4]=j;
+				m++;
+    		}
+    	}
+    	//sta_index.writeToFile("H:\\task\\link\\xiangji\\201905-weahter_identification\\output\\start.txt");
+    	int flow_times = 0;
+    	VectorData direction0 =VectorMathod.getDirection(wind);
+    	VectorData direction = VectorMathod.rotate(direction0,15);
+    	VectorData direction_30 = VectorMathod.rotate(direction0,45);
+    	//direction.writeToFile("H:\\task\\link\\xiangji\\201905-weahter_identification\\output\\dir.txt", "2019010108");
+    	
+    	int ig,jg;
+    	float rs = 0.3f;
+    	float speed;
+    	boolean need_flow = true;
+		Sta4Data sta_u = new Sta4Data(sta_index.nsta);
+		Sta4Data sta_v = new Sta4Data(sta_index.nsta);
+		int fnum=0;
+    	while(need_flow && fnum <2000) {
+    		System.out.println(fnum);
+    		fnum ++;
+    		sta_u = new Sta4Data(sta_index.nsta);
+    		sta_v = new Sta4Data(sta_index.nsta);
+    		for (int n= 0;n<sta_index.nsta;n++) {
+    			sta_u.dat[n][1] = sta_index.dat[n][1];
+    			sta_u.dat[n][2] = sta_index.dat[n][2];
+    			sta_v.dat[n][1] = sta_index.dat[n][1];
+    			sta_v.dat[n][2] = sta_index.dat[n][2];
+    		}
+	    	sta_u.getValueFromGrid(direction_30.u);
+	    	sta_v.getValueFromGrid(direction_30.v); 	
+	    	need_flow = false;
+	    	speed = 0;
+    		for (int n = 0;n < sta_index.nsta;n++) {
+    			if(need_flow == false) {
+    				speed = sta_u.dat[n][3] * sta_u.dat[n][3] + sta_v.dat[n][3] * sta_v.dat[n][3];
+    			}
+    			if (speed >1e-6) {
+    				need_flow = true;
+    			}
+     			sta_index.dat[n][1] += sta_u.dat[n][3] * rs;
+     			sta_index.dat[n][2] += sta_v.dat[n][3] * rs;
+    		}	
+    	}
+    	sta_u.writeToFile(test_data_root+"201905-weahter_identification/output/sta_u.txt");
+    	System.out.println("b");
+    	
+
+    	
+    	ArrayList<float[]> cents = new ArrayList<float[]>();
+    	float x,y;
+    	boolean had;
+    	float dis2;
+      	float u,v;
+    	float dx,dy,dis;
+    	float vox;
+    	
+    	//鐠佹澘缍嶅☉鈩冩娑擃厼绺炬担宥囩枂閸滃瞼鍋ｉ弫锟�
+    	for (int n = 0;n < sta_index.nsta;n++) {
+    		x = sta_index.dat[n][6];
+    		y = sta_index.dat[n][7];
+    		if(x > wind.gridInfo.startlon+scale && x <wind.gridInfo.endlon-scale && y >wind.gridInfo.startlat+scale && y < wind.gridInfo.endlat-scale) {
+    			had = false;
+    			for (int k=0;k<cents.size();k++) {
+    				float[] pk = cents.get(k);
+    				dis2 = (x-pk[0])*(x-pk[0]) + (y-pk[1]) * (y-pk[1]);
+    				if(dis2 < 0.1) {
+    					had = true;
+    					pk[2] ++;
+    					break;
+    				}
+    			}
+    			if(!had) {
+    				float[] point = new float[3];
+    				point[0] = x;
+    				point[1] = y;
+    				point[2] = 1;
+    				cents.add(point);
+    				//System.out.println(point.ptLon + " " + point.ptLat);
+    			}
+    		}
+    	}
+    	
     
-    public static WeatherSystems getVortexCentres(VectorData wind,int level,float scale) {
+    	
+    	
+    	//
+    	Sta4Data sta_cents = new Sta4Data(cents.size());
+    	for(int k=0;k<cents.size();k++) {
+    		sta_cents.dat[k][0] = k;
+    		sta_cents.dat[k][1] = cents.get(k)[0];
+    		sta_cents.dat[k][2] = cents.get(k)[1];
+    	}
+    	
+    	ArrayList<Point> cent_points = new ArrayList<Point>();
+    	
+    	//
+    	GridData vor = VectorMathod.getVor(wind);
+    	sta_cents.getValueFromGrid(vor);
+    	
+    	for(int k=0;k<sta_cents.nsta;k++) {
+    		if(sta_cents.dat[k][3] >0) {		
+    			Point point = new Point(sta_cents.dat[k][1],sta_cents.dat[k][2]);
+    			cent_points.add(point);
+    		}
+    	}
+    	
+    	//
+    	sta_cents = new Sta4Data(cent_points.size());
+    	for(int k=0;k<cent_points.size();k++) {
+    		sta_cents.dat[k][0] = k;
+    		sta_cents.dat[k][1] = cent_points.get(k).ptLon;
+    		sta_cents.dat[k][2] = cent_points.get(k).ptLat;
+    	}
+    	
+    	
+    	//System.out.println(flow_times);
+    	sta_cents.writeToFile(test_data_root+"201905-weahter_identification\\output\\end.txt");
+    	
+    	
+    	//
+    	for (int n = 0;n < sta_index.nsta;n++) {
+    		x = sta_index.dat[n][6];
+    		y = sta_index.dat[n][7];
+    		if(x > wind.gridInfo.startlon && x <wind.gridInfo.endlon && y >wind.gridInfo.startlat && y < wind.gridInfo.endlat) {
+    			for (int k=0;k<cent_points.size();k++) {
+    				Point pk = cent_points.get(k);
+    				dis2 = (x-pk.ptLon)*(x-pk.ptLon) + (y-pk.ptLat) * (y-pk.ptLat);
+    				if(dis2 < 0.1) {
+    					sta_index.dat[n][5] = k+1;
+    					break;
+    				}
+    			}
+    		}
+    	}
+    	GridData grid_speed = VectorMathod.getMod(wind);
+    	grid_speed.smooth(50);
+    	float lon,lat;
+    	//
+    	GridData wor_id = new GridData(wind.gridInfo);
+    	GridData wor_value = new GridData(wind.gridInfo);
+
+    	
+    	SystemIdentification.smoothIds(wor_id,2);
+    	
+    	for(int i=0;i<nlon;i++) {
+    		for (int j = 0;j<nlat;j++) {
+    			if(wor_id.dat[i][j] == 0) {
+    				wor_value.dat[i][j] =0;
+    			}
+    		}
+    	}
+    	
+    	//wor_id.writeToFile("H:\\task\\link\\xiangji\\201905-weahter_identification\\output\\wor_id.txt");
+    	
+    	//wor_value.writeToFile("H:\\task\\link\\xiangji\\201905-weahter_identification\\output\\wor_value.txt");
+    	//
+    	
+    	WeatherSystems vc = new WeatherSystems("vortex",level);
+		vc.setValue(wor_value);
+		vc.setIds(wor_id);
+		vc.reset();
+		return vc;
+ 
+		
+		
+		
+    }
+    public static WeatherSystems getVortexCentres2(VectorData wind,int level,float scale) {
     	//GridData grid_index = new GridData(wind.gridInfo);
     	//Sta4Data sta_index0 = new Sta4Data(grid_index);
     	
@@ -206,7 +461,7 @@ public class SVortex{
 		float slon=wind.gridInfo.startlon,slat=wind.gridInfo.startlat;
 		float dlon=wind.gridInfo.dlon,dlat=wind.gridInfo.dlat;
 		float elon = wind.gridInfo.endlon,elat = wind.gridInfo.endlat;
-		//灏嗙綉鏍兼暟鎹浆鍙樹负绔欑偣褰㈠紡
+		//鐏忓棛缍夐弽鍏兼殶閹诡喛娴嗛崣妯硅礋缁旀瑧鍋ｈぐ銏犵础
     	for(int i=0;i<wind.gridInfo.nlon;i++) {
     		for(int j=0;j<wind.gridInfo.nlat;j++) {
     			sta_index.dat[m][0]=i*1000+j;
@@ -231,7 +486,7 @@ public class SVortex{
 		Sta4Data sta_u = new Sta4Data(sta_index.nsta);
 		Sta4Data sta_v = new Sta4Data(sta_index.nsta);
     	
-		//棣栧厛娌跨潃椋庡満骞虫祦
+		//妫ｆ牕鍘涘▽璺ㄦ絻妞嬪骸婧�楠炶櫕绁�
 		StaData sta_index_in = null;
     	for(int s = 0;s<101;s++) {
     		sta_u = new Sta4Data(sta_index.nsta);
@@ -253,7 +508,7 @@ public class SVortex{
      			}
     		}
     		if(s%30 == 0) {
-    			//娓呴櫎鍑轰簡杈圭晫鐨勭偣
+    			//濞撳懘娅庨崙杞扮啊鏉堝湱鏅惃鍕仯
 	    		sta_index_in = new StaData(nin,9);
 	    		nin = 0;
 	    		for (int n = 0;n < sta_index.nsta;n++) {
@@ -268,10 +523,10 @@ public class SVortex{
 	    	}
     		
     	}
-    	sta_u.writeToFile("D:/develop/java/201905-weahter_identification/output/sta_u.txt");
+    	sta_u.writeToFile(test_data_root+"201905-weahter_identification/output/sta_u.txt");
 
     	System.out.println("A");
-    	//涓轰簡閬垮厤鐜舰鏃嬭浆锛屽鍔犲悜娑″害涓績鐨勫垎閲�
+    	//娑撹桨绨￠柆鍨帳閻滎垰鑸伴弮瀣祮閿涘苯顤冮崝鐘叉倻濞戔�冲娑擃厼绺鹃惃鍕瀻闁诧拷
     	int fnum=0;
     	while(need_flow && fnum <1000) {
     		fnum ++;
@@ -298,11 +553,11 @@ public class SVortex{
      			sta_index.dat[n][2] += sta_v.dat[n][3] * rs;
     		}	
     	}
-    	sta_u.writeToFile("D:/develop/java/201905-weahter_identification/output/sta_u.txt");
+    	sta_u.writeToFile(test_data_root+"201905-weahter_identification/output/sta_u.txt");
     	System.out.println("b");
     	
     	
-    	//瀵瑰皢sta_index缁堢偣浣嶇疆锛岃祴鍊煎埌绗�6,7鍒�
+    	//鐎电懓鐨ta_index缂佸牏鍋ｆ担宥囩枂閿涘矁绁撮崐鐓庡煂缁楋拷6,7閸掞拷
     	for(int n=0;n<sta_index.nsta;n++) {
     		sta_index.dat[n][6] = sta_index.dat[n][1];
     		sta_index.dat[n][7] = sta_index.dat[n][2];
@@ -311,7 +566,7 @@ public class SVortex{
     	}
     	
     	
-		//閲嶆柊璧颁竴閬�,鍒ゆ柇鏈夋病鏈夊弽杞殑鎯呭喌
+		//闁插秵鏌婄挧棰佺闁拷,閸掋倖鏌囬張澶嬬梾閺堝寮芥潪顒傛畱閹懎鍠�
     	float u,v;
     	float dx,dy,dis;
     	float vox;
@@ -369,7 +624,7 @@ public class SVortex{
     	boolean had;
     	float dis2;
     	
-    	//璁板綍娑℃棆涓績浣嶇疆鍜岀偣鏁�
+    	//鐠佹澘缍嶅☉鈩冩娑擃厼绺炬担宥囩枂閸滃瞼鍋ｉ弫锟�
     	for (int n = 0;n < sta_index.nsta;n++) {
     		x = sta_index.dat[n][6];
     		y = sta_index.dat[n][7];
@@ -396,7 +651,7 @@ public class SVortex{
     	}
     	
     	
-    	//灏嗙偣鏁板皯鐨勬丁鏃嬩腑蹇冭褰曚笅鏉ワ紝骞跺垹闄�
+    	//鐏忓棛鍋ｉ弫鏉跨毌閻ㄥ嫭涓侀弮瀣╄厬韫囧啳顔囪ぐ鏇氱瑓閺夈儻绱濋獮璺哄灩闂勶拷
     	float min_num =0 ;//2 * ((scale/wind.gridInfo.dlat) * (scale/wind.gridInfo.dlon));
     	ArrayList<float[]> cents_small = new ArrayList<float[]>();
     	for(float[] c : cents) {
@@ -410,7 +665,7 @@ public class SVortex{
     	System.out.println(cents.size());
     	
     	
-    	//灏嗘丁鏃嬩腑蹇冪偣闆嗘敼鎴愮珯鐐瑰舰寮�
+    	//鐏忓棙涓侀弮瀣╄厬韫囧啰鍋ｉ梿鍡樻暭閹存劗鐝悙鐟拌埌瀵拷
     	Sta4Data sta_cents = new Sta4Data(cents.size());
     	for(int k=0;k<cents.size();k++) {
     		sta_cents.dat[k][0] = k;
@@ -420,7 +675,7 @@ public class SVortex{
     	
     	ArrayList<Point> cent_points = new ArrayList<Point>();
     	
-    	//鍒ゆ柇娑℃棆涓績鐨勭偣鏄惁澶勪簬姝ｆ丁搴﹀尯
+    	//閸掋倖鏌囧☉鈩冩娑擃厼绺鹃惃鍕仯閺勵垰鎯佹径鍕艾濮濓絾涓佹惔锕�灏�
     	GridData vor = VectorMathod.getVor(wind);
     	sta_cents.getValueFromGrid(vor);
     	
@@ -431,7 +686,7 @@ public class SVortex{
     		}
     	}
     	
-    	//淇濈暀姝ｆ丁搴﹀尯鐨勬丁鏃嬩腑蹇冧綅缃�
+    	//娣囨繄鏆�濮濓絾涓佹惔锕�灏惃鍕竵閺冨鑵戣箛鍐х秴缂冿拷
     	sta_cents = new Sta4Data(cent_points.size());
     	for(int k=0;k<cent_points.size();k++) {
     		sta_cents.dat[k][0] = k;
@@ -441,10 +696,10 @@ public class SVortex{
     	
     	
     	//System.out.println(flow_times);
-    	sta_cents.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output\\end.txt");
+    	sta_cents.writeToFile(test_data_root+"201905-weahter_identification\\output\\end.txt");
     	
     	
-    	//鏍规嵁骞虫祦鍚巗ta_index鐨勪綅缃紝鍒ゆ柇鍏跺睘浜庡摢涓�涓丁鏃嬩腑蹇冿紝骞朵互姝や綔涓虹紪鍙�
+    	//閺嶈宓侀獮铏ウ閸氬窏ta_index閻ㄥ嫪缍呯純顕嗙礉閸掋倖鏌囬崗璺虹潣娴滃骸鎽㈡稉锟芥稉顏呬竵閺冨鑵戣箛鍐跨礉楠炴湹浜掑銈勭稊娑撹櫣绱崣锟�
     	for (int n = 0;n < sta_index.nsta;n++) {
     		x = sta_index.dat[n][6];
     		y = sta_index.dat[n][7];
@@ -462,7 +717,7 @@ public class SVortex{
     	GridData grid_speed = VectorMathod.getMod(wind);
     	grid_speed.smooth(50);
     	float lon,lat;
-    	//鏍规嵁绔欑偣褰㈠紡鐨勭紪鍙凤紝鍙嶆帹璧峰浣嶇疆鏍肩偣浣嶇疆鐨勭紪鍙�
+    	//閺嶈宓佺粩娆戝仯瑜般垹绱￠惃鍕椽閸欏嚖绱濋崣宥嗗腹鐠у嘲顫愭担宥囩枂閺嶈偐鍋ｆ担宥囩枂閻ㄥ嫮绱崣锟�
     	GridData wor_id = new GridData(wind.gridInfo);
     	GridData wor_value = new GridData(wind.gridInfo);
     	float dw;
@@ -507,7 +762,7 @@ public class SVortex{
     	//wor_id.writeToFile("H:\\task\\link\\xiangji\\201905-weahter_identification\\output\\wor_id.txt");
     	
     	//wor_value.writeToFile("H:\\task\\link\\xiangji\\201905-weahter_identification\\output\\wor_value.txt");
-    	//鍒ゆ柇姣忎釜鐐瑰拰娑℃棆涓績鐨勮繛绾夸笌椋庡満鏂瑰悜鐨勫す瑙�
+    	//閸掋倖鏌囧В蹇庨嚋閻愮懓鎷板☉鈩冩娑擃厼绺鹃惃鍕箾缁惧じ绗屾搴℃簚閺傜懓鎮滈惃鍕仚鐟欙拷
     	
     	WeatherSystems vc = new WeatherSystems("vortex",level);
 		vc.setValue(wor_value);

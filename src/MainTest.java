@@ -124,35 +124,40 @@ public class MainTest {
 		// TODO Auto-generated method stub
 		int[] level = new int[]{850};   // 濞戔剝妫嗛崗铏暈娑擃厼鐪伴崪灞肩秵鐏烇拷
 		Calendar start = Calendar.getInstance();
-		start.set(2010, 6, 3,2,0);
+		start.set(2010, 3, 20,14,0);
 		
 		Calendar end =Calendar.getInstance();
-		end.set(2010, 6, 4,8,0);
+		end.set(2010, 7, 24,8,0);
 		for(int i=0; i< level.length;i++){
 			Calendar time= (Calendar) start.clone();
 			while(time.before(end)){
 				String fileName =MyMath.getFileNameFromCalendar(time);
 				time.add(Calendar.HOUR, 6);
 				VectorData wind=new VectorData(test_data_root+"201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/"+level[i]+"/"+fileName.substring(2,10)+".000");
-				wind.u.smooth(1); wind.v.smooth(1);
-				int nlon = wind.gridInfo.nlon * 2 - 1;
-				int nlat = wind.gridInfo.nlat * 2 - 1;
-				GridInfo grid025 = new GridInfo(nlon,nlat,wind.gridInfo.startlon,wind.gridInfo.startlat,wind.gridInfo.dlon/2,wind.gridInfo.dlat/2);
-				VectorData wind025 = new VectorData(grid025);
-				wind025.u.linearIntepolatedFrom(wind.u);
-				wind025.v.linearIntepolatedFrom(wind.v);
-				wind = wind025;
-				GridData cor = VectorMathod.getCurvatureVor(wind);
-				wind.writeToFile(test_data_root+"201905-weahter_identification/output/wind.txt", "2019060108");
-				cor.smooth(5);
-				cor.writeToFile(test_data_root+"201905-weahter_identification/output/cor.txt", "2019060108");
+				if (wind.gridInfo!= null) {
+					
 				
-				wind.writeToFile(test_data_root+"201905-weahter_identification/output/wind/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
-				WeatherSystems vorCentres = SVortex.getVortexCentres(wind,level[i],2.0f);
-				vorCentres.writeIds(test_data_root+"201905-weahter_identification/output/ids/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
-				vorCentres.writeFeatures(test_data_root+"201905-weahter_identification/output/features/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
-				vorCentres.writeValues(test_data_root+"201905-weahter_identification/output/values/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
-				System.out.println(fileName);
+					int nlon = wind.gridInfo.nlon * 2 - 1;
+					int nlat = wind.gridInfo.nlat * 2 - 1;
+					GridInfo grid025 = new GridInfo(nlon,nlat,wind.gridInfo.startlon,wind.gridInfo.startlat,wind.gridInfo.dlon/2,wind.gridInfo.dlat/2);
+					VectorData wind025 = new VectorData(grid025);
+					wind025.u.linearIntepolatedFrom(wind.u);
+					wind025.v.linearIntepolatedFrom(wind.v);
+					//wind = wind025;
+					wind.u.smooth(1); wind.v.smooth(1);
+					
+					GridData cor = VectorMathod.getCurvatureVor(wind);
+					wind.writeToFile(test_data_root+"201905-weahter_identification/output/wind.txt", "2019060108");
+					cor.smooth(5);
+					cor.writeToFile(test_data_root+"201905-weahter_identification/output/cor.txt", "2019060108");
+					
+					wind.writeToFile(test_data_root+"201905-weahter_identification/output/wind/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
+					WeatherSystems vorCentres = SVortex.getVortexCentres(wind,level[i],1.0f);
+					vorCentres.writeIds(test_data_root+"201905-weahter_identification/output/ids/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
+					vorCentres.writeFeatures(test_data_root+"201905-weahter_identification/output/features/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
+					vorCentres.writeValues(test_data_root+"201905-weahter_identification/output/values/vortexCentre/"+level[i]+"/"+fileName.substring(2,10)+".000",fileName);
+					System.out.println(fileName);
+				}
 			}
 		}
 	}

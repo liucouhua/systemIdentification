@@ -252,6 +252,13 @@ public class VectorMathod {
 		return value;
 	}
 
+	static float[] getValue(VectorData wind, float[] point) {
+		// TODO Auto-generated method stub
+		float [] uv = new float[2];
+		uv[0] = getValue(wind.u,point);
+		uv[1] = getValue(wind.v,point);
+		return uv;
+	}
 	
 	
 	public static GridData getFlux(VectorData ve,GridData q) {
