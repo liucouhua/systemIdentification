@@ -142,7 +142,7 @@ public class SVortex{
             	
             	for(int p = -1;p<2;p++) {
             		for(int q =-1;q <2;q++) {
-            			sum.dat[i][j] += output.dat[i][j];
+            			sum.dat[i][j] += output.dat[i+p][j+q];
             		}
             	}
             	if (sum.dat[i][j] < 3) {
@@ -150,6 +150,45 @@ public class SVortex{
             	}
             }
         }
+        ArrayList<float[]> cents = new ArrayList<float[]>();
+        
+        for (int j = 3; j < wind.gridInfo.nlat-3; j++)
+        {
+            for (int i = 3; i < wind.gridInfo.nlon-3; i++)
+            {
+            	if(output.dat[i][j]>0) {
+            		dx = 0;
+            		dy = 0;
+            		float index_sum = 0;
+	            	for(int p = -3;p<4;p++) {
+	            		for(int q =-3;q <4;q++) {
+	            			dx += output.dat[i+p][j+q] * p;
+	            			dy += output.dat[i+p][j+q] * q;
+	            			index_sum += output.dat[i+p][j+q];
+	            		}
+	            	}
+	            	dx /= index_sum;
+	            	dy /= index_sum;
+	            	float lon = wind.gridInfo.startlon + (i+dx) * wind.gridInfo.dlon;
+	            	float lat = wind.gridInfo.startlat + (j+dy) * wind.gridInfo.dlat;
+	            	
+	            	boolean had = false;
+	            	for(float[] cent:cents) {
+	            		if (lon== cent[0] && lat== cent[1]) {
+	            			had = true;
+	            			break;
+	            		}
+	            	}
+	            	if (!had) {
+	            		float[] cent = new float[2];
+	            		cent[0] = lon;
+	            		cent[1] = lat;
+	            		cents.add(cent);
+	            	}
+            	}
+            }
+        }
+        	
         
         //设置一个宽度为4乘4的窗口，以output的权重计算出涡旋的中心
         
