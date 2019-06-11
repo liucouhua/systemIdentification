@@ -124,10 +124,10 @@ public class MainTest {
 		// TODO Auto-generated method stub
 		int[] level = new int[]{850};   // 濞戔剝妫嗛崗铏暈娑擃厼鐪伴崪灞肩秵鐏烇拷
 		Calendar start = Calendar.getInstance();
-		start.set(2010, 3, 20,14,0);
+		start.set(2010, 1, 3,2,0);
 		
 		Calendar end =Calendar.getInstance();
-		end.set(2010, 7, 24,8,0);
+		end.set(2012, 12, 5,2,0);
 		for(int i=0; i< level.length;i++){
 			Calendar time= (Calendar) start.clone();
 			while(time.before(end)){

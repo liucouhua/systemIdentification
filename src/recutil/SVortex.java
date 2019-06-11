@@ -20,20 +20,21 @@ public class SVortex{
 		//get_cents_by_flow(wind,scale);
 		
 		//wind.u.smooth(10); wind.v.smooth(10);
-		GridData marker = getCenter(wind);  // 鐠侊紕鐣诲☉鈩冩閸栫尨绱檓arker閸欐牕锟介棿璐�1閻ㄥ嫰鍎撮崚鍡礆
-		GridData cycle = GetCycleStrenth(wind.u,wind.v,scale);  //缁夘垰鍨庡妤冨箚濞翠礁宸辨惔锟�
-		cycle.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output/cycle.txt");
+		//GridData marker = getCenter(wind);  // 鐠侊紕鐣诲☉鈩冩閸栫尨绱檓arker閸欐牕锟介棿璐�1閻ㄥ嫰鍎撮崚鍡礆
+		//GridData cycle = GetCycleStrenth(wind.u,wind.v,scale);  //缁夘垰鍨庡妤冨箚濞翠礁宸辨惔锟�
+		//cycle.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output/cycle.txt");
 		
-		cycle = cycle.mutiply(marker);                            // 娣囨繄鏆�濞戔剝妫嗛崠铏规畱閻滎垱绁﹀鍝勫
-		marker.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output/marker.txt");
-		GridData ids = SystemIdentification.getCuttedRegion(cycle);  //鐎规矮绠熷☉鈩冩缁崵绮洪敍宀冾啎缂冾喚娴夋惔鏂垮綁闁插骏绱濋獮鍫曪拷姘崇箖reset閸戣姤鏆熺拋锛勭暬濞戔剝妫嗛惃鍕厬韫囧啩缍呯純顔兼嫲閻╃鍙х仦鐐达拷锟�
+		//cycle = cycle.mutiply(marker);                            // 娣囨繄鏆�濞戔剝妫嗛崠铏规畱閻滎垱绁﹀鍝勫
+		//marker.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output/marker.txt");
+		GridData cycle = getcycle(wind);  
+		GridData ids = SystemIdentification.getCuttedRegion(cycle,1);  //鐎规矮绠熷☉鈩冩缁崵绮洪敍宀冾啎缂冾喚娴夋惔鏂垮綁闁插骏绱濋獮鍫曪拷姘崇箖reset閸戣姤鏆熺拋锛勭暬濞戔剝妫嗛惃鍕厬韫囧啩缍呯純顔兼嫲閻╃鍙х仦鐐达拷锟�
 		WeatherSystems vc = new WeatherSystems("vortex",level);
-		vc.setValue(marker);
+		vc.setValue(cycle);
 		vc.setIds(ids);
 		vc.reset();
 		return vc;
 	}
-	  public static GridData GetCycleStrenth(GridData gdUwnd, GridData gdVwnd, double minScale)
+	public static GridData GetCycleStrenth(GridData gdUwnd, GridData gdVwnd, double minScale)
       {
           //閺嶅洤绻旀潏鎾冲毉閸︼拷
           GridData output = gdUwnd.copy();
@@ -91,14 +92,14 @@ public class SVortex{
           return output;
       }
 
-	public static GridData getCenter(VectorData wind) {
+	public static GridData getcycle(VectorData wind) {
 		GridData output = new GridData(wind.gridInfo);
 		float slon = wind.gridInfo.startlon;
 		float dlon = wind.gridInfo.dlon;
 		float slat = wind.gridInfo.startlat;
 		float dlat = wind.gridInfo.dlat;
 		float[] point0 = new float[2],point1= new float[2],uv = new float[2];
-		float dx,dy,dis,vor;
+		float dx,dy,dis = 0,vor;
         for (int j = 3; j < wind.gridInfo.nlat-3; j++)
         {
             for (int i = 3; i < wind.gridInfo.nlon-3; i++)
@@ -150,8 +151,10 @@ public class SVortex{
             	}
             }
         }
-        ArrayList<float[]> cents = new ArrayList<float[]>();
         
+        
+      //设置一个宽度为4乘4的窗口，以output的权重计算出涡旋的中心
+        ArrayList<float[]> cents = new ArrayList<float[]>();       
         for (int j = 3; j < wind.gridInfo.nlat-3; j++)
         {
             for (int i = 3; i < wind.gridInfo.nlon-3; i++)
@@ -188,16 +191,76 @@ public class SVortex{
             	}
             }
         }
+        
+        //以涡旋中心搜素最大的圆
+        int ig,jg,nx,ny,i,j;
+        float lon,lat,dis2;
+        GridData cur_vor = VectorMathod.getVor(wind);
+        cur_vor.smooth(5);
+        float cur;
+        for(float[] cent :cents) {
+        	float maxr = 0;
+        	float max_cycle = 0;
+        	for(int d = 3;d<10000;d++) {
+        		dis = 0.5f * d * wind.gridInfo.dlon;	       
+        		boolean isCycle = true;
+        		float cycle = 0;
+        		for (int s = 0; s< 360; s += 5) {
+        			dx = (float) (dis * Math.cos(s * 3.1416/ 180));
+        			dy = (float) (dis * Math.sin(s * 3.1416/ 180));
+        			point1[0] = cent[0] + dx;
+        			point1[1] = cent[1] + dy;
+        			uv = VectorMathod.getValue(wind, point1);
+        			cur = VectorMathod.getValue(cur_vor, point1);
+        			vor = dx * uv[1] - dy *uv[0];
+        			if (vor <0 || cur <0) {
+        				isCycle = false;
+        				break;
+        			}
+        			else {
+        				cycle += vor;
+        			}
+        			
+        		}
+        		if(!isCycle) {
+        			maxr = dis;
+        			break;
+        		}
+        		else {
+        			max_cycle = cycle;
+        		}
+        	}
+        	ig =(int)((cent[0] - wind.gridInfo.startlon)/wind.gridInfo.dlon);
+        	jg = (int)((cent[1] - wind.gridInfo.startlat)/wind.gridInfo.dlat);
+        	nx = (int)(dis/wind.gridInfo.dlon) + 2;
+        	ny = (int)(dis/wind.gridInfo.dlat) + 2;
         	
+        	for(int p = -nx;p<nx; p++) {
+        		for(int q = -ny; q<ny; q++) {
+        			i = ig+ p;
+        			j = jg + q;
+        			if(i>=0 && i< wind.gridInfo.nlon && j>=0 && j<wind.gridInfo.nlat) {
+        				lon = wind.gridInfo.startlon + i * wind.gridInfo.dlon;
+        				lat = wind.gridInfo.startlat + j * wind.gridInfo.dlat;
+        				dis2 = (lon - cent[0]) * (lon - cent[0]) + (lat - cent[1]) * (lat - cent[1]);
+        				dis = (float) Math.sqrt(dis2);
+        				if(dis < maxr) {
+        					output.dat[i][j] = max_cycle/(dis + maxr);
+        				}
+        				
+        			}
+        		}
+        	}
+        	
+        }
         
-        //设置一个宽度为4乘4的窗口，以output的权重计算出涡旋的中心
+        //GridData pid0 = SystemIdentification.getCuttedRegion(output,1); 
         
         
-        //以涡旋中心
-        
-        
+        //pid0.writeToFile(test_data_root+"201905-weahter_identification\\output\\pid0.txt");
 		
-		return output;
+		//return pid0;
+        return output;
 	}
 	  
 	  

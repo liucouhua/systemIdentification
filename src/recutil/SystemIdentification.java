@@ -20,7 +20,7 @@ public class SystemIdentification {
 
 		static VectorData getDirectionFromLine(ArrayList<Line> trough, GridData marker) {
 			
-			// 根据线条生成垂直于线条的平流风
+			// 鏍规嵁绾挎潯鐢熸垚鍨傜洿浜庣嚎鏉＄殑骞虫祦椋�
 			VectorData paDirect=new VectorData(marker.gridInfo);
 			VectorData veDirect=new VectorData(marker.gridInfo);
 			
@@ -34,7 +34,7 @@ public class SystemIdentification {
 			for(Line line :trough){
 				int pointNum=line.point.size();
 				for(int i=0;i<pointNum-1;i++){
-					//将每个脊线点的方向标记到附近的格点上
+					//灏嗘瘡涓剨绾跨偣鐨勬柟鍚戞爣璁板埌闄勮繎鐨勬牸鐐逛笂
 					float lon=line.point.get(i)[0];
 					float lat=line.point.get(i)[1];
 					float u=(line.point.get(i+1)[0]-line.point.get(i)[0]);
@@ -90,7 +90,7 @@ public class SystemIdentification {
 				paDirect = VectorMathod.getDirection(paDirect);
 			}
 			veDirect=VectorMathod.rotate(paDirect, 90.0f);
-			// 求平均,将脊线附近的平均风速赋值给空白区域
+			// 姹傚钩鍧�,灏嗚剨绾块檮杩戠殑骞冲潎椋庨�熻祴鍊肩粰绌虹櫧鍖哄煙
 			float meanU=veDirect.u.mean();
 			float meanV=veDirect.v.mean();
 			GridData speed = VectorMathod.getMod(veDirect);
@@ -105,7 +105,7 @@ public class SystemIdentification {
 			
 			veDirect=VectorMathod.getDirection(veDirect);
 		
-			//为使得非marker区域风场和marker区域之间平滑过渡
+			//涓轰娇寰楅潪marker鍖哄煙椋庡満鍜宮arker鍖哄煙涔嬮棿骞虫粦杩囨浮
 			for(int k=0;k<3;k++){
 				for(int i=1;i<nlon-1;i++){
 					for(int j=1;j<nlat-1;j++){
@@ -131,11 +131,11 @@ public class SystemIdentification {
 		public static ArrayList<Line> lineSystem(float scale, VectorData tranWind, GridData feature, GridData marker0) {
 			// TODO Auto-generated method stub
 			
-			//首先根据feature绘制其平流0线（其中平流风的初始设置为西北风），在使用marker进行裁剪
+			//棣栧厛鏍规嵁feature缁樺埗鍏跺钩娴�0绾匡紙鍏朵腑骞虫祦椋庣殑鍒濆璁剧疆涓鸿タ鍖楅锛夛紝鍦ㄤ娇鐢╩arker杩涜瑁佸壀
 			ArrayList<Line> trough=new ArrayList<Line>();
 			VectorData tranDirection=VectorMathod.getDirection(tranWind);
 			GridData marker1=marker0.sign01();
-			GridData adve=VectorMathod.getAdvection(tranDirection, feature);    //计算平流场
+			GridData adve=VectorMathod.getAdvection(tranDirection, feature);    //璁＄畻骞虫祦鍦�
 			adve.writeToFile("G:/data/systemIdentify/adve.txt");
 			GridData curOfAdve=VectorMathod.getCurvature(adve);
 			curOfAdve.writeToFile("G:/data/systemIdentify/curOfadve.txt");
@@ -149,22 +149,22 @@ public class SystemIdentification {
 		
 		//	mixWind = VectorMathod.getDirection(mixWind);
 		//	mixWind.writeToFile("G:/data/systemIdentify/mixWind.txt");
-		//	GridData adve1=VectorMathod.getAdvection(mixWind, feature);    //计算平流场
+		//	GridData adve1=VectorMathod.getAdvection(mixWind, feature);    //璁＄畻骞虫祦鍦�
 		//	adve1.writeToFile("G:/data/systemIdentify/adve1.txt");
-			ArrayList<Line> origainalTrough=LineDealing.creatLine(0.0f, adve);  //计算平流场0线，作为脊线或槽线
+			ArrayList<Line> origainalTrough=LineDealing.creatLine(0.0f, adve);  //璁＄畻骞虫祦鍦�0绾匡紝浣滀负鑴婄嚎鎴栨Ы绾�
 			VectorData roWind = VectorMathod.rotate(tranDirection,-15);
-			GridData adveOfAdve= VectorMathod.dot(roWind, adve_grad_direction); //计算平流的平流，在槽线位置平流的平流为正，脊线位置平流的平流为负
+			GridData adveOfAdve= VectorMathod.dot(roWind, adve_grad_direction); //璁＄畻骞虫祦鐨勫钩娴侊紝鍦ㄦЫ绾夸綅缃钩娴佺殑骞虫祦涓烘锛岃剨绾夸綅缃钩娴佺殑骞虫祦涓鸿礋
 			adveOfAdve.writeToFile("G:/data/systemIdentify/adveOfAdve.txt");
 			adveOfAdve = adveOfAdve.add(0.6f);
 			curOfAdve = curOfAdve.add(-0.4f);
 			adveOfAdve.writeToFile("G:/data/systemIdentify/adveOfAdve.txt");
-			GridData minalAofA=adveOfAdve.mutiply(-1).sign01();    //为提取脊线部分，保留平流的平流为负的区域
+			GridData minalAofA=adveOfAdve.mutiply(-1).sign01();    //涓烘彁鍙栬剨绾块儴鍒嗭紝淇濈暀骞虫祦鐨勫钩娴佷负璐熺殑鍖哄煙
 			GridData minalcofA=curOfAdve.mutiply(-1).sign01();
 			minalAofA.writeToFile("G:/data/systemIdentify/maOfa.txt");
 			minalcofA.writeToFile("G:/data/systemIdentify/maOfc.txt");
-			GridData marker=marker1.mutiply(minalAofA).mutiply(minalcofA);					 //生成marker场
+			GridData marker=marker1.mutiply(minalAofA).mutiply(minalcofA);					 //鐢熸垚marker鍦�
 			marker.writeToFile("G:/data/systemIdentify/marker.txt");
-			ArrayList<Line> cutedTrough=LineDealing.cutLines(origainalTrough, marker);  //裁剪获得脊线
+			ArrayList<Line> cutedTrough=LineDealing.cutLines(origainalTrough, marker);  //瑁佸壀鑾峰緱鑴婄嚎
 			LineDealing.writeToFile("G:/data/systemIdentify/cutedtroughs.txt", cutedTrough);
 			trough = getLongTrough(scale,cutedTrough);
 			LineDealing.writeToFile("G:/data/systemIdentify/troughs.txt", trough);
@@ -176,7 +176,7 @@ public class SystemIdentification {
 		
 		public static void getLineStrenght(ArrayList<Line> line, GridData grid, VectorData wind){
 			ArrayList<float[]> strenght =new ArrayList<float[]>();
-			// 将风速转换成等经纬度网格矢量
+			// 灏嗛閫熻浆鎹㈡垚绛夌粡绾害缃戞牸鐭㈤噺
 			int nlat=grid.gridInfo.nlat;
 			int nlon=grid.gridInfo.nlon;
 			int j_1,j1,i_1,i1,dj,di;
@@ -191,7 +191,7 @@ public class SystemIdentification {
 				float maxStrenght=0;
 				float totalStrenght=0;
 				for(int j = 0; j < line.get(i).point.size()-1; j++){
-					//对每个点沿着风向对上下游的feature进行积分，积分停止点在feature极小点处或marker=0处停止
+					//瀵规瘡涓偣娌跨潃椋庡悜瀵逛笂涓嬫父鐨刦eature杩涜绉垎锛岀Н鍒嗗仠姝㈢偣鍦╢eature鏋佸皬鐐瑰鎴杕arker=0澶勫仠姝�
 					sr = (float) Math.cos(line.get(i).point.get(j)[1]*3.14/180);
 					float dx =sr* (line.get(i).point.get(j+1)[0]-line.get(i).point.get(j)[0]);
 					float dy = line.get(i).point.get(j+1)[1]-line.get(i).point.get(j)[1];
@@ -200,7 +200,7 @@ public class SystemIdentification {
 					float u0 = VectorMathod.getValue(wind.u,startP);
 					float v0 = VectorMathod.getValue(wind.v,startP);
 					float cross = Math.abs(-dx*v0 + dy*u0);
-					//往上游积分
+					//寰�涓婃父绉垎
 					float[] point = new float[2];
 					point[0] = startP[0]; point[1] =startP[1];
 					
@@ -239,7 +239,7 @@ public class SystemIdentification {
 							break;
 						}
 					}
-					//往下游积分
+					//寰�涓嬫父绉垎
 					point[0] = startP[0]; point[1] =startP[1];
 					value0=lineValue;value_1=lineValue;
 					while(true){
@@ -273,16 +273,16 @@ public class SystemIdentification {
 		
 		}
 		*/
-		public static GridData getCuttedRegion(GridData grid0){
-			// 根据格点场分布，将大于0的区域按梯度上升法切割成各个极值点的覆盖分区
+		public static GridData getCuttedRegion(GridData grid0, int  sm_id_window_size){
+			// 鏍规嵁鏍肩偣鍦哄垎甯冿紝灏嗗ぇ浜�0鐨勫尯鍩熸寜姊害涓婂崌娉曞垏鍓叉垚鍚勪釜鏋佸�肩偣鐨勮鐩栧垎鍖�
 			
 			GridData crId = new GridData(grid0.gridInfo);
-			crId.setValue(0.0f);			//重置成0，后面将返回目标编号
+			crId.setValue(0.0f);			//閲嶇疆鎴�0锛屽悗闈㈠皢杩斿洖鐩爣缂栧彿
 			int nlon=crId.gridInfo.nlon;
 			int nlat=crId.gridInfo.nlat;
 			
 			int nobj=0;
-			GridData oriData= grid0.copy();   //用于保存原始数据，但网格重设
+			GridData oriData= grid0.copy();   //鐢ㄤ簬淇濆瓨鍘熷鏁版嵁锛屼絾缃戞牸閲嶈
 			oriData.gridInfo = new GridInfo(nlon,nlat,0.0f,0.0f,1.0f,1.0f);	
 			VectorData grad = getGradsDirection(oriData);
 			class GrowPoint{
@@ -295,7 +295,7 @@ public class SystemIdentification {
 
 			float u,v;
 			int i1,j1,i2,j2;
-			//先对所有极值点附近格点赋值
+			//鍏堝鎵�鏈夋瀬鍊肩偣闄勮繎鏍肩偣璧嬪��
 			for(int i=0;i<nlon;i++){
 				for(int j=0;j<nlat;j++){
 			        if(crId.dat[i][j]!=0||oriData.dat[i][j]<=0)continue;  
@@ -319,7 +319,7 @@ public class SystemIdentification {
 			        		i1= MyMath.cycleIndex(false, nlon, i, p);
 			        		j1= MyMath.cycleIndex(false, nlat, j, q);
 			        		if(oriData.dat[i1][j1]>0&&crId.dat[i1][j1]==0){
-			        			crId.dat[i1][j1]=nobj;   //将极值中心点附近9个点都赋为同一编号
+			        			crId.dat[i1][j1]=nobj;   //灏嗘瀬鍊间腑蹇冪偣闄勮繎9涓偣閮借祴涓哄悓涓�缂栧彿
 			     		        queue.offer(new GrowPoint(i1,j1));
 			        		}
 			        	}
@@ -334,7 +334,7 @@ public class SystemIdentification {
 		    while((gp=queue.poll())!=null){
 		    	i1=gp.i;
 		    	j1=gp.j;
-		    	//把相邻点加入队列
+		    	//鎶婄浉閭荤偣鍔犲叆闃熷垪
 		        for(int p=-1;p<2;p++){
 		        	for(int q=-1;q<2;q++){
 		        		if((p*p+q*q)!=1)continue;
@@ -346,7 +346,7 @@ public class SystemIdentification {
 		        		}
 		        	}
 		        }
-		    	//沿梯度上升至周围4个点都有相同标记停止
+		    	//娌挎搴︿笂鍗囪嚦鍛ㄥ洿4涓偣閮芥湁鐩稿悓鏍囪鍋滄
 		        point[0] = i1;
 		        point[1] = j1;
 		        int step =0;
@@ -368,7 +368,7 @@ public class SystemIdentification {
 					if(point[1]>=nlat-1) point[1] = nlat-1.001f;
 					ig = (int)point[0];
 					jg = (int)point[1];
-					//将矩形框四个顶点中所有非0id找出来，如果他们相同则循环结束
+					//灏嗙煩褰㈡鍥涗釜椤剁偣涓墍鏈夐潪0id鎵惧嚭鏉ワ紝濡傛灉浠栦滑鐩稿悓鍒欏惊鐜粨鏉�
 					
 					float sameId =Math.max(crId.dat[ig][jg], Math.max(crId.dat[ig+1][jg], Math.max(crId.dat[ig][jg+1], crId.dat[ig+1][jg+1])));		
 					step++;
@@ -382,6 +382,124 @@ public class SystemIdentification {
 					if(crId.dat[ig+1][jg+1]>0 &&crId.dat[ig+1][jg+1]!=sameId) sameId =0;
 					
 					crId.dat[i1][j1] = sameId;
+					//System.out.println(sameId);
+							
+				}
+		    }
+		    smoothIds(crId,sm_id_window_size);
+			return crId;
+		}
+		
+		public static GridData getCuttedRegion(GridData grid0){
+			// 鏍规嵁鏍肩偣鍦哄垎甯冿紝灏嗗ぇ浜�0鐨勫尯鍩熸寜姊害涓婂崌娉曞垏鍓叉垚鍚勪釜鏋佸�肩偣鐨勮鐩栧垎鍖�
+			
+			GridData crId = new GridData(grid0.gridInfo);
+			crId.setValue(0.0f);			//閲嶇疆鎴�0锛屽悗闈㈠皢杩斿洖鐩爣缂栧彿
+			int nlon=crId.gridInfo.nlon;
+			int nlat=crId.gridInfo.nlat;
+			
+			int nobj=0;
+			GridData oriData= grid0.copy();   //鐢ㄤ簬淇濆瓨鍘熷鏁版嵁锛屼絾缃戞牸閲嶈
+			oriData.gridInfo = new GridInfo(nlon,nlat,0.0f,0.0f,1.0f,1.0f);	
+			VectorData grad = getGradsDirection(oriData);
+			class GrowPoint{
+				int i,j;
+				public GrowPoint(int i0,int j0){
+					i=i0;j=j0;
+				}
+			}
+			Queue<GrowPoint> queue=new LinkedList<GrowPoint>(); 
+
+			float u,v;
+			int i1,j1,i2,j2;
+			//鍏堝鎵�鏈夋瀬鍊肩偣闄勮繎鏍肩偣璧嬪��
+			for(int i=0;i<nlon;i++){
+				for(int j=0;j<nlat;j++){
+			        if(crId.dat[i][j]!=0||oriData.dat[i][j]<=0)continue;  
+			        boolean isMax=true;
+			        for(int p=-1;p<2;p++){
+			        	for(int q=-1;q<2;q++){
+			        		i1= MyMath.cycleIndex(false, nlon, i, p);
+			        		j1= MyMath.cycleIndex(false, nlat, j, q);
+			        		if(oriData.dat[i1][j1]>oriData.dat[i][j]){
+			        			isMax = false;
+			        			break;
+			        		}
+			        	}
+			        	if(!isMax)break;
+			        }
+			        if(!isMax) continue;
+			        
+			        nobj++;
+			        for(int p=-1;p<2;p++){
+			        	for(int q=-1;q<2;q++){
+			        		i1= MyMath.cycleIndex(false, nlon, i, p);
+			        		j1= MyMath.cycleIndex(false, nlat, j, q);
+			        		if(oriData.dat[i1][j1]>0&&crId.dat[i1][j1]==0){
+			        			crId.dat[i1][j1]=nobj;   //灏嗘瀬鍊间腑蹇冪偣闄勮繎9涓偣閮借祴涓哄悓涓�缂栧彿
+			     		        queue.offer(new GrowPoint(i1,j1));
+			        		}
+			        	}
+			        }
+				}
+			}
+			GrowPoint gp;
+			float[] point = new float[2];
+			float speed;
+			int ig,jg;
+			int num=0;
+		    while((gp=queue.poll())!=null){
+		    	i1=gp.i;
+		    	j1=gp.j;
+		    	//鎶婄浉閭荤偣鍔犲叆闃熷垪
+		        for(int p=-1;p<2;p++){
+		        	for(int q=-1;q<2;q++){
+		        		if((p*p+q*q)!=1)continue;
+		        		i2= MyMath.cycleIndex(false, nlon, i1, p);
+		        		j2= MyMath.cycleIndex(false, nlat, j1, q);      		
+		        		if(oriData.dat[i2][j2]>0&&crId.dat[i2][j2]==0){
+		        			crId.dat[i2][j2] =-1;
+		     		        queue.offer(new GrowPoint(i2,j2));
+		        		}
+		        	}
+		        }
+		    	//娌挎搴︿笂鍗囪嚦鍛ㄥ洿4涓偣閮芥湁鐩稿悓鏍囪鍋滄
+		        point[0] = i1;
+		        point[1] = j1;
+		        int step =0;
+		        while(crId.dat[i1][j1]<=0){
+		        	u= VectorMathod.getValue(grad.u,point);
+					v= VectorMathod.getValue(grad.v,point);
+					float random = (float) Math.random()*0.2f;
+					if(u<0 && point[0]<1)u=-Math.abs(random*v);
+					if(u>0 && point[0]>nlon-2)u=Math.abs(random*v);
+					if(v<0 && point[1]<1)v=-Math.abs(random*u);
+					if(v>0 && point[1]>nlat-2)v = Math.abs(random*u);
+					if(u==0 && v == 0) u=1;
+					speed = (float) Math.sqrt(u * u + v * v)+0.000001f;
+					point[0] += u / speed;
+					point[1] += v / speed;
+					if(point[0]<=0)point[0]=0.001f;
+					if(point[0]>=nlon-1) point[0] = nlon-1.001f;
+					if(point[1]<=0)point[1]=0.001f;
+					if(point[1]>=nlat-1) point[1] = nlat-1.001f;
+					ig = (int)point[0];
+					jg = (int)point[1];
+					//灏嗙煩褰㈡鍥涗釜椤剁偣涓墍鏈夐潪0id鎵惧嚭鏉ワ紝濡傛灉浠栦滑鐩稿悓鍒欏惊鐜粨鏉�
+					
+					float sameId =Math.max(crId.dat[ig][jg], Math.max(crId.dat[ig+1][jg], Math.max(crId.dat[ig][jg+1], crId.dat[ig+1][jg+1])));		
+					step++;
+					if(step>nlon+nlat){
+						crId.dat[i1][j1] = sameId;
+						break;
+					}
+					if(crId.dat[ig][jg]>0 &&crId.dat[ig][jg]!=sameId) sameId =0;
+					if(crId.dat[ig+1][jg]>0 &&crId.dat[ig+1][jg]!=sameId) sameId =0;
+					if(crId.dat[ig][jg+1]>0 &&crId.dat[ig][jg+1]!=sameId) sameId =0;
+					if(crId.dat[ig+1][jg+1]>0 &&crId.dat[ig+1][jg+1]!=sameId) sameId =0;
+					
+					crId.dat[i1][j1] = sameId;
+					//System.out.println(sameId);
 							
 				}
 		    }
@@ -496,15 +614,15 @@ public class SystemIdentification {
 		}
 		
 		public static ArrayList<Line> HighValueAreaRidge(VectorData tranWind, GridData gridFeature,int level){
-			//根据平流风方法获取高值区的脊线
-			VectorData tranDirection = VectorMathod.getDirection(tranWind);          //计算平流方向
-			GridData adve=VectorMathod.getAdvection(tranDirection, gridFeature);    //计算平流场
-			ArrayList<Line> line0 = LineDealing.creatLine(0.0f, adve);  //计算平流场0线，作为脊线或槽线
+			//鏍规嵁骞虫祦椋庢柟娉曡幏鍙栭珮鍊煎尯鐨勮剨绾�
+			VectorData tranDirection = VectorMathod.getDirection(tranWind);          //璁＄畻骞虫祦鏂瑰悜
+			GridData adve=VectorMathod.getAdvection(tranDirection, gridFeature);    //璁＄畻骞虫祦鍦�
+			ArrayList<Line> line0 = LineDealing.creatLine(0.0f, adve);  //璁＄畻骞虫祦鍦�0绾匡紝浣滀负鑴婄嚎鎴栨Ы绾�
 			VectorData adve_grad_direction = VectorMathod.getDirection(VectorMathod.getGrads(adve));
 			GridData adveOfAdve= VectorMathod.dot(tranDirection, adve_grad_direction); //
 			GridData marker=gridFeature.sign01().mutiply(adveOfAdve.add(0.5f).mutiply(-1).sign01());
 			
-			// 边界裁剪
+			// 杈圭晫瑁佸壀
 			int n = 10;
 			GridData markerR= new GridData(marker.gridInfo);
 			for(int i= n;i<markerR.gridInfo.nlon-n;i++){
@@ -527,7 +645,7 @@ public class SystemIdentification {
 		
 		public static Map<Integer, SystemFeature> getCentreAreaStrenght(GridData grid, GridData ids) {
 			// TODO Auto-generated method stub
-			//给定分区和特征值，返回每个系统的中心和面积、积分强度等属性
+			//缁欏畾鍒嗗尯鍜岀壒寰佸�硷紝杩斿洖姣忎釜绯荤粺鐨勪腑蹇冨拰闈㈢Н銆佺Н鍒嗗己搴︾瓑灞炴��
 			Map<Integer,SystemFeature> idPros = new HashMap<Integer,SystemFeature>();
 			int id;
 			int nlon = ids.gridInfo.nlon;
@@ -567,7 +685,7 @@ public class SystemIdentification {
 		
 		
 		public static void resetId(GridData ids,int oldId,int newId,int startI,int startJ){
-			//将格点场ids中的某个分区编号重设
+			//灏嗘牸鐐瑰満ids涓殑鏌愪釜鍒嗗尯缂栧彿閲嶈
 			int nlon = ids.gridInfo.nlon;
 			int nlat = ids.gridInfo.nlat;
 			class GrowPoint{
@@ -582,14 +700,14 @@ public class SystemIdentification {
 			GrowPoint gp;
 			int i1,j1;
 	        while((gp=queue.poll())!=null){
-	        	//从队列中取出第一个，如果它不为空则判断周围26个点
+	        	//浠庨槦鍒椾腑鍙栧嚭绗竴涓紝濡傛灉瀹冧笉涓虹┖鍒欏垽鏂懆鍥�26涓偣
 
 	        	for(int p=-3;p<4;p++){
 	        		i1=MyMath.cycleIndex(false, nlon,gp.i,p);
 	        		for(int q=-3;q<4;q++){
 	        			j1=MyMath.cycleIndex(false, nlat,gp.j,q);
 	        			if(ids.dat[i1][j1]==oldId){
-	        				//如果周围26个点中有未被修改的点，则改正过来，并将周围的添加到队列中
+	        				//濡傛灉鍛ㄥ洿26涓偣涓湁鏈淇敼鐨勭偣锛屽垯鏀规杩囨潵锛屽苟灏嗗懆鍥寸殑娣诲姞鍒伴槦鍒椾腑
 	        				ids.dat[i1][j1]=newId;
 	        				queue.offer(new GrowPoint(i1,j1));
 	        			}
@@ -601,15 +719,15 @@ public class SystemIdentification {
 		
 		
 		public static GridData combineStrongConnectingRegion_2d(GridData ids,float connectingRate){			
-			//如果两个相邻的系统边界线很长，而面积不大，则它们应该属于同一个系统
+			//濡傛灉涓や釜鐩搁偦鐨勭郴缁熻竟鐣岀嚎寰堥暱锛岃�岄潰绉笉澶э紝鍒欏畠浠簲璇ュ睘浜庡悓涓�涓郴缁�
 			GridData grid =ids.copy();
-			//逐个合并链接度超过阈值的目标
+			//閫愪釜鍚堝苟閾炬帴搴﹁秴杩囬槇鍊肩殑鐩爣
 			int nlon = ids.gridInfo.nlon;
 			int nlat = ids.gridInfo.nlat;
 		
 			Map<Integer,Map<Integer,Float>> map = getRegionAreaAndConnectingId_2d(grid,ids);
 			while(true){
-				//获取每个目标的面积，以及它和其它目标的边界线长度
+				//鑾峰彇姣忎釜鐩爣鐨勯潰绉紝浠ュ強瀹冨拰鍏跺畠鐩爣鐨勮竟鐣岀嚎闀垮害
 				
 				float maxRate = 0;
 				int id0=0,id1=0;
@@ -619,7 +737,7 @@ public class SystemIdentification {
 					for (Map.Entry<Integer,Float> entry1 : map1.entrySet()){
 						if(entry1.getKey()!=0 && map.containsKey(entry1.getKey())){
 							float lenght = entry1.getValue();
-							float rate = lenght * lenght / area;   //采用边界线长度的平方/面积 作为两个系统紧邻的程度
+							float rate = lenght * lenght / area;   //閲囩敤杈圭晫绾块暱搴︾殑骞虫柟/闈㈢Н 浣滀负涓や釜绯荤粺绱ч偦鐨勭▼搴�
 							if(maxRate < rate) {
 								id0 = entry.getKey();
 								id1 = entry1.getKey();
@@ -632,13 +750,13 @@ public class SystemIdentification {
 					break;
 				}
 				else{
-					//合并目标id
+					//鍚堝苟鐩爣id
 					for(int i=0;i<nlon;i++){
 						for(int j=0;j<nlat;j++){
 							if(ids.dat[i][j]==id1) ids.dat[i][j]=id0;
 						}
 					}
-					//合并map中的元素
+					//鍚堝苟map涓殑鍏冪礌
 					Map<Integer,Float> map0 = map.get(id0);
 					Map<Integer,Float> map1 = map.get(id1);
 					map0.put(0, map0.get(0)+map1.get(0));
@@ -674,7 +792,7 @@ public class SystemIdentification {
 		
 		public static Map<Integer,Map<Integer,Float>> getRegionAreaAndConnectingId_2d(GridData grid0,GridData ids){
 			
-			// 计算一个高值区的面积以及和其它分区的边界线长度
+			// 璁＄畻涓�涓珮鍊煎尯鐨勯潰绉互鍙婂拰鍏跺畠鍒嗗尯鐨勮竟鐣岀嚎闀垮害
 			Map<Integer,Map<Integer,Float>> map_area = new HashMap<Integer,Map<Integer,Float>>();
 			int id,i1,j1,id1;
 			int nlon = ids.gridInfo.nlon;
