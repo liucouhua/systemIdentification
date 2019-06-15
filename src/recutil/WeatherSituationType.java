@@ -14,13 +14,13 @@ public class WeatherSituationType {
 	public T_Tythoon tTythoon;
 	public HashMap<String, WeatherSystems> wss = new HashMap<String,WeatherSystems>();
 	
-	public WeatherSituationType(GridData mslp,GridData hight500, VectorData wind850, VectorData wind700,
-			VectorData wind500,TyphoonReport typhoon) {
+	public WeatherSituationType(GridData hight1000,GridData hight500, VectorData wind850, VectorData wind700,
+			VectorData wind500,ArrayList<TyphoonReport> typhoons) {
 		
 		// 识别出各层的基本天气
 		
 		// 地面低压
-		WeatherSystems low_surface = SHighLowPressure.getHLCentres(mslp, 1000, 1.0f);
+		WeatherSystems low_surface = SHighLowPressure.getHLCentres(hight1000, 1000, 1.0f);
 		wss.put("low_surface", low_surface);
 		
 		//500hpa 高度场低涡
@@ -59,13 +59,15 @@ public class WeatherSituationType {
 		WeatherSystems jet_700 = SVortex.getVortexCentres(wind700, 700, 1.0f);
 		wss.put("jet_700", jet_700);
 		
-		tFront = new T_Front (wss);
-		tSWVortex = new T_SWVortex(wss);
-		tSrTrough = new T_SummerReversedTrough(wss);
-		tSrTrough = new T_SummerReversedTrough(wss);
-		tTythoon =  new T_Tythoon(wss);
+		tFront = new T_Front (wss,typhoons);
+		tSWVortex = new T_SWVortex(wss,typhoons);
+		tSrTrough = new T_SummerReversedTrough(wss,typhoons);
+		tSrTrough = new T_SummerReversedTrough(wss,typhoons);
+		tTythoon =  new T_Tythoon(wss,typhoons);
 	}
 	
-	
+	public void write_to_file() {
+		
+	}
 	
 }

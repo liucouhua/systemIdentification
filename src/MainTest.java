@@ -16,8 +16,10 @@ import recutil.SSubtropicalHigh;
 import recutil.STrough;
 import recutil.SVortex;
 import recutil.SystemIdentification;
+import recutil.TyphoonReport;
 import recutil.VectorData;
 import recutil.VectorMathod;
+import recutil.WeatherSituationType;
 import recutil.WeatherSystems;
 public class MainTest {
 	
@@ -25,6 +27,7 @@ public class MainTest {
 	
 	public static void main(String[] args) throws Exception
 	{
+		
 		
 		//GridData grid = new GridData("G:\\data\\dt24grid\\output\\15010620.000");
 		//grid = grid.mutiply(-1).add(-4);
@@ -35,12 +38,60 @@ public class MainTest {
 		//閹碉拷閺堝琚崹瀣兇缂佺喕鐦戦崚顐ゆ畱濞村鐦粙瀣碍閸忋儱褰�
 		//southAsiaHighTest();
 		//hLCentreTest();
-		vortexCentreTest();
+		//vortexCentreTest();
 		//troughTest();
 		//ridgeTest();
 		//shearLineTest();
 		//jetLineTest();
 		//SubtropicalHighTest();
+		weathersituationtype();
+		
+		
+	}
+	
+	private static void weathersituationtype() {
+		Calendar start = Calendar.getInstance();
+		start.set(2017, 9, 20,8,0);
+		Calendar end =Calendar.getInstance();
+		end.set(2017, 9, 20,20,0);
+		Calendar time= (Calendar) start.clone();
+		while(time.before(end)){
+			String fileName =MyMath.getFileNameFromCalendar(time);
+			time.add(Calendar.HOUR, 6);
+			String h1000_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/1000/"+fileName.substring(2,10)+".000";
+			GridData h1000 = new GridData(h1000_path);
+			if(h1000.gridInfo == null) {
+				continue;
+			}
+			String h500_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/500/"+fileName.substring(2,10)+".000";
+			GridData h500 = new GridData(h500_path);
+			if(h500.gridInfo == null) {
+				continue;
+			}
+			String w850_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/850/"+fileName.substring(2,10)+".000";
+			VectorData w850 = new VectorData(w850_path);
+			if(w850.gridInfo == null) {
+				continue;
+			}
+			
+			String w700_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/700/"+fileName.substring(2,10)+".000";
+			VectorData w700 = new VectorData(w700_path);
+			if(w700.gridInfo == null) {
+				continue;
+			}
+			String w500_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/500/"+fileName.substring(2,10)+".000";
+			VectorData w500 = new VectorData(w850_path);
+			if(w500.gridInfo == null) {
+				continue;
+			}
+			
+			ArrayList<TyphoonReport> tythoons = new ArrayList<TyphoonReport>();
+			
+			WeatherSituationType wst = new WeatherSituationType(h1000,h500,w850,w700,w500,tythoons);
+			System.out.println(fileName);
+			
+		}
+		
 		
 	}
 	
