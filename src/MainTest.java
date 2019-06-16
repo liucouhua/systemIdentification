@@ -44,6 +44,8 @@ public class MainTest {
 		//shearLineTest();
 		//jetLineTest();
 		//SubtropicalHighTest();
+
+		
 		weathersituationtype();
 		
 		
@@ -51,9 +53,9 @@ public class MainTest {
 	
 	private static void weathersituationtype() {
 		Calendar start = Calendar.getInstance();
-		start.set(2017, 9, 20,8,0);
+		start.set(2010, 5, 18,20,0);
 		Calendar end =Calendar.getInstance();
-		end.set(2017, 9, 20,20,0);
+		end.set(2010, 5, 20,20,0);
 		Calendar time= (Calendar) start.clone();
 		while(time.before(end)){
 			String fileName =MyMath.getFileNameFromCalendar(time);
@@ -67,6 +69,11 @@ public class MainTest {
 			GridData h500 = new GridData(h500_path);
 			if(h500.gridInfo == null) {
 				continue;
+			}
+			for(int i=0;i<h500.gridInfo.nlon;i++) {
+				for(int j=0;j<h500.gridInfo.nlat;j++) {
+					h500.dat[i][j] *= 10;
+				}
 			}
 			String w850_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/850/"+fileName.substring(2,10)+".000";
 			VectorData w850 = new VectorData(w850_path);

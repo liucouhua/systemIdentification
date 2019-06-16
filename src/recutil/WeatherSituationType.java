@@ -14,26 +14,46 @@ public class WeatherSituationType {
 	public T_Tythoon tTythoon;
 	public HashMap<String, WeatherSystems> wss = new HashMap<String,WeatherSystems>();
 	
+	
 	public WeatherSituationType(GridData hight1000,GridData hight500, VectorData wind850, VectorData wind700,
 			VectorData wind500,ArrayList<TyphoonReport> typhoons) {
 		
 		// 识别出各层的基本天气
 		
 		// 地面低压
+		
+		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
+		hight1000.smooth(3);
 		WeatherSystems low_surface = SHighLowPressure.getHLCentres(hight1000, 1000, 1.0f);
 		wss.put("low_surface", low_surface);
 		
+		//low_surface.writeIds(output_dir +"ids.txt", "2010042008");
+		//low_surface.writeFeatures(output_dir +"feature.txt", "2010042008");
+		//low_surface.writeValues(output_dir + "value.txt", "2010042008");
+		
 		//500hpa 高度场低涡
+		hight500.smooth(10);
 		WeatherSystems low_500 = SHighLowPressure.getHLCentres(hight500, 1000, 1.0f);
 		wss.put("low_500", low_500);
+		//low_500.writeIds(output_dir +"ids.txt", "2010042008");
+		//low_500.writeFeatures(output_dir +"feature.txt", "2010042008");
+		//low_500.writeValues(output_dir + "value.txt", "2010042008");
+		
 		
 		//500副高
 		WeatherSystems subHigh_500 = SSubtropicalHigh.getSubtropicalHigh(hight500, 500, 1.0f);
 		wss.put("subHigh_500", subHigh_500);
+		//subHigh_500.writeIds(output_dir +"ids.txt", "2010042008");
+		//subHigh_500.writeFeatures(output_dir +"feature.txt", "2010042008");
+		//subHigh_500.writeValues(output_dir + "value.txt", "2010042008");
 		
 		//500高空槽
 		WeatherSystems trough_500 = STrough.getTrough(hight500, 500, 1.0f);
 		wss.put("trough_500", trough_500);
+		trough_500.writeIds(output_dir +"ids.txt", "2010042008");
+		trough_500.writeFeatures(output_dir +"feature.txt", "2010042008");
+		trough_500.writeValues(output_dir + "value.txt", "2010042008");
+		
 		
 		//500hpa 涡旋 
 		WeatherSystems vortex_500 = SVortex.getVortexCentres(wind500, 500, 1.0f);

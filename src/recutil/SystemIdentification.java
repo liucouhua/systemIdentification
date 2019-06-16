@@ -632,7 +632,7 @@ public class SystemIdentification {
 			}
 			marker = marker.mutiply(markerR);
 			
-			GridData geoHeight0 = new GridData("height_oy.txt");
+			GridData geoHeight0 = new GridData("D:\\develop\\java\\systemIdentification\\src\\height_oy.txt");
 			GridData geoHeight = new GridData(gridFeature.gridInfo);
 			geoHeight.linearIntepolatedFrom(geoHeight0);
 			geoHeight.setDefaultValue(0);
