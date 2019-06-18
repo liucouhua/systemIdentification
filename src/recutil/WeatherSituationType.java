@@ -50,34 +50,62 @@ public class WeatherSituationType {
 		//500¸ß¿Õ²Û
 		WeatherSystems trough_500 = STrough.getTrough(hight500, 500, 1.0f);
 		wss.put("trough_500", trough_500);
-		trough_500.writeIds(output_dir +"ids.txt", "2010042008");
-		trough_500.writeFeatures(output_dir +"feature.txt", "2010042008");
-		trough_500.writeValues(output_dir + "value.txt", "2010042008");
+		//trough_500.writeIds(output_dir +"ids.txt", "2010042008");
+		//trough_500.writeFeatures(output_dir +"feature.txt", "2010042008");
+		//trough_500.writeValues(output_dir + "value.txt", "2010042008");
 		
 		
 		//500hpa ÎÐÐý 
 		WeatherSystems vortex_500 = SVortex.getVortexCentres(wind500, 500, 1.0f);
 		wss.put("vortex_500",vortex_500);
+		//vortex_500.writeIds(output_dir +"ids.txt", "2010042008");
+		//vortex_500.writeFeatures(output_dir +"feature.txt", "2010042008");
+		//vortex_500.writeValues(output_dir + "value.txt", "2010042008");
+		
 		
 		//850hpa ÎÐÐý
 		WeatherSystems vortex_850 = SVortex.getVortexCentres(wind850, 850, 1.0f);
 		wss.put("vortex_850", vortex_850);
 		
+		vortex_850.writeIds(output_dir +"ids.txt", "2010042008");
+		vortex_850.writeFeatures(output_dir +"feature.txt", "2010042008");
+		vortex_850.writeValues(output_dir + "value.txt", "2010042008");
+		
 		//700hpa ÎÐÐý 
 		WeatherSystems vortex_700 = SVortex.getVortexCentres(wind700, 700, 1.0f);
 		wss.put("vortex_700", vortex_700);
+		vortex_700.writeIds(output_dir +"ids.txt", "2010042008");
+		vortex_700.writeFeatures(output_dir +"feature.txt", "2010042008");
+		vortex_700.writeValues(output_dir + "value.txt", "2010042008");
 		
 		//850ÇÐ±ßÏß
-		WeatherSystems shear_850 = SVortex.getVortexCentres(wind850, 850, 1.0f);
+		WeatherSystems shear_850 = SShear.getShear(wind850, 850, 1.0f);
 		wss.put("shear_850", shear_850);
+		shear_850.writeIds(output_dir +"ids.txt", "2010042008");
+		shear_850.writeFeatures(output_dir +"feature.txt", "2010042008");
+		shear_850.writeValues(output_dir + "value.txt", "2010042008");
+		//700ÇÐ±ßÏß
+		WeatherSystems shear_700 = SShear.getShear(wind850, 850, 1.0f);
+		wss.put("shear_700", shear_700);
+		shear_700.writeIds(output_dir +"ids.txt", "2010042008");
+		shear_700.writeFeatures(output_dir +"feature.txt", "2010042008");
+		shear_700.writeValues(output_dir + "value.txt", "2010042008");
 		
 		//850¼±Á÷
-		WeatherSystems jet_850 = SVortex.getVortexCentres(wind850, 850, 1.0f);
+		WeatherSystems jet_850 = SJet.getJet(wind850, 850, 1.0f);
 		wss.put("jet_850", jet_850);
+		jet_850.writeIds(output_dir +"ids.txt", "2010042008");
+		jet_850.writeFeatures(output_dir +"feature.txt", "2010042008");
+		jet_850.writeValues(output_dir + "value.txt", "2010042008");
+		
 		
 		//700¼±Á÷
-		WeatherSystems jet_700 = SVortex.getVortexCentres(wind700, 700, 1.0f);
+		WeatherSystems jet_700 = SJet.getJet(wind700, 700, 1.0f);
 		wss.put("jet_700", jet_700);
+		jet_700.writeIds(output_dir +"ids.txt", "2010042008");
+		jet_700.writeFeatures(output_dir +"feature.txt", "2010042008");
+		jet_700.writeValues(output_dir + "value.txt", "2010042008");
+		
 		
 		tFront = new T_Front (wss,typhoons);
 		tSWVortex = new T_SWVortex(wss,typhoons);

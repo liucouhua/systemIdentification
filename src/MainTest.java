@@ -87,7 +87,7 @@ public class MainTest {
 				continue;
 			}
 			String w500_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/500/"+fileName.substring(2,10)+".000";
-			VectorData w500 = new VectorData(w850_path);
+			VectorData w500 = new VectorData(w500_path);
 			if(w500.gridInfo == null) {
 				continue;
 			}
