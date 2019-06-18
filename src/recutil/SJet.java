@@ -4,60 +4,60 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 急流
+ * 鎬ユ祦
  * @author zhang
  *
  */
 public class SJet{
 	
-	//设置急流的速度阈值
+	//璁剧疆鎬ユ祦鐨勯�熷害闃堝��
 	public static float getJetSpeed(int level){
 		if(level >= 850){
-			return 12.0f;  //850hpa以下设置为12.0m/s
+			return 12.0f;  //850hpa浠ヤ笅璁剧疆涓�12.0m/s
 		}
 		else if(level == 700){
-			return 16.0f;  //700hpa设置为16m/s
+			return 16.0f;  //700hpa璁剧疆涓�16m/s
 		}
 		else{
-			return 30.0f;  //700hpa以上设置为30m/s
+			return 30.0f;  //700hpa浠ヤ笂璁剧疆涓�30m/s
 		}
 	}
 	
 	
 	public static WeatherSystems getJet(VectorData wind, int level, float scale) {
 		// TODO Auto-generated method stub
-		WeatherSystems jet = new WeatherSystems("jet",level);  
+		WeatherSystems jet = new WeatherSystems("jet",level);
 		float jetSpeed = getJetSpeed(level);
-		GridData speed = VectorMathod.getMod(wind);  //风速- 急流风速阈值
-		speed.smooth(3);
+		GridData speed = VectorMathod.getMod(wind);  //椋庨��- 鎬ユ祦椋庨�熼槇鍊�
+		//speed.smooth(3);
 		//speed.writeToFile("G:/data/systemIdentify/speed.txt");
 		GridData v = wind.v.copy();
-		GridData marker = speed.add(-jetSpeed).sign01();  // 风速大于阈值的部分将被保留
+		GridData marker = speed.add(-jetSpeed).sign01();  // 椋庨�熷ぇ浜庨槇鍊肩殑閮ㄥ垎灏嗚淇濈暀
 		
-		//700hpa 以下只保留偏南风急流，侧重水汽输送和动力辐合
-		//500hpa及以上急流讨论的是急流出口和入口区对涡度平流的差异导致的动力强迫，因此不区分南北风
+		//700hpa 浠ヤ笅鍙繚鐣欏亸鍗楅鎬ユ祦锛屼晶閲嶆按姹借緭閫佸拰鍔ㄥ姏杈愬悎
+		//500hpa鍙婁互涓婃�ユ祦璁ㄨ鐨勬槸鎬ユ祦鍑哄彛鍜屽叆鍙ｅ尯瀵规丁搴﹀钩娴佺殑宸紓瀵艰嚧鐨勫姩鍔涘己杩紝鍥犳涓嶅尯鍒嗗崡鍖楅
 		if(level>=700) marker =marker.mutiply(v.sign01());  
 		
-		//marker.writeToFile("G:/data/systemIdentify/marker.txt");
-		speed = speed.mutiply(marker);   //保留急流区的风速
+		//marker.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output\\marker.txt");
+		speed = speed.mutiply(marker);   //淇濈暀鎬ユ祦鍖虹殑椋庨��
 		
-		//以垂直急流的方向对风速进行平流
+		//浠ュ瀭鐩存�ユ祦鐨勬柟鍚戝椋庨�熻繘琛屽钩娴�
 		VectorData rw = VectorMathod.rotate(wind,-90); 
 		ArrayList<Line> jetLine = SystemIdentification.HighValueAreaRidge(rw,speed,level);
 		
-		jetLine = LineDealing.cutLines(jetLine, marker);   //用风速和风向条件对急流轴线进行裁剪
-		jetLine = SystemIdentification.getLongLine(scale,jetLine);  //保留大雨scale的急流
-		LineDealing.smoothLines(jetLine, 10);   // 对线条进行平滑
+		jetLine = LineDealing.cutLines(jetLine, marker);   //鐢ㄩ閫熷拰椋庡悜鏉′欢瀵规�ユ祦杞寸嚎杩涜瑁佸壀
+		jetLine = SystemIdentification.getLongLine(scale,jetLine);  //淇濈暀澶ч洦scale鐨勬�ユ祦
+		LineDealing.smoothLines(jetLine, 10);   // 瀵圭嚎鏉¤繘琛屽钩婊�
 		//LineDealing.writeToFile("G:/data/systemIdentify/jetLine.txt",jetLine);
-		GridData ids = SystemIdentification.getCuttedRegion(speed);              //根据速度进行初步分区
-		ids = SystemIdentification.combineStrongConnectingRegion_2d(ids,2.0f);   //将紧邻的分区进行合并
+		GridData ids = SystemIdentification.getCuttedRegion(speed,1);              //鏍规嵁閫熷害杩涜鍒濇鍒嗗尯
+		ids = SystemIdentification.combineStrongConnectingRegion_2d(ids,0.5f);   //灏嗙揣閭荤殑鍒嗗尯杩涜鍚堝苟
 		
-		//ids.writeToFile("G:/data/systemIdentify/ids.txt");
+		//ids.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output\\ids.txt");
 		
-		jet.setAxes(jetLine);  // 将天气系统的轴线属性设置为jetLine
-		jet.setValue(speed);  //将天气系统的value 属性设置为speed
-		jet.setIds(ids);      // 将天气学系统的分区设置为ids
-		jet.reset();         //将分区设置与轴线设置进行匹配
+		jet.setAxes(jetLine);  // 灏嗗ぉ姘旂郴缁熺殑杞寸嚎灞炴�ц缃负jetLine
+		jet.setValue(speed);  //灏嗗ぉ姘旂郴缁熺殑value 灞炴�ц缃负speed
+		jet.setIds(ids);      // 灏嗗ぉ姘斿绯荤粺鐨勫垎鍖鸿缃负ids
+		jet.reset();         //灏嗗垎鍖鸿缃笌杞寸嚎璁剧疆杩涜鍖归厤
 		return jet;
 	}
 

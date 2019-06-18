@@ -15,7 +15,7 @@ public class WeatherSituationType {
 	public HashMap<String, WeatherSystems> wss = new HashMap<String,WeatherSystems>();
 	
 	
-	public WeatherSituationType(GridData hight1000,GridData hight500, VectorData wind850, VectorData wind700,
+	public WeatherSituationType(GridData hight1000,GridData hight850,GridData hight500, VectorData wind850, VectorData wind700,
 			VectorData wind500,ArrayList<TyphoonReport> typhoons) {
 		
 		// 识别出各层的基本天气
@@ -27,9 +27,14 @@ public class WeatherSituationType {
 		WeatherSystems low_surface = SHighLowPressure.getHLCentres(hight1000, 1000, 1.0f);
 		wss.put("low_surface", low_surface);
 		
-		//low_surface.writeIds(output_dir +"ids.txt", "2010042008");
-		//low_surface.writeFeatures(output_dir +"feature.txt", "2010042008");
-		//low_surface.writeValues(output_dir + "value.txt", "2010042008");
+		low_surface.writeIds(output_dir +"ids.txt", "2010042008");
+		low_surface.writeFeatures(output_dir +"feature.txt", "2010042008");
+		low_surface.writeValues(output_dir + "value.txt", "2010042008");
+		
+		//500hpa 高度场低涡
+		hight850.smooth(10);
+		WeatherSystems low_850 = SHighLowPressure.getHLCentres(hight500, 1000, 1.0f);
+		wss.put("low_850", low_850);
 		
 		//500hpa 高度场低涡
 		hight500.smooth(10);
@@ -46,6 +51,13 @@ public class WeatherSituationType {
 		//subHigh_500.writeIds(output_dir +"ids.txt", "2010042008");
 		//subHigh_500.writeFeatures(output_dir +"feature.txt", "2010042008");
 		//subHigh_500.writeValues(output_dir + "value.txt", "2010042008");
+		
+		//1000高空槽
+		WeatherSystems trough_1000 = STrough.getTrough(hight1000, 500, 1.0f);
+		wss.put("trough_1000", trough_1000);
+		//trough_500.writeIds(output_dir +"ids.txt", "2010042008");
+		//trough_500.writeFeatures(output_dir +"feature.txt", "2010042008");
+		//trough_500.writeValues(output_dir + "value.txt", "2010042008");
 		
 		//500高空槽
 		WeatherSystems trough_500 = STrough.getTrough(hight500, 500, 1.0f);
@@ -85,7 +97,7 @@ public class WeatherSituationType {
 		shear_850.writeFeatures(output_dir +"feature.txt", "2010042008");
 		shear_850.writeValues(output_dir + "value.txt", "2010042008");
 		//700切边线
-		WeatherSystems shear_700 = SShear.getShear(wind850, 850, 1.0f);
+		WeatherSystems shear_700 = SShear.getShear(wind700, 700, 1.0f);
 		wss.put("shear_700", shear_700);
 		shear_700.writeIds(output_dir +"ids.txt", "2010042008");
 		shear_700.writeFeatures(output_dir +"feature.txt", "2010042008");

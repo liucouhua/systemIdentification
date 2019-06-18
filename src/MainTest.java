@@ -65,6 +65,12 @@ public class MainTest {
 			if(h1000.gridInfo == null) {
 				continue;
 			}
+			String h850_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/1000/"+fileName.substring(2,10)+".000";
+			GridData h850 = new GridData(h850_path);
+			if(h850.gridInfo == null) {
+				continue;
+			}
+			
 			String h500_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/500/"+fileName.substring(2,10)+".000";
 			GridData h500 = new GridData(h500_path);
 			if(h500.gridInfo == null) {
@@ -94,7 +100,7 @@ public class MainTest {
 			
 			ArrayList<TyphoonReport> tythoons = new ArrayList<TyphoonReport>();
 			
-			WeatherSituationType wst = new WeatherSituationType(h1000,h500,w850,w700,w500,tythoons);
+			WeatherSituationType wst = new WeatherSituationType(h1000,h850,h500,w850,w700,w500,tythoons);
 			System.out.println(fileName);
 			
 		}
