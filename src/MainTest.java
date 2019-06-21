@@ -65,7 +65,7 @@ public class MainTest {
 			if(h1000.gridInfo == null) {
 				continue;
 			}
-			String h850_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/1000/"+fileName.substring(2,10)+".000";
+			String h850_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/850/"+fileName.substring(2,10)+".000";
 			GridData h850 = new GridData(h850_path);
 			if(h850.gridInfo == null) {
 				continue;
