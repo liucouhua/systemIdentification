@@ -341,5 +341,89 @@ public class LineDealing {
 	}
 	
 	
+
+	public static void writeToFile(String fileName,ArrayList<Line> trough) {
+		DecimalFormat datafmt = new DecimalFormat("0.000");
+		DecimalFormat datafmt1 = new DecimalFormat("0.0");
+		try {
+			OutputStreamWriter fos= new OutputStreamWriter(new FileOutputStream(new File(fileName)),"GBK");
+			BufferedWriter br=new BufferedWriter(fos);
+			String str="diamond 14 "+fileName;
+			br.write(str);
+			str="\n2017 08 12 16 0\n";
+			br.write(str);
+			//输出lines
+			br.write("LINES: 0\n");
+			
+			
+			//输出trough
+			int nline = trough.size();
+			br.write("LINES_SYMBOL: "+nline+"\n");
+			for(int i=0;i<trough.size();i++){
+				br.write("0 4 "+trough.get(i).point.size());
+				for(int j=0;j<trough.get(i).point.size();j++){
+					if(j%4==0)br.write("\n");
+					float [] p1=(float[]) trough.get(i).point.get(j);
+					br.write("   "+datafmt.format(p1[0]));
+					br.write("   "+datafmt.format(p1[1]));
+					if(j==0){
+						br.write("         1");
+					}
+					else{
+						br.write("     0.000");
+					}
+				}
+				br.write("\nNoLabel 0\n");
+			}
+
+
+			//输出symbol
+		//	br.write("SYMBOLS: "+0+"\n");
+			
+			br.write("SYMBOLS: "+trough.size()*1+"\n");
+			for(int i=0;i<trough.size();i++){
+				br.write("  48  ");
+				br.write("   "+datafmt.format(trough.get(i).point.get(0)[0]));
+				br.write("   "+datafmt.format(trough.get(i).point.get(0)[1]));
+				br.write("  1");
+				br.write("   " +datafmt1.format(trough.get(i).lenght)+"\n");
+			}
+			
+			br.write("CLOSED_CONTOURS: 0\n");
+			br.write("STATION_SITUATION\n");
+			br.write("WEATHER_REGION:  0\n"); 
+			br.write("FILLAREA:  0\n");
+			br.write("NOTES_SYMBOL: "+0+"\n");
+			
+			br.write("NOTES_SYMBOL: "+trough.size()*1+"\n");
+			for(int i=0;i<trough.size();i++){
+				br.write("48  ");
+				br.write("   "+datafmt.format(trough.get(i).point.get(0)[0]));
+				br.write("   "+datafmt.format(trough.get(i).point.get(0)[1]));
+				br.write("  0 5");
+				br.write("   " +datafmt1.format(trough.get(i).lenght)+" 0 10 simhei.ttf 16 1 255 255 0 0\n");
+			}	
+			
+			br.write("WithProp_LINESYMBOLS: "+trough.size()+"\n");
+			for(int i=0;i<trough.size();i++){
+				br.write("0 4 255 255 255 0 0 0\n"+trough.get(i).point.size());
+				for(int j=0;j<trough.get(i).point.size();j++){
+					if(j%4==0)br.write("\n");
+					float [] p1=(float[]) trough.get(i).point.get(j);
+					br.write("   "+datafmt.format(p1[0]));
+					br.write("   "+datafmt.format(p1[1]));
+					br.write("     0.000");
+				}
+				br.write("\nNoLabel 0\n");
+			}
+			br.flush();
+			fos.close();
+		} catch (Exception e) {
+			// TODO 自动生成的 catch 块
+			System.out.println(fileName+"写入失败");
+			
+		}
+	}
+	
 	
 }

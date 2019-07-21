@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * 亚热带高压
+ * 浜氱儹甯﹂珮鍘�
  */
 public class SSubtropicalHigh{
 	public static WeatherSystems getSubtropicalHigh(GridData height, int level, float scale) {
-		// 一般意义的副高在588线以内
-		GridData ids = SystemIdentification.getCuttedRegion(height.mutiply(height.add(-5880).sign01()));//以高度场分割出高压区  
+		// 涓�鑸剰涔夌殑鍓珮鍦�588绾夸互鍐�
+		GridData ids = SystemIdentification.getCuttedRegion(height.mutiply(height.add(-5880).sign01()));//浠ラ珮搴﹀満鍒嗗壊鍑洪珮鍘嬪尯  
 		Map<Integer, SystemFeature> features = SystemIdentification.getCentreAreaStrenght(height, ids);
         Iterator<Entry<Integer, SystemFeature>> it = features.entrySet().iterator();  
         float lat;
@@ -19,7 +19,7 @@ public class SSubtropicalHigh{
         while(it.hasNext()){  
             Entry<Integer, SystemFeature> entry = it.next();  
             lat = entry.getValue().centrePoint.ptLat;
-            if(lat<10 || lat> 40){ // 副高的中心需在副热带
+            if(lat<10 || lat> 40){ // 鍓珮鐨勪腑蹇冮渶鍦ㄥ壇鐑甫
                  ig = (int) ((entry.getValue().centrePoint.ptLon-height.gridInfo.startlon)/height.gridInfo.dlon);
                  jg = (int) ((lat -height.gridInfo.startlat)/height.gridInfo.dlat);
                  oldId = entry.getKey();
@@ -27,18 +27,18 @@ public class SSubtropicalHigh{
              }
         } 
       //  ids.writeToFile("G:/data/systemIdentify/ids1.txt");
-        ids = SystemIdentification.combineStrongConnectingRegion_2d(ids, 0.1f);  //合并高压区
+        ids = SystemIdentification.combineStrongConnectingRegion_2d(ids, 0.1f);  //鍚堝苟楂樺帇鍖�
       //  ids.writeToFile("G:/data/systemIdentify/ids2.txt");
         
-		VectorData tranDirection=new VectorData(height.gridInfo);  //平流风设置正南风
+		VectorData tranDirection=new VectorData(height.gridInfo);  //骞虫祦椋庤缃鍗楅
 		tranDirection.v.setValue(1.0f); 
 		
 		GridData marker = ids.sign01();
 	//	marker.writeToFile("G:/data/systemIdentify/maker.txt");
 		GridData smheight = height.copy();
-		smheight.smooth(100);
+		smheight.smooth(15);
 	//	smheight.writeToFile("G:/data/systemIdentify/smheight.txt");
-		ArrayList<Line> ridge = SystemIdentification.HighValueAreaRidge(tranDirection,smheight,level);  //获得脊线
+		ArrayList<Line> ridge = SystemIdentification.HighValueAreaRidge(tranDirection,smheight,level);  //鑾峰緱鑴婄嚎
 		ridge = LineDealing.cutLines(ridge, marker);
 		LineDealing.smoothLines(ridge, 30);
 		ridge = SystemIdentification.getLongLine(scale,ridge);
@@ -50,11 +50,11 @@ public class SSubtropicalHigh{
 		LineDealing.smoothLines(ridge, 30);
 		ridge = SystemIdentification.getLongLine(scale,ridge);
 	//	LineDealing.writeToFile("G:/data/systemIdentify/ridge1.txt",ridge);
-		WeatherSystems sh = new  WeatherSystems("SubtropicalHigh",level);//定义副热带高压，并进行赋值
+		WeatherSystems sh = new  WeatherSystems("SubtropicalHigh",level);//瀹氫箟鍓儹甯﹂珮鍘嬶紝骞惰繘琛岃祴鍊�
 		sh.setAxes(ridge);
 		sh.setValue(height);
 		sh.setIds(ids);
-		sh.reset1();//副高压轴线和分区设置的时候，一个高压区可能对应多条轴线
+		sh.reset1();//鍓珮鍘嬭酱绾垮拰鍒嗗尯璁剧疆鐨勬椂鍊欙紝涓�涓珮鍘嬪尯鍙兘瀵瑰簲澶氭潯杞寸嚎
 
 		
 		return sh;

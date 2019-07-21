@@ -53,10 +53,11 @@ public class MainTest {
 	
 	private static void weathersituationtype() {
 		Calendar start = Calendar.getInstance();
-		start.set(2010, 5, 18,20,0);
+		start.set(2010, 3, 3,14,0);
 		Calendar end =Calendar.getInstance();
-		end.set(2010, 5, 20,20,0);
+		end.set(2010, 9, 4,2,0);
 		Calendar time= (Calendar) start.clone();
+		String root_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		while(time.before(end)){
 			String fileName =MyMath.getFileNameFromCalendar(time);
 			time.add(Calendar.HOUR, 6);
@@ -101,6 +102,7 @@ public class MainTest {
 			ArrayList<TyphoonReport> tythoons = new ArrayList<TyphoonReport>();
 			
 			WeatherSituationType wst = new WeatherSituationType(h1000,h850,h500,w850,w700,w500,tythoons);
+			wst.write_to_file(root_dir,time);
 			System.out.println(fileName);
 			
 		}
@@ -162,7 +164,7 @@ public class MainTest {
 	private static void hLCentreTest() {
 		int[] level = new int[]{500};  // 娑擄拷閼割剛娈戞妯圭秵閸樺灏稉鏄忣洣閸忚櫕鏁炴稉顓濈秵鐏烇拷
 		Calendar start = Calendar.getInstance();
-		start.set(2018, 4, 16,8,0);
+		start.set(2018, 3, 16,8,0);
 		Calendar end =Calendar.getInstance();
 		end.set(2018, 4, 16,20,0);
 		for(int i=0; i< level.length;i++){
@@ -174,7 +176,7 @@ public class MainTest {
 				//grid = grid.mutiply(10);
 				grid.smooth(200);
 			//	grid.writeToFile("H:\\task\\link\\xiangji\\201706-systemIdentification\\output\\smooth.003");
-				WeatherSystems hlCentres = SHighLowPressure.getHLCentres(grid,level[i],2.0f);
+				WeatherSystems hlCentres = SHighLowPressure.getHLCentres(grid,level[i],2.0f,4.0f);
 			//	WeatherSystems hlCentres = SHighLowPressure.getHLCentres_quickly(grid,level[i],5.0f);
 				hlCentres.writeIds("H:\\task\\link\\xiangji\\201706-systemIdentification\\output\\ids.003",fileName);
 				hlCentres.writeFeatures("H:\\task\\link\\xiangji\\201706-systemIdentification\\output\\feature.003",fileName);

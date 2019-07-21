@@ -25,7 +25,7 @@ public class VectorData {
 		for(int i=0;i<gridInfo.nlon;i++){
 			for(int j=0;j<gridInfo.nlat;j++){
 				int index = 0;
-				//判断数据是高纬度到低纬度还是其他排列的
+				//鍒ゆ柇鏁版嵁鏄珮绾害鍒颁綆绾害杩樻槸鍏朵粬鎺掑垪鐨�
 				if(model.getLatstep()>0){
 					index = j*gridInfo.nlon+i;
 					
@@ -61,14 +61,14 @@ public class VectorData {
 
 	
 	public VectorData(GridInfo gridInfo0) {
-		// TODO 自动生成的方法存根
+		// TODO 鑷姩鐢熸垚鐨勬柟娉曞瓨鏍�
 		gridInfo=gridInfo0.copy();
 		u=new GridData(gridInfo);
 		v=new GridData(gridInfo);
 	}
 	
 	public VectorData copy() {
-		// TODO 自动生成的方法存根
+		// TODO 鑷姩鐢熸垚鐨勬柟娉曞瓨鏍�
 		VectorData vector=new VectorData(gridInfo);
 		for(int i=0;i<vector.gridInfo.nlon;i++){
 			for(int j=0;j<vector.gridInfo.nlat;j++){
@@ -83,8 +83,8 @@ public class VectorData {
 		File file=new File(fileName);
 		
 
-		// TODO 自动生成的构造函数存根
-		// TODO 自动生成的构造函数存根
+		// TODO 鑷姩鐢熸垚鐨勬瀯閫犲嚱鏁板瓨鏍�
+		// TODO 鑷姩鐢熸垚鐨勬瀯閫犲嚱鏁板瓨鏍�
 		String str;
 		String[] strs;
 		String zz="\\s+";
@@ -152,7 +152,7 @@ public class VectorData {
 			}
 			else if(fileType == 2) {
 				StaData staData = new StaData(fileName);
-				System.out.println(fileName);
+				//System.out.println(fileName);
 				Sta4Data sta_speed = new Sta4Data(9,staData);
 				Sta4Data sta_direction = new Sta4Data(8,staData);
 				GridData speed = new GridData(sta_speed);
@@ -172,17 +172,17 @@ public class VectorData {
 				
 			}
 			else {
-				System.out.println(file.getAbsolutePath()+"并非micaps风场文件");
+				System.out.println(file.getAbsolutePath()+"骞堕潪micaps椋庡満鏂囦欢");
 			}
 			
 		} catch (Exception e) {
-			// TODO 自动生成的 catch 块
+			// TODO 鑷姩鐢熸垚鐨� catch 鍧�
 			System.out.println(e.getMessage());
-			System.out.println(file.getAbsolutePath()+"读取失败");
+			System.out.println(file.getAbsolutePath()+"璇诲彇澶辫触");
 		}
 	}
 	public void writeToFile(String fileName,String time)  {
-		// TODO 自动生成的方法存根
+		// TODO 鑷姩鐢熸垚鐨勬柟娉曞瓨鏍�
 		File file=new File(fileName);
 		File dir = file.getParentFile();
 		if(!dir.exists()){
@@ -230,8 +230,8 @@ public class VectorData {
 			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			// TODO 自动生成的 catch 块
-			System.out.println(file.getAbsolutePath()+"写入失败");
+			// TODO 鑷姩鐢熸垚鐨� catch 鍧�
+			System.out.println(file.getAbsolutePath()+"鍐欏叆澶辫触");
 		}
 	}
 }

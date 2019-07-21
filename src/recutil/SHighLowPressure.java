@@ -1,6 +1,4 @@
 package recutil;
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -9,40 +7,39 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 
-public class SHighLowPressure{
-	
-	public static WeatherSystems getHLCentres(GridData grid, int level, float scale) {
+public class SHighLowPressure {
+	public static WeatherSystems getHLCentres(GridData grid, int level, float scale,float grade_set) {
 	
 		float maxValue = grid.max()+1;
 		float minValue = grid.min()-1;
 		GridData pgrid = grid.add(-minValue);  //  
-		GridData mgrid = grid.mutiply(-1).add(maxValue);  // å°†é«˜åº¦åœºå–ååè°ƒæ•´ä¸ºæ­£
+		GridData mgrid = grid.mutiply(-1).add(maxValue);  
 		//pgrid.writeToFile("G:/data/systemIdentify/pgrid.txt");
 		//mgrid.writeToFile("G:/data/systemIdentify/mgrid.txt");
 
-		GridData pid0 = SystemIdentification.getCuttedRegion(pgrid);  // ä»¥é«˜å‹ä¸­å¿ƒåˆ†åŒº
-		GridData mid0 = SystemIdentification.getCuttedRegion(mgrid);  // ä»¥ä½å‹ä¸­å¿ƒåˆ†åŒº
-		//pid0.writeToFile("G:/data/systemIdentify/pid0.txt");
-		//mid0.writeToFile("G:/data/systemIdentify/mid0.txt");
+		GridData pid0 = SystemIdentification.getCuttedRegion(pgrid);  // ÒÔ¸ßÑ¹ÖĞĞÄ·ÖÇø
+		GridData mid0 = SystemIdentification.getCuttedRegion(mgrid);  // ÒÔµÍÑ¹ÖĞĞÄ·ÖÇø
+		pid0.writeToFile("D:/develop/java/201905-weahter_identification/output/low_surface/pid0.txt");
+
 		
-		GridData pid1 = mergeSmallCentre(pgrid,pid0,scale);  // å°†å°å°ºåº¦é«˜å‹åŒºåˆå¹¶
-		GridData mid1 = mergeSmallCentre(mgrid,mid0,scale);  // å°†å°å°ºåº¦ä½å‹åŒºåˆå¹¶
-		//pid1.writeToFile("G:/data/systemIdentify/pid1.txt");
-		//mid1.writeToFile("G:/data/systemIdentify/mid1.txt");
+		GridData pid1 = mergeSmallCentre(pgrid,pid0,scale,grade_set);  // ½«Ğ¡³ß¶È¸ßÑ¹ÇøºÏ²¢
+
+		GridData mid1 = mergeSmallCentre(mgrid,mid0,scale,grade_set);  // ½«Ğ¡³ß¶ÈµÍÑ¹ÇøºÏ²¢
 		
-		GridData pid2 = getCentreArea(pgrid, pid1);         //è·å¾—é«˜å‹åŒºåŸŸçš„1/3 æ ¸å¿ƒåŒº
-		GridData mid2 = getCentreArea(mgrid, mid1);          // è·å–ä½å‹åŒºçš„1/3æ ¸å¿ƒåŒº
-		//pid2.writeToFile("G:/data/systemIdentify/pid2.txt");
-		//mid2.writeToFile("G:/data/systemIdentify/mid2.txt");
+
+		
+		GridData pid2 = getCentreArea(pgrid, pid1);         //»ñµÃ¸ßÑ¹ÇøÓòµÄ1/3 ºËĞÄÇø
+		GridData mid2 = getCentreArea(mgrid, mid1);          // »ñÈ¡µÍÑ¹ÇøµÄ1/3ºËĞÄÇø
+
 	
-		GridData tId = seprateHighLow(pgrid,pid2,mid2);       // å°†é«˜ä½å‹åŒºé‡åˆéƒ¨åˆ†åˆ†å‰²
-		//tId.writeToFile("G:/data/systemIdentify/tId0.txt");
-		mergeStrongConnecting(tId,3f);                           //å°†ç´§å¯†é è¿‘çš„é«˜ï¼ˆä½ï¼‰å‹åŒºåˆå¹¶
+		GridData tId = seprateHighLow(pgrid,pid2,mid2);       // ½«¸ßµÍÑ¹ÇøÖØºÏ²¿·Ö·Ö¸î
+
+		//mergeStrongConnecting(tId,3f);                           //½«½ôÃÜ¿¿½üµÄ¸ß£¨µÍ£©Ñ¹ÇøºÏ²¢
 		
-		WeatherSystems hl= new WeatherSystems("HLPresure",level);   //å®šä¹‰å¤©æ°”ç³»ç»Ÿ
-		hl.setValue(grid);  										//å¤©æ°”ç³»ç»Ÿçš„valueå±æ€§è®¾ç½®ä¸ºé«˜åº¦åœº
-		hl.setIds(tId);												// å°†å¤©æ°”ç³»ç»Ÿçš„åˆ†åŒºå±æ€§è®¾ç½®ä¸ºids
-		hl.reset();													// æ ¹æ®å¤©æ°”ç³»ç»Ÿçš„åˆ†åŒºidsï¼Œè®¡ç®—æ¯ä¸ªé«˜ä½å‹åŒºçš„å±æ€§ï¼ŒåŒ…æ‹¬ä¸­å¿ƒä½ç½®ï¼Œå–å€¼ç­‰
+		WeatherSystems hl= new WeatherSystems("HLPresure",level);   //¶¨ÒåÌìÆøÏµÍ³
+		hl.setValue(grid);  										//ÌìÆøÏµÍ³µÄvalueÊôĞÔÉèÖÃÎª¸ß¶È³¡
+		hl.setIds(tId);												// ½«ÌìÆøÏµÍ³µÄ·ÖÇøÊôĞÔÉèÖÃÎªids
+		hl.reset();													// ¸ù¾İÌìÆøÏµÍ³µÄ·ÖÇøids£¬¼ÆËãÃ¿¸ö¸ßµÍÑ¹ÇøµÄÊôĞÔ£¬°üÀ¨ÖĞĞÄÎ»ÖÃ£¬È¡ÖµµÈ
 		
 		GridData lonMean = grid.lonmean();
 		float mean,strenght;
@@ -58,25 +55,27 @@ public class SHighLowPressure{
 				mean += lonMean.dat[0][j]; 
 			}
 			mean /=(ejg-sjg);
-			sf.features.put("strenght1", sf.centrePoint.ptVal-mean); //è®¡ç®—å¼ºåº¦æŒ‡æ•°1,ä»¥é«˜ï¼ˆä½ï¼‰ä¸­å¿ƒå€¼å‡åŒçº¬åº¦å¸¦çš„å¹³å‡å€¼ã€‚
+			sf.features.put("strenght1", sf.centrePoint.ptVal-mean); //¼ÆËãÇ¿¶ÈÖ¸Êı1,ÒÔ¸ß£¨µÍ£©ÖĞĞÄÖµ¼õÍ¬Î³¶È´øµÄÆ½¾ùÖµ¡£
 			strenght = sf.centrePoint.ptVal*sf.features.get("area")-sf.features.get("strenght");
-			sf.features.put("strenght",strenght);  // è®¡ç®—å¼ºåº¦æŒ‡æ•°ï¼Œï¼ˆé«˜ï¼ˆä½ï¼‰å‹ä¸­å¿ƒå€¼-å»é«˜ï¼ˆä½ï¼‰å‹åŒºåŸŸå¹³å‡å€¼ï¼‰*é¢ç§¯ã€‚  
-			//sf.centrePoint.ptVal = strenght;    //ä¸ºè¾“å‡ºæŸ¥çœ‹æ–¹ä¾¿ï¼Œå°†ä¸­å¿ƒç‚¹å€¼å–ä¸ºstrength
+			sf.features.put("strenght",strenght);  // ¼ÆËãÇ¿¶ÈÖ¸Êı£¬£¨¸ß£¨µÍ£©Ñ¹ÖĞĞÄÖµ-È¥¸ß£¨µÍ£©Ñ¹ÇøÓòÆ½¾ùÖµ£©*Ãæ»ı¡£  
+			//sf.centrePoint.ptVal = strenght;    //ÎªÊä³ö²é¿´·½±ã£¬½«ÖĞĞÄµãÖµÈ¡Îªstrength
 		}
 		
 		return hl;
 	}
+	
+	
 
-	static GridData mergeSmallCentre(GridData grid0, GridData id, float scale) {
+	static GridData mergeSmallCentre(GridData grid0, GridData id, float scale,float grade_set) {
 		// TODO Auto-generated method stub
-		//é€ä¸ªåˆå¹¶é“¾æ¥åº¦è¶…è¿‡é˜ˆå€¼çš„ç›®æ ‡
+		//Öğ¸öºÏ²¢Á´½Ó¶È³¬¹ıãĞÖµµÄÄ¿±ê
 		GridData ids = id.copy();
 		int oldId,newId,startI,startJ;
 		boolean changged =true;
 		float mindis=9999;
 		int minId=0;
 		while(true){
-			//è·å–ä¸­å¿ƒç‚¹è·ç¦»è¾¹ç¼˜æœ€å¤§å€¼ç‚¹çš„è·ç¦»
+			//»ñÈ¡ÖĞĞÄµã¾àÀë±ßÔµ×î´óÖµµãµÄ¾àÀë
 			mindis = 9999;
 			minId=0;
 			Map<Integer,Map<String,Float>> map = getCentreAndEdgeMax(grid0,ids);		
@@ -87,6 +86,7 @@ public class SHighLowPressure{
 					mindis = map1.get("scale");
 					minId= entry.getKey();
 				}
+				
 			}
 			if(mindis<scale){
 				oldId = minId;
@@ -102,12 +102,68 @@ public class SHighLowPressure{
 				break;
 			}
 		}
+		
+		
+		float min_dvalue = 9999;
+		float dvalue;
+		float value1 = 0,value2 = 0;
+		int grade1,grade2;
+		while(true){
+			//»ñÈ¡ÖĞĞÄµã¾àÀë±ßÔµ×î´óÖµµãµÄ¾àÀë
+			min_dvalue = 9999;
+			minId=0;
+			Map<Integer,Map<String,Float>> map = getCentreAndEdgeMax(grid0,ids);
+			for (Map.Entry<Integer,Map<String,Float>> entry : map.entrySet()){
+				Map<String,Float> map1 = entry.getValue();			
+				value1 = map1.get("edgeMax") ;
+				value2 = map1.get("centreMax");
+				grade1 = (int)(value1/grade_set);
+				grade2 = (int)(value2/grade_set);
+				
+				if(grade1 == grade2) {
+					dvalue = Math.abs(value2 - value1);
+					if(dvalue < min_dvalue){
+						min_dvalue = dvalue;
+						minId= entry.getKey();
+					}
+				}
+			}
+			if(min_dvalue<grade_set){
+				value1 = map.get(minId).get("centreMax");
+				int id2 = map.get(minId).get("edgeId").intValue();
+			
+				value2 = map.get(id2).get("centreMax");
+				
+				if(value1 < value2) {		
+					oldId = minId;
+					newId = id2;
+				}
+				else {
+					oldId = id2;
+					newId = minId;
+				}
+
+				startI= map.get(oldId).get("centreI").intValue();
+				startJ= map.get(oldId).get("centreJ").intValue();
+				
+				if(newId ==0){
+					System.out.println(oldId);
+				}
+				SystemIdentification.resetId(ids,oldId,newId,startI,startJ);
+			}
+			
+			else{
+				break;
+			}
+		}
+		
+		
 		SystemIdentification.smoothIds(ids);
 		return ids;
 	}
 
 	private static void mergeStrongConnecting(GridData tId, float f) {
-		// å°†ç´§å¯†ç›¸é‚»çš„é«˜å‹ï¼ˆä½å‹ï¼‰è¿›è¡Œåˆå¹¶ï¼Œåˆ¤æ–­æ¡ä»¶æ˜¯ä¸¤ä¸ªé«˜å‹ï¼ˆä½å‹ï¼‰ä¹‹é—´çš„è¾¹ç•Œçº¿^2/é¢ç§¯è¾ƒå°è€… > é˜ˆå€¼
+		// ½«½ôÃÜÏàÁÚµÄ¸ßÑ¹£¨µÍÑ¹£©½øĞĞºÏ²¢£¬ÅĞ¶ÏÌõ¼şÊÇÁ½¸ö¸ßÑ¹£¨µÍÑ¹£©Ö®¼äµÄ±ß½çÏß^2/Ãæ»ı½ÏĞ¡Õß > ãĞÖµ
 		//
 		GridData id2 = new GridData(tId.gridInfo);
 		GridData mid2 = new GridData(tId.gridInfo);
@@ -129,7 +185,7 @@ public class SHighLowPressure{
 
 	
 	private static Map<Integer, Map<String, Float>> getCentreAndEdgeMax(GridData grid, GridData ids) {
-		// å½“ä¸€ä¸ªé«˜ï¼ˆä½ï¼‰å‹ä¸­å¿ƒè·ç¦»å¦ä¸€ä¸ªé«˜ï¼ˆä½ï¼‰å‹åŒºæœ€è¿‘è·ç¦»<scale æ—¶ï¼Œéœ€å°†å…¶å¹¶å…¥å…¶å®ƒé«˜ï¼ˆä½ï¼‰å‹åŒºï¼Œä¸ºæ­¤éœ€è®¡ç®—è¯¥é«˜ï¼ˆä½ï¼‰å‹ä¸­å¿ƒè·ç¦»è¾¹ç•Œçš„æœ€è¿‘è·ç¦»
+		// µ±Ò»¸ö¸ß£¨µÍ£©Ñ¹ÖĞĞÄ¾àÀëÁíÒ»¸ö¸ß£¨µÍ£©Ñ¹Çø×î½ü¾àÀë<scale Ê±£¬Ğè½«Æä²¢ÈëÆäËü¸ß£¨µÍ£©Ñ¹Çø£¬Îª´ËĞè¼ÆËã¸Ã¸ß£¨µÍ£©Ñ¹ÖĞĞÄ¾àÀë±ß½çµÄ×î½ü¾àÀë
 		Map<Integer,Map<String,Float>> idPros = new HashMap<Integer,Map<String,Float>>();
 		int id,i1,j1,id1;
 		int nlon = ids.gridInfo.nlon;
@@ -309,13 +365,13 @@ public class SHighLowPressure{
 					GrowPoint gp;
 					int i1,j1;
 			        while((gp=queue.poll())!=null){
-			        	//ä»é˜Ÿåˆ—ä¸­å–å‡ºç¬¬ä¸€ä¸ªï¼Œå¦‚æœå®ƒä¸ä¸ºç©ºåˆ™åˆ¤æ–­å‘¨å›´8ä¸ªç‚¹
+			        	//´Ó¶ÓÁĞÖĞÈ¡³öµÚÒ»¸ö£¬Èç¹ûËü²»Îª¿ÕÔòÅĞ¶ÏÖÜÎ§8¸öµã
 			        	for(int p=-1;p<2;p++){
 			        		i1=MyMath.cycleIndex(false, nlon,gp.i,p);
 			        		for(int q=-1;q<2;q++){
 			        			j1=MyMath.cycleIndex(false, nlat,gp.j,q);
 			        			if((int)id.dat[i1][j1]==pkey&& sed.dat[i1][j1]==0){
-			        				//å¦‚æœå‘¨å›´8ä¸ªç‚¹ä¸­æœ‰æœªè¢«ä¿®æ”¹çš„ç‚¹ï¼Œåˆ™æ”¹æ­£è¿‡æ¥ï¼Œå¹¶å°†å‘¨å›´çš„æ·»åŠ åˆ°é˜Ÿåˆ—ä¸­
+			        				//Èç¹ûÖÜÎ§8¸öµãÖĞÓĞÎ´±»ĞŞ¸ÄµÄµã£¬Ôò¸ÄÕı¹ıÀ´£¬²¢½«ÖÜÎ§µÄÌí¼Óµ½¶ÓÁĞÖĞ
 			        				float[] onePoint1 = new float[3];
 			        				onePoint1[0] = i1;
 			        				onePoint1[1] = j1;
@@ -339,7 +395,7 @@ public class SHighLowPressure{
 							tId.dat[i1][j1] = id.dat[i1][j1];
 						}
 					}
-					//ç»“æŸä¸€ç‰‡èµ‹å€¼
+					//½áÊøÒ»Æ¬¸³Öµ
 				}
 			}
 		}
@@ -370,14 +426,14 @@ public class SHighLowPressure{
 					GrowPoint gp;
 					int i1,j1;
 			        while((gp=queue.poll())!=null){
-			        	//ä»é˜Ÿåˆ—ä¸­å–å‡ºç¬¬ä¸€ä¸ªï¼Œå¦‚æœå®ƒä¸ä¸ºç©ºåˆ™åˆ¤æ–­å‘¨å›´8ä¸ªç‚¹
+			        	//´Ó¶ÓÁĞÖĞÈ¡³öµÚÒ»¸ö£¬Èç¹ûËü²»Îª¿ÕÔòÅĞ¶ÏÖÜÎ§8¸öµã
 			        	pkey = (int) id.dat[gp.i][gp.j];
 			        	for(int p=-1;p<2;p++){
 			        		i1=MyMath.cycleIndex(false, nlon,gp.i,p);
 			        		for(int q=-1;q<2;q++){
 			        			j1=MyMath.cycleIndex(false, nlat,gp.j,q);
 			        			if(((int)id.dat[i1][j1]==pkey||(tId.dat[gp.i][gp.j]>0&&tId.dat[i1][j1]>0))&& sed.dat[i1][j1]==0){
-			        				//å¦‚æœå‘¨å›´8ä¸ªç‚¹ä¸­æœ‰æœªè¢«ä¿®æ”¹çš„ç‚¹ï¼Œåˆ™æ”¹æ­£è¿‡æ¥ï¼Œå¹¶å°†å‘¨å›´çš„æ·»åŠ åˆ°é˜Ÿåˆ—ä¸­
+			        				//Èç¹ûÖÜÎ§8¸öµãÖĞÓĞÎ´±»ĞŞ¸ÄµÄµã£¬Ôò¸ÄÕı¹ıÀ´£¬²¢½«ÖÜÎ§µÄÌí¼Óµ½¶ÓÁĞÖĞ
 			        				float[] onePoint1 = new float[3];
 			        				onePoint1[0] = i1;
 			        				onePoint1[1] = j1;
@@ -401,7 +457,7 @@ public class SHighLowPressure{
 							ccId.dat[i1][j1] = id.dat[i1][j1];
 						}
 					}
-					//ç»“æŸä¸€ç‰‡èµ‹å€¼
+					//½áÊøÒ»Æ¬¸³Öµ
 				}
 			}
 		}
@@ -452,13 +508,13 @@ public class SHighLowPressure{
 					GrowPoint gp;
 					int i1,j1;
 			        while((gp=queue.poll())!=null){
-			        	//ä»é˜Ÿåˆ—ä¸­å–å‡ºç¬¬ä¸€ä¸ªï¼Œå¦‚æœå®ƒä¸ä¸ºç©ºåˆ™åˆ¤æ–­å‘¨å›´26ä¸ªç‚¹
+			        	//´Ó¶ÓÁĞÖĞÈ¡³öµÚÒ»¸ö£¬Èç¹ûËü²»Îª¿ÕÔòÅĞ¶ÏÖÜÎ§26¸öµã
 			        	for(int p=-1;p<2;p++){
 			        		i1=MyMath.cycleIndex(false, nlon,gp.i,p);
 			        		for(int q=-1;q<2;q++){
 			        			j1=MyMath.cycleIndex(false, nlat,gp.j,q);
 			        			if((int)id.dat[i1][j1]==pkey &&(int)mid.dat[i1][j1]==mkey && sed.dat[i1][j1]==0){
-			        				//å¦‚æœå‘¨å›´8ä¸ªç‚¹ä¸­æœ‰æœªè¢«ä¿®æ”¹çš„ç‚¹ï¼Œåˆ™æ”¹æ­£è¿‡æ¥ï¼Œå¹¶å°†å‘¨å›´çš„æ·»åŠ åˆ°é˜Ÿåˆ—ä¸­
+			        				//Èç¹ûÖÜÎ§8¸öµãÖĞÓĞÎ´±»ĞŞ¸ÄµÄµã£¬Ôò¸ÄÕı¹ıÀ´£¬²¢½«ÖÜÎ§µÄÌí¼Óµ½¶ÓÁĞÖĞ
 			        				float[] onePoint1 = new float[3];
 			        				onePoint1[0] = i1;
 			        				onePoint1[1] = j1;
@@ -485,11 +541,11 @@ public class SHighLowPressure{
 							tId.dat[i1][j1] = id.dat[i1][j1];
 						}
 					}
-					//ç»“æŸä¸€ç‰‡èµ‹å€¼
+					//½áÊøÒ»Æ¬¸³Öµ
 				}
 			}
 		}
-		//ç»“æŸæ‰€æœ‰ç‚¹èµ‹å€¼
+		//½áÊøËùÓĞµã¸³Öµ
 	    //smooth id
 		int i1,j1;
 	    for (k=0;k<2;k++){
@@ -526,8 +582,4 @@ public class SHighLowPressure{
 		
 		return tId;
 	}
-	
-	
-
-	
 }

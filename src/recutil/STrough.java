@@ -8,31 +8,55 @@ public class STrough{
 	
 	public static WeatherSystems getTrough(GridData height, int level, float scale) {
 		
-		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
-		
+		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output";
+		String fileName = output_dir + "\\trough_1000\\h1000.txt";
+		height.writeToFile(fileName);
 		GridData curVor=VectorMathod.getCurvatureVor(height);  //璁＄畻鏇茬巼娑″害锛屽洜涓鸿剨鍖哄搴旀鐨勬洸鐜囨丁搴�
 		curVor.smooth(30);
-	//	curVor.writeToFile("G:/data/systemIdentify/curVor.txt");
+		//curVor.writeToFile(output_dir +  "\\trough_1000\\curVor.txt");
 		VectorData wind = VectorMathod.getGeostrophicWind(height);   //璁＄畻鍦拌浆椋�
-	//	wind.writeToFile("G:/data/systemIdentify/wind.txt");
+		//wind.writeToFile(output_dir +  "\\trough_1000\\wind.txt","2018010108");
 		ArrayList<Line> trough = SystemIdentification.HighValueAreaRidge(wind,curVor,level);  //閫氳繃骞虫祦娉曡幏寰楁Ы绾�
-		
-		
-		GridData marker=(curVor.add(-0.5f).sign01());   //鏇茬巼娑″害闃堝��
-		
+		//LineDealing.writeToFile(output_dir + "\\trough_1000\\markLine0.txt", trough);
+		float min_curVor = 0;
+		if(level == 1000) {
+			min_curVor = -0.1f;
+		}
+		else {
+			min_curVor = -0.5f;
+		}
+		GridData marker=(curVor.add(min_curVor).sign01());   //鏇茬巼娑″害闃堝��
 	
 		trough=LineDealing.cutLines(trough, marker); 
-		//LineDealing.writeToFile(output_dir + "markLine1.txt", trough);
+		//LineDealing.writeToFile(output_dir + "\\trough_1000\\markLine1.txt", trough);
 		
 	
 		GridData windSpeed = VectorMathod.getMod(wind);
 	//	windSpeed.writeToFile("G:/data/systemIdentify/windSpeed.txt");
-		marker = marker.mutiply(windSpeed.add(-4.0f));    //椋庨�熼槇鍊�
+		
+		float min_windspeed = 0;
+		if(level == 1000) {
+			min_windspeed = -1f;
+		}
+		else {
+			min_windspeed = -4f;
+		}
+		
+		marker = marker.mutiply(windSpeed.add(min_windspeed));    //椋庨�熼槇鍊�
 		trough=LineDealing.cutLines(trough, marker); 
 	//	LineDealing.writeToFile("G:/data/systemIdentify/markLine2.txt", trough);
 		
 		GridData adve=VectorMathod.getAdvection(wind, curVor);    //璁＄畻骞虫祦鍦�
 		GridData curOfAdve=VectorMathod.getCurvature(adve);
+		
+		float min_curOfAdve = 0;
+		if(level == 1000) {
+			min_curOfAdve = -0.1f;
+		}
+		else {
+			min_curOfAdve = -0.4f;
+		}
+		
 		marker = marker.mutiply(curOfAdve.add(-0.4f).mutiply(-1).sign01());  // 閫嗘椂閽堝集鏇插害闃堝��
 	//	curOfAdve.writeToFile("G:/data/systemIdentify/curOfAdve.txt");
 		trough=LineDealing.cutLines(trough, marker); 

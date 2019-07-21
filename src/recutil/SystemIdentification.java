@@ -295,6 +295,7 @@ public class SystemIdentification {
 
 			float u,v;
 			int i1,j1,i2,j2;
+			GridData grid_isMax = new GridData(grid0.gridInfo);
 			//鍏堝鎵�鏈夋瀬鍊肩偣闄勮繎鏍肩偣璧嬪��
 			for(int i=0;i<nlon;i++){
 				for(int j=0;j<nlat;j++){
@@ -312,7 +313,7 @@ public class SystemIdentification {
 			        	if(!isMax)break;
 			        }
 			        if(!isMax) continue;
-			        
+			        grid_isMax.dat[i][j] = 1;
 			        nobj++;
 			        for(int p=-1;p<2;p++){
 			        	for(int q=-1;q<2;q++){
@@ -321,6 +322,7 @@ public class SystemIdentification {
 			        		if(oriData.dat[i1][j1]>0&&crId.dat[i1][j1]==0){
 			        			crId.dat[i1][j1]=nobj;   //灏嗘瀬鍊间腑蹇冪偣闄勮繎9涓偣閮借祴涓哄悓涓�缂栧彿
 			     		        queue.offer(new GrowPoint(i1,j1));
+			     		        
 			        		}
 			        	}
 			        }
@@ -332,6 +334,9 @@ public class SystemIdentification {
 			int ig,jg;
 			int num=0;
 		    while((gp=queue.poll())!=null){
+		    	if(queue.size() <10) {
+		    		num ++;
+		    	}
 		    	i1=gp.i;
 		    	j1=gp.j;
 		    	//鎶婄浉閭荤偣鍔犲叆闃熷垪
@@ -342,7 +347,10 @@ public class SystemIdentification {
 		        		j2= MyMath.cycleIndex(false, nlat, j1, q);      		
 		        		if(oriData.dat[i2][j2]>0&&crId.dat[i2][j2]==0){
 		        			crId.dat[i2][j2] =-1;
-		     		        queue.offer(new GrowPoint(i2,j2));
+				    		if(num < 1000) {
+				    			queue.offer(new GrowPoint(i2,j2));
+				    		}
+		     		        
 		        		}
 		        	}
 		        }
@@ -369,17 +377,45 @@ public class SystemIdentification {
 					ig = (int)point[0];
 					jg = (int)point[1];
 					//灏嗙煩褰㈡鍥涗釜椤剁偣涓墍鏈夐潪0id鎵惧嚭鏉ワ紝濡傛灉浠栦滑鐩稿悓鍒欏惊鐜粨鏉�
+					if(step > (nlon +nlat)* 0.2) {
+						float max_value = -9999;
+						int max_ip=-1,max_jq=-1;
+						int ip=-1,jq=-1;
+						for(int p=-1;p<2;p++){
+				        	for(int q=-1;q<2;q++){
+				        		ip= MyMath.cycleIndex(false, nlon, ig, p);
+				        		jq= MyMath.cycleIndex(false, nlat, jg, q);
+				        		if(oriData.dat[i1][j1]>max_value){
+				        			max_value = oriData.dat[i1][j1];
+				        			max_ip = ip;
+				        			max_jq = jq;
+				        		}
+				        	}
+				        }
+						if(max_ip <0) {
+							crId.dat[i1][j1] = crId.dat[ig][jg];
+							break;
+						}
+						else {
+							ig = ip;
+							jg = jq;
+							point[0] = ig;
+							point[1] = jg;
+						}
+					}
+					int ig1 = (int)Math.min(crId.gridInfo.nlon-1, ig+1);
+					int jg1 = (int)Math.min(crId.gridInfo.nlat -1, jg+1);
 					
-					float sameId =Math.max(crId.dat[ig][jg], Math.max(crId.dat[ig+1][jg], Math.max(crId.dat[ig][jg+1], crId.dat[ig+1][jg+1])));		
+					float sameId =Math.max(crId.dat[ig][jg], Math.max(crId.dat[ig1][jg], Math.max(crId.dat[ig][jg1], crId.dat[ig1][jg1])));		
 					step++;
 					if(step>nlon+nlat){
 						crId.dat[i1][j1] = sameId;
 						break;
 					}
 					if(crId.dat[ig][jg]>0 &&crId.dat[ig][jg]!=sameId) sameId =0;
-					if(crId.dat[ig+1][jg]>0 &&crId.dat[ig+1][jg]!=sameId) sameId =0;
-					if(crId.dat[ig][jg+1]>0 &&crId.dat[ig][jg+1]!=sameId) sameId =0;
-					if(crId.dat[ig+1][jg+1]>0 &&crId.dat[ig+1][jg+1]!=sameId) sameId =0;
+					if(crId.dat[ig1][jg]>0 &&crId.dat[ig1][jg]!=sameId) sameId =0;
+					if(crId.dat[ig][jg1]>0 &&crId.dat[ig][jg1]!=sameId) sameId =0;
+					if(crId.dat[ig1][jg1]>0 &&crId.dat[ig1][jg1]!=sameId) sameId =0;
 					
 					crId.dat[i1][j1] = sameId;
 					//System.out.println(sameId);
@@ -390,16 +426,168 @@ public class SystemIdentification {
 			return crId;
 		}
 		
+		
+
+		
 		public static GridData getCuttedRegion(GridData grid0){
-			// 鏍规嵁鏍肩偣鍦哄垎甯冿紝灏嗗ぇ浜�0鐨勫尯鍩熸寜姊害涓婂崌娉曞垏鍓叉垚鍚勪釜鏋佸�肩偣鐨勮鐩栧垎鍖�
+			// 根据格点场分布，将大于0的区域按梯度上升法切割成各个极值点的覆盖分区
 			
 			GridData crId = new GridData(grid0.gridInfo);
-			crId.setValue(0.0f);			//閲嶇疆鎴�0锛屽悗闈㈠皢杩斿洖鐩爣缂栧彿
+			crId.setValue(0.0f);			//重置成0，后面将返回目标编号
 			int nlon=crId.gridInfo.nlon;
 			int nlat=crId.gridInfo.nlat;
 			
 			int nobj=0;
-			GridData oriData= grid0.copy();   //鐢ㄤ簬淇濆瓨鍘熷鏁版嵁锛屼絾缃戞牸閲嶈
+			GridData oriData= grid0.copy();   //用于保存原始数据，但网格重设
+			oriData.gridInfo = new GridInfo(nlon,nlat,0.0f,0.0f,1.0f,1.0f);	
+			VectorData grad = getGradsDirection(oriData);
+			class GrowPoint{
+				int i,j;
+				public GrowPoint(int i0,int j0){
+					i=i0;j=j0;
+				}
+			}
+			Queue<GrowPoint> queue=new LinkedList<GrowPoint>(); 
+			GridData grid_isMax = new GridData(grid0.gridInfo);
+			float u,v;
+			int i1,j1,i2,j2;
+			//先对所有极值点附近格点赋值
+			for(int i=0;i<nlon;i++){
+				for(int j=0;j<nlat;j++){
+			        if(crId.dat[i][j]!=0||oriData.dat[i][j]<=0)continue;  
+			        boolean isMax=true;
+			        for(int p=-1;p<2;p++){
+			        	for(int q=-1;q<2;q++){
+			        		i1= MyMath.cycleIndex(false, nlon, i, p);
+			        		j1= MyMath.cycleIndex(false, nlat, j, q);
+			        		if(oriData.dat[i1][j1]>oriData.dat[i][j]){
+			        			isMax = false;
+			        			break;
+			        		}
+			        	}
+			        	if(!isMax)break;
+			        }
+			        if(!isMax) continue;
+			        grid_isMax.dat[i][j] = 1;
+			        nobj++;
+			        for(int p=-1;p<2;p++){
+			        	for(int q=-1;q<2;q++){
+			        		i1= MyMath.cycleIndex(false, nlon, i, p);
+			        		j1= MyMath.cycleIndex(false, nlat, j, q);
+			        		if(oriData.dat[i1][j1]>0&&crId.dat[i1][j1]==0){
+			        			crId.dat[i1][j1]=nobj;   //将极值中心点附近9个点都赋为同一编号
+			     		        queue.offer(new GrowPoint(i1,j1));
+			        		}
+			        	}
+			        }
+				}
+			}
+			GrowPoint gp;
+			float[] point = new float[2];
+			float speed;
+			int ig,jg;
+			int num=0;
+		    while((gp=queue.poll())!=null){
+		    	i1=gp.i;
+		    	j1=gp.j;
+		    	//把相邻点加入队列
+		        for(int p=-1;p<2;p++){
+		        	for(int q=-1;q<2;q++){
+		        		if((p*p+q*q)!=1)continue;
+		        		i2= MyMath.cycleIndex(false, nlon, i1, p);
+		        		j2= MyMath.cycleIndex(false, nlat, j1, q);      		
+		        		if(oriData.dat[i2][j2]>0&&crId.dat[i2][j2]==0){
+		        			crId.dat[i2][j2] =-1;
+		     		        queue.offer(new GrowPoint(i2,j2));
+		        		}
+		        	}
+		        }
+		    	//沿梯度上升至周围4个点都有相同标记停止
+		        point[0] = i1;
+		        point[1] = j1;
+		        int step =0;
+		        while(crId.dat[i1][j1]<=0){
+		        	if(step <=(nlon+nlat)*0.2) {
+			        	u= VectorMathod.getValue(grad.u,point);
+						v= VectorMathod.getValue(grad.v,point);
+						float random = (float) Math.random()*0.2f;
+						if(u<0 && point[0]<1)u=-Math.abs(random*v);
+						if(u>0 && point[0]>nlon-2)u=Math.abs(random*v);
+						if(v<0 && point[1]<1)v=-Math.abs(random*u);
+						if(v>0 && point[1]>nlat-2)v = Math.abs(random*u);
+						if(u==0 && v == 0) u=1;
+						speed = (float) Math.sqrt(u * u + v * v)+0.000001f;
+						point[0] += u / speed;
+						point[1] += v / speed;
+						if(point[0]<=0)point[0]=0.001f;
+						if(point[0]>=nlon-1) point[0] = nlon-1.001f;
+						if(point[1]<=0)point[1]=0.001f;
+						if(point[1]>=nlat-1) point[1] = nlat-1.001f;
+						ig = (int)point[0];
+						jg = (int)point[1];
+					}
+		        	else {
+						float max_value = -9999;
+						int max_ip=-1,max_jq=-1;
+						int ip=-1,jq=-1;
+						ig = (int)point[0];
+						jg = (int)point[1];
+						for(int p=-1;p<2;p++){
+				        	for(int q=-1;q<2;q++){
+				        		ip= MyMath.cycleIndex(false, nlon, ig, p);
+				        		jq= MyMath.cycleIndex(false, nlat, jg, q);
+				        		if(oriData.dat[i1][j1]>max_value){
+				        			max_value = oriData.dat[i1][j1];
+				        			max_ip = ip;
+				        			max_jq = jq;
+				        		}
+				        	}
+				        }
+						if(max_ip <0) {
+							crId.dat[i1][j1] = crId.dat[ig][jg];
+							break;
+						}
+						else {
+							ig = ip;
+							jg = jq;
+							point[0] = ig;
+							point[1] = jg;
+						}
+					}
+					int ig1 = (int)Math.min(crId.gridInfo.nlon-1, ig+1);
+					int jg1 = (int)Math.min(crId.gridInfo.nlat -1, jg+1);
+					
+					
+					float sameId =Math.max(crId.dat[ig][jg], Math.max(crId.dat[ig1][jg], Math.max(crId.dat[ig][jg1], crId.dat[ig1][jg1])));		
+					step++;
+					if(step>nlon+nlat){
+						crId.dat[i1][j1] = sameId;
+						break;
+					}
+					if(crId.dat[ig][jg]>0 &&crId.dat[ig][jg]!=sameId) sameId =0;
+					if(crId.dat[ig1][jg]>0 &&crId.dat[ig1][jg]!=sameId) sameId =0;
+					if(crId.dat[ig][jg1]>0 &&crId.dat[ig][jg1]!=sameId) sameId =0;
+					if(crId.dat[ig1][jg1]>0 &&crId.dat[ig1][jg1]!=sameId) sameId =0;
+					
+					crId.dat[i1][j1] = sameId;
+					
+							
+				}
+		    }
+		    smoothIds(crId);
+			return crId;
+		}
+		
+		public static GridData getCuttedRegion1(GridData grid0){
+			// 根据格点场分布，将大于0的区域按梯度上升法切割成各个极值点的覆盖分区
+			
+			GridData crId = new GridData(grid0.gridInfo);
+			crId.setValue(0.0f);			//重置成0，后面将返回目标编号
+			int nlon=crId.gridInfo.nlon;
+			int nlat=crId.gridInfo.nlat;
+			
+			int nobj=0;
+			GridData oriData= grid0.copy();   //用于保存原始数据，但网格重设
 			oriData.gridInfo = new GridInfo(nlon,nlat,0.0f,0.0f,1.0f,1.0f);	
 			VectorData grad = getGradsDirection(oriData);
 			class GrowPoint{
@@ -412,7 +600,7 @@ public class SystemIdentification {
 
 			float u,v;
 			int i1,j1,i2,j2;
-			//鍏堝鎵�鏈夋瀬鍊肩偣闄勮繎鏍肩偣璧嬪��
+			//先对所有极值点附近格点赋值
 			for(int i=0;i<nlon;i++){
 				for(int j=0;j<nlat;j++){
 			        if(crId.dat[i][j]!=0||oriData.dat[i][j]<=0)continue;  
@@ -436,7 +624,7 @@ public class SystemIdentification {
 			        		i1= MyMath.cycleIndex(false, nlon, i, p);
 			        		j1= MyMath.cycleIndex(false, nlat, j, q);
 			        		if(oriData.dat[i1][j1]>0&&crId.dat[i1][j1]==0){
-			        			crId.dat[i1][j1]=nobj;   //灏嗘瀬鍊间腑蹇冪偣闄勮繎9涓偣閮借祴涓哄悓涓�缂栧彿
+			        			crId.dat[i1][j1]=nobj;   //将极值中心点附近9个点都赋为同一编号
 			     		        queue.offer(new GrowPoint(i1,j1));
 			        		}
 			        	}
@@ -451,7 +639,7 @@ public class SystemIdentification {
 		    while((gp=queue.poll())!=null){
 		    	i1=gp.i;
 		    	j1=gp.j;
-		    	//鎶婄浉閭荤偣鍔犲叆闃熷垪
+		    	//把相邻点加入队列
 		        for(int p=-1;p<2;p++){
 		        	for(int q=-1;q<2;q++){
 		        		if((p*p+q*q)!=1)continue;
@@ -463,7 +651,7 @@ public class SystemIdentification {
 		        		}
 		        	}
 		        }
-		    	//娌挎搴︿笂鍗囪嚦鍛ㄥ洿4涓偣閮芥湁鐩稿悓鏍囪鍋滄
+		    	//沿梯度上升至周围4个点都有相同标记停止
 		        point[0] = i1;
 		        point[1] = j1;
 		        int step =0;
@@ -485,7 +673,7 @@ public class SystemIdentification {
 					if(point[1]>=nlat-1) point[1] = nlat-1.001f;
 					ig = (int)point[0];
 					jg = (int)point[1];
-					//灏嗙煩褰㈡鍥涗釜椤剁偣涓墍鏈夐潪0id鎵惧嚭鏉ワ紝濡傛灉浠栦滑鐩稿悓鍒欏惊鐜粨鏉�
+					//将矩形框四个顶点中所有非0id找出来，如果他们相同则循环结束
 					
 					float sameId =Math.max(crId.dat[ig][jg], Math.max(crId.dat[ig+1][jg], Math.max(crId.dat[ig][jg+1], crId.dat[ig+1][jg+1])));		
 					step++;
@@ -499,13 +687,14 @@ public class SystemIdentification {
 					if(crId.dat[ig+1][jg+1]>0 &&crId.dat[ig+1][jg+1]!=sameId) sameId =0;
 					
 					crId.dat[i1][j1] = sameId;
-					//System.out.println(sameId);
+					
 							
 				}
 		    }
 		    smoothIds(crId);
 			return crId;
 		}
+		
 		public static VectorData getGradsDirection(GridData grid){
 			VectorData ve=new VectorData(grid.gridInfo);
 			int nlat=grid.gridInfo.nlat;
