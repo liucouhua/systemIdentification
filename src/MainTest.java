@@ -59,8 +59,9 @@ public class MainTest {
 		Calendar time= (Calendar) start.clone();
 		String root_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		while(time.before(end)){
-			String fileName =MyMath.getFileNameFromCalendar(time);
+			
 			time.add(Calendar.HOUR, 6);
+			String fileName =MyMath.getFileNameFromCalendar(time);
 			String h1000_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/1000/"+fileName.substring(2,10)+".000";
 			GridData h1000 = new GridData(h1000_path);
 			if(h1000.gridInfo == null) {
