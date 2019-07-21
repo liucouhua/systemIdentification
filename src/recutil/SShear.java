@@ -3,60 +3,60 @@ package recutil;
 import java.util.ArrayList;
 
 /**
- * 切变线
+ * 鍒囧彉绾�
  */
 public class SShear{
 	
 	public static WeatherSystems getShear(VectorData wind, int level, float scale) {
 		// TODO Auto-generated method stub
 		
-		VectorData tranDirection=new VectorData(wind.gridInfo);  // 定义初猜平流风向为西北风
+		VectorData tranDirection=new VectorData(wind.gridInfo);  // 瀹氫箟鍒濈寽骞虫祦椋庡悜涓鸿タ鍖楅
 		tranDirection.v.setValue(-1.0f); 
 		tranDirection.u.setValue(1.0f); 
 		
 		GridData directionShear = null,marker=null;
 		ArrayList<Line>  shearLine=null;
-		for(int k=0;k<2;k++){  //通过两轮迭代获取切变线
-			directionShear = getMeanDirectionShear(tranDirection,wind);              //计算风向切变
+		for(int k=0;k<2;k++){  //閫氳繃涓よ疆杩唬鑾峰彇鍒囧彉绾�
+			directionShear = getMeanDirectionShear(tranDirection,wind);              //璁＄畻椋庡悜鍒囧彉
 			marker = directionShear.add(-0.5f).sign01();
 //			directionShear.writeToFile("G:/data/systemIdentify/directionShear.txt");  
-			shearLine = SystemIdentification.HighValueAreaRidge(tranDirection, directionShear,level);  //根据风向切变量计算初步的切变线位置
-			shearLine = LineDealing.cutLines(shearLine, marker);			// 消空
-			LineDealing.smoothLines(shearLine, 10);							//平滑
-			shearLine = SystemIdentification.getLongLine(scale,shearLine);	//去短
-			tranDirection = SystemIdentification.getDirectionFromLine(shearLine, directionShear.sign01());  //根据切变线重新计算平流风
+			shearLine = SystemIdentification.HighValueAreaRidge(tranDirection, directionShear,level);  //鏍规嵁椋庡悜鍒囧彉閲忚绠楀垵姝ョ殑鍒囧彉绾夸綅缃�
+			shearLine = LineDealing.cutLines(shearLine, marker);			// 娑堢┖
+			LineDealing.smoothLines(shearLine, 10);							//骞虫粦
+			shearLine = SystemIdentification.getLongLine(scale,shearLine);	//鍘荤煭
+			tranDirection = SystemIdentification.getDirectionFromLine(shearLine, directionShear.sign01());  //鏍规嵁鍒囧彉绾块噸鏂拌绠楀钩娴侀
 		}
 		//LineDealing.writeToFile("G:/data/systemIdentify/shearLine1.txt",shearLine);		
 		//tranDirection.writeToFile("G:/data/systemIdentify/tranDirection.txt");
 		
-		GridData VV = getLineVV(tranDirection,wind);                        //计算切变线两侧v风速之差
+		GridData VV = getLineVV(tranDirection,wind);                        //璁＄畻鍒囧彉绾夸袱渚椋庨�熶箣宸�
 		//VV.writeToFile("G:/data/systemIdentify/VV.txt");
-		GridData minShear = getMinLineShear(tranDirection,wind);            // 计算切变线两侧风向切变的较小值
+		GridData minShear = getMinLineShear(tranDirection,wind);            // 璁＄畻鍒囧彉绾夸袱渚ч鍚戝垏鍙樼殑杈冨皬鍊�
 		//minShear.writeToFile("G:/data/systemIdentify/minShear.txt");
 		
-		GridData windShear = getMeanWindShear(tranDirection,wind);           //计算全风速切变
+		GridData windShear = getMeanWindShear(tranDirection,wind);           //璁＄畻鍏ㄩ閫熷垏鍙�
 		//windShear.writeToFile("G:/data/systemIdentify/windShear.txt");
 		
-		GridData lineDiv = getLineDiv(tranDirection,wind);					//计算切变线两侧朝切变线的辐合
+		GridData lineDiv = getLineDiv(tranDirection,wind);					//璁＄畻鍒囧彉绾夸袱渚ф湞鍒囧彉绾跨殑杈愬悎
 		//lineDiv.writeToFile("G:/data/systemIdentify/lineDiv.txt");
 		
-		GridData shearFeature = windShear.add(lineDiv).mutiply(marker);     //切变线的特征量定义为 切变线两侧的切变+辐合
+		GridData shearFeature = windShear.add(lineDiv).mutiply(marker);     //鍒囧彉绾跨殑鐗瑰緛閲忓畾涔変负 鍒囧彉绾夸袱渚х殑鍒囧彉+杈愬悎
 		shearFeature.smooth(3);
 		
-		marker = VV.add(-0.3f).sign01().mutiply(minShear.add(0.3f).sign01()).mutiply(shearFeature.sign01()); //构建消空条件
+		marker = VV.add(-0.3f).sign01().mutiply(minShear.add(0.3f).sign01()).mutiply(shearFeature.sign01()); //鏋勫缓娑堢┖鏉′欢
 		//shearFeature.writeToFile("G:/data/systemIdentify/shearFeature.txt");
 		//marker.writeToFile("G:/data/systemIdentify/marker.txt");
 
-		shearLine = LineDealing.cutLines(shearLine, marker);              //消空
-		shearLine = SystemIdentification.getLongLine(scale,shearLine);		//去短
+		shearLine = LineDealing.cutLines(shearLine, marker);              //娑堢┖
+		shearLine = SystemIdentification.getLongLine(scale,shearLine);		//鍘荤煭
 		
 		//LineDealing.writeToFile("G:/data/systemIdentify/shearLine2.txt",shearLine);	
-		WeatherSystems shear = new WeatherSystems("shear",level);         // 定义切变线系统，设置轴线shearLine、特征量value以及分区ids，并将它们协调
+		WeatherSystems shear = new WeatherSystems("shear",level);         // 瀹氫箟鍒囧彉绾跨郴缁燂紝璁剧疆杞寸嚎shearLine銆佺壒寰侀噺value浠ュ強鍒嗗尯ids锛屽苟灏嗗畠浠崗璋�
 		shear.setAxes(shearLine);
 		shear.setValue(shearFeature);
-//		GridData ids = SystemIdentification.getCuttedRegion(shearFeature);
+		GridData ids = SystemIdentification.getCuttedRegion(shearFeature);
 //		//ids.writeToFile("G:/data/systemIdentify/ids.txt");
-//		shear.setIds(ids);
+		shear.setIds(ids);
 		
 		shear.reset();
 		
@@ -92,9 +92,9 @@ public class SShear{
 		windMarker.setValue(1);
 		
 		
-			GridData adve=VectorMathod.getAdvection(tranDirection, speed);    //计算平流场
+			GridData adve=VectorMathod.getAdvection(tranDirection, speed);    //璁＄畻骞虫祦鍦�
 		//	adve.writeToFile("G:/data/systemIdentify/adve.txt");
-			ArrayList<Line> line0=LineDealing.creatLine(0.0f, adve);  //计算平流场0线，作为脊线或槽线
+			ArrayList<Line> line0=LineDealing.creatLine(0.0f, adve);  //璁＄畻骞虫祦鍦�0绾匡紝浣滀负鑴婄嚎鎴栨Ы绾�
 			ArrayList<Line> cutedLine1=LineDealing.cutLines(line0, marker); 	
 			VectorData adve_grad_direction = VectorMathod.getDirection(VectorMathod.getGrads(adve));
 			GridData adveOfAdve= VectorMathod.dot(tranDirection, adve_grad_direction); //
@@ -107,7 +107,7 @@ public class SShear{
 			
 			marker.writeToFile("G:/data/systemIdentify/marker.txt");
 			
-			marker=(marker.mutiply(adveOfAdve.add(-0.3f).sign01()));					 //生成marker场
+			marker=(marker.mutiply(adveOfAdve.add(-0.3f).sign01()));					 //鐢熸垚marker鍦�
 			ArrayList<Line> cutedLine2=LineDealing.cutLines(line0, marker); 	
 			shearLine = SystemIdentification.getLongLine(scale,cutedLine2);
 			LineDealing.smoothLines(shearLine, 10);
@@ -115,7 +115,7 @@ public class SShear{
 			
 			tranDirection = SystemIdentification.getDirectionFromLine(shearLine, windMarker);
 
-		// 边界裁剪
+		// 杈圭晫瑁佸壀
 		int n = (int) (scale/111/wind.gridInfo.dlat);
 		GridData markerR= new GridData(marker.gridInfo);
 		for(int i= n;i<markerR.gridInfo.nlon-n;i++){
@@ -124,7 +124,7 @@ public class SShear{
 			}
 		}
 		marker = marker.mutiply(markerR);
-		shearLine=LineDealing.cutLines(shearLine, marker);  //裁剪获得脊线
+		shearLine=LineDealing.cutLines(shearLine, marker);  //瑁佸壀鑾峰緱鑴婄嚎
 		
 		tranDirection.writeToFile("G:/data/systemIdentify/tranDirection.txt");
 		
@@ -144,10 +144,10 @@ public class SShear{
 		shearFeature = shearFeature.mutiply(speed.add(-8f).mutiply(-1).sign01());
 		shearFeature.smooth(3);
 		shearFeature.writeToFile("G:/data/systemIdentify/shearFeature.txt");
-		GridData adve1=VectorMathod.getAdvection(tranDirection, shearFeature);    //计算平流场
+		GridData adve1=VectorMathod.getAdvection(tranDirection, shearFeature);    //璁＄畻骞虫祦鍦�
 		adve.writeToFile("G:/data/systemIdentify/adve.txt");
 		
-		line0=LineDealing.creatLine(0.0f, adve1);  //计算平流场0线，作为脊线或槽线
+		line0=LineDealing.creatLine(0.0f, adve1);  //璁＄畻骞虫祦鍦�0绾匡紝浣滀负鑴婄嚎鎴栨Ы绾�
 		
 		marker=shearFeature.add(-0.01f).sign01();
 		
