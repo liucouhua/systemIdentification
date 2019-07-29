@@ -29,21 +29,6 @@ public class MainTest {
 	{
 		
 		
-		//GridData grid = new GridData("G:\\data\\dt24grid\\output\\15010620.000");
-		//grid = grid.mutiply(-1).add(-4);
-		//GridData id = SystemIdentification.getCuttedRegion(grid); 
-		//id.writeToFile("E:/java/coldair/newId.txt");
-		
-		
-		//閹碉拷閺堝琚崹瀣兇缂佺喕鐦戦崚顐ゆ畱濞村鐦粙瀣碍閸忋儱褰�
-		//southAsiaHighTest();
-		//hLCentreTest();
-		//vortexCentreTest();
-		//troughTest();
-		//ridgeTest();
-		//shearLineTest();
-		//jetLineTest();
-		//SubtropicalHighTest();
 
 		
 		weathersituationtype();

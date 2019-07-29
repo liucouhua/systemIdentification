@@ -316,15 +316,16 @@ public class WeatherSituationType {
 	public void write_to_file_tSEVortexShear(String root_dir,Calendar time) {
 		//输出锋面气旋类天气系统
 		String dir_tSEVortexShear = root_dir + "tSEVortexShear\\";
+		
 		File file = new File(dir_tSEVortexShear);
+		file.mkdir(); 
+		file = new File(dir_tSEVortexShear +"\\high_850\\");
 		file.mkdir();
 		file = new File(dir_tSEVortexShear +"\\low_850\\");
 		file.mkdir(); 
 		file = new File(dir_tSEVortexShear+"\\low_700\\");
 		file.mkdir(); 
 		file = new File(dir_tSEVortexShear +"\\shear_850\\");
-		file.mkdir(); 
-		file = new File(dir_tSEVortexShear +"\\high_850\\");
 		file.mkdir(); 
 		file = new File(dir_tSEVortexShear +"\\trough_500\\");
 		file.mkdir(); 
