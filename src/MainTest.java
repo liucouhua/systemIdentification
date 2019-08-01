@@ -38,7 +38,7 @@ public class MainTest {
 	
 	private static void weathersituationtype() {
 		Calendar start = Calendar.getInstance();
-		start.set(2010, 3, 3,14,0);
+		start.set(2010, 3, 21,2,0);
 		Calendar end =Calendar.getInstance();
 		end.set(2010, 9, 4,2,0);
 		Calendar time= (Calendar) start.clone();

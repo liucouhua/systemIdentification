@@ -316,7 +316,7 @@ public class T_SWVortexShear {
 		if(max_lenght_k !=0) fit_num++;
 		//System.out.println("trough_500:"+ trough_500_id+"\n");
 		//System.out.println();
-		System.out.print("high_850"+"\t"+"low_700" +"\t"+ "low_850" + "\t\t" + "shear_850" + "\t" + "jet_850" + "\t\t" + "trough_1000" + "\t" + "trough_500" + "\t" +"subHigh_500" + "\t" +"fit_num"+"\n");
+		System.out.print("high_850"+"\t"+"low_700" +"\t\t"+ "low_850" + "\t\t" + "shear_850" + "\t" + "jet_850" + "\t\t" + "trough_1000" + "\t" + "trough_500" + "\t" +"subHigh_500" + "\t" +"fit_num"+"\n");
 		System.out.print(high_850_id +"\t\t"+low_700_id +"\t\t"+ low_850_id + "\t\t"  + shear_850_id + "\t\t" + jet_850_id + "\t\t" + trough_1000_id + "\t\t" + trough_500_id + "\t\t" +subHigh_500_id +"\t\t" + fit_num+ "\n");
 		
 	}
