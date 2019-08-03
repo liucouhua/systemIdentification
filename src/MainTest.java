@@ -38,9 +38,9 @@ public class MainTest {
 	
 	private static void weathersituationtype() {
 		Calendar start = Calendar.getInstance();
-		start.set(2010, 3, 21,2,0);
+		start.set(2010, 1, 1,2,0);
 		Calendar end =Calendar.getInstance();
-		end.set(2010, 9, 4,2,0);
+		end.set(2013, 1, 1,2,0);
 		Calendar time= (Calendar) start.clone();
 		String root_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		while(time.before(end)){

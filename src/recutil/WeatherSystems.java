@@ -64,33 +64,44 @@ public class WeatherSystems {
 			br.write(str);
 			str="\n2017 08 12 16 0\n";
 			br.write(str);
-			//输出lines
+			//杈撳嚭lines
 			br.write("LINES: 0\n");
 			
 			
-			//输出trough
-			int nline = this.features.size();
-			br.write("LINES_SYMBOL: "+nline+"\n");
+			//杈撳嚭trough
+			int nline0 = this.features.size();
 			Set<Integer> keys = this.features.keySet();
+			int nline1 = 0;
 			for(Integer i : keys){
-				br.write("0 4 "+this.features.get(i).axes.point.size());
-				for(int j=0;j<this.features.get(i).axes.point.size();j++){
-					if(j%4==0)br.write("\n");
-					float [] p1=(float[]) this.features.get(i).axes.point.get(j);
-					br.write("   "+datafmt.format(p1[0]));
-					br.write("   "+datafmt.format(p1[1]));
-					if(j==0){
-						br.write("         1");
-					}
-					else{
-						br.write("     0.000");
-					}
+				if(this.features.get(i).axes.point.size() >0) {
+					nline1 +=1;
 				}
-				br.write("\nNoLabel 0\n");
+			}
+			
+			
+			br.write("LINES_SYMBOL: "+nline1+"\n");
+			keys = this.features.keySet();
+			for(Integer i : keys){
+				if(this.features.get(i).axes.point.size() >0) {
+					br.write("0 4 "+this.features.get(i).axes.point.size());
+					for(int j=0;j<this.features.get(i).axes.point.size();j++){
+						if(j%4==0)br.write("\n");
+						float [] p1=(float[]) this.features.get(i).axes.point.get(j);
+						br.write("   "+datafmt.format(p1[0]));
+						br.write("   "+datafmt.format(p1[1]));
+						if(j==0){
+							br.write("         1");
+						}
+						else{
+							br.write("     0.000");
+						}
+					}
+					br.write("\nNoLabel 0\n");
+				}
 			}
 
 
-			//输出symbol
+			//杈撳嚭symbol
 			br.write("SYMBOLS: "+this.features.size()*1+"\n");
 			for(Integer i : keys){
 				if(this.features.get(i).getFeature("strenght")>0) {
@@ -142,12 +153,14 @@ public class WeatherSystems {
 			br.flush();
 			fos.close();
 		} catch (Exception e) {
-			// TODO 自动生成的 catch 块
-			System.out.println(fileName+"写入失败");
+			// TODO 鑷姩鐢熸垚鐨� catch 鍧�
+			System.out.println(fileName+"鍐欏叆澶辫触");
 			
 		}
 	
 	}
+
+	
 
 	
 	
@@ -169,36 +182,52 @@ public class WeatherSystems {
 			str="\n"+time.substring(0,4)+" "+time.substring(4,6)+" "
 					+time.substring(6,8)+" "+time.substring(8,10)+" 0\n";
 			br.write(str);
-			//输出lines
+			//杈撳嚭lines
 			br.write("LINES: 0\n");
 
 
-			//输出trough
-			int nline = this.features.size();
-			br.write("LINES_SYMBOL: "+nline+"\n");
+
+			//杈撳嚭trough
 			Set<Integer> keys = this.features.keySet();
+			int nline1 = 0;
 			for(Integer i : keys){
-				br.write("0 4 "+this.features.get(i).axes.point.size());
-				for(int j=0;j<this.features.get(i).axes.point.size();j++){
-					if(j%4==0)br.write("\n");
-					float [] p1=(float[]) this.features.get(i).axes.point.get(j);
-
-					br.write("   "+datafmt.format(p1[0]));
-					br.write("   "+datafmt.format(p1[1]));
-
-					br.write("     0.000");
-//					if(j==0){
-//						br.write("         1");
-//					}
-//					else{
-//						br.write("     0.000");
-//					}
+				if(this.features.get(i).axes.point.size() >0) {
+					nline1 +=1;
 				}
-				br.write("\nNoLabel 0\n");
+			}
+			
+
+			
+			
+			
+			//杈撳嚭trough
+			br.write("LINES_SYMBOL: "+nline1+"\n");
+			keys = this.features.keySet();
+			for(Integer i : keys){
+				if(this.features.get(i).axes.point.size() >0) {
+					br.write("0 4 "+this.features.get(i).axes.point.size());
+					for(int j=0;j<this.features.get(i).axes.point.size();j++){
+						if(j%4==0)br.write("\n");
+						float [] p1=(float[]) this.features.get(i).axes.point.get(j);
+	
+						br.write("   "+datafmt.format(p1[0]));
+						br.write("   "+datafmt.format(p1[1]));
+	
+						br.write("     0.000");
+	//					if(j==0){
+	//						br.write("         1");
+	//					}
+	//					else{
+	//						br.write("     0.000");
+	//					}
+					}
+					br.write("\nNoLabel 0\n");
+				}
+				
 			}
 
 
-			//输出symbol
+			//杈撳嚭symbol
 		//	br.write("SYMBOLS: "+0+"\n");
 
 			br.write("SYMBOLS: "+this.features.size()*1+"\n");
@@ -207,7 +236,7 @@ public class WeatherSystems {
 				br.write("  48  ");
 				br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLon));
 				br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLat));
-				br.write("  0");
+				br.write("  1");
 				br.write("   " +datafmt1.format(this.features.get(i).centrePoint.ptVal)+"\n");
 			}
 
@@ -226,131 +255,30 @@ public class WeatherSystems {
 				br.write("   " +datafmt1.format(this.features.get(i).centrePoint.ptVal)+" 0 10 simhei.ttf 16 1 255 255 0 0\n");
 			}
 
-			br.write("WithProp_LINESYMBOLS: "+this.features.size()+"\n");
+			br.write("WithProp_LINESYMBOLS: "+nline1+"\n");
 			for(Integer i : keys){
-				br.write("0 4 255 255 255 0 0 0\n"+this.features.get(i).axes.point.size());
-				for(int j=0;j<this.features.get(i).axes.point.size();j++){
-					if(j%4==0)br.write("\n");
-					float [] p1=(float[]) this.features.get(i).axes.point.get(j);
-					br.write("   "+datafmt.format(p1[0]));
-					br.write("   "+datafmt.format(p1[1]));
-					br.write("     0.000");
+				if(this.features.get(i).axes.point.size() >0) {
+					br.write("0 4 255 255 255 0 0 0\n"+this.features.get(i).axes.point.size());
+					for(int j=0;j<this.features.get(i).axes.point.size();j++){
+						if(j%4==0)br.write("\n");
+						float [] p1=(float[]) this.features.get(i).axes.point.get(j);
+						br.write("   "+datafmt.format(p1[0]));
+						br.write("   "+datafmt.format(p1[1]));
+						br.write("     0.000");
+					}
+					br.write("\nNoLabel 0\n");
 				}
-				br.write("\nNoLabel 0\n");
 			}
 			br.flush();
 			fos.close();
 		} catch (Exception e) {
-			// TODO 自动生成的 catch 块
-			System.out.println(fileName+"写入失败");
+			// TODO 鑷姩鐢熸垚鐨� catch 鍧�
+			System.out.println(fileName+"鍐欏叆澶辫触");
 
 		}
 
 	}
 
-	public Set<Integer> writeFeatures1(String fileName,String time,String type,int level) {
-		Set<Integer> weatherResult=new HashSet<>();//保存已有的天气情况
-		DecimalFormat datafmt = new DecimalFormat("0.000");
-		DecimalFormat datafmt1 = new DecimalFormat("0.0");
-		File file = new File(fileName);
-		File dir = file.getParentFile();
-		if(!dir.exists()){
-			dir.mkdirs();
-		}
-		try {
-			OutputStreamWriter fos= new OutputStreamWriter(new FileOutputStream(new File(fileName)),"GBK");
-			BufferedWriter br=new BufferedWriter(fos);
-			int end=file.getName().length();
-			int start=Math.max(0, end-16);
-			String str="diamond 14 "+file.getName().substring(start, end);
-			br.write(str);
-			str="\n"+time.substring(0,4)+" "+time.substring(4,6)+" "
-					+time.substring(6,8)+" "+time.substring(8,10)+" 0\n";
-			br.write(str);
-			//输出lines
-			br.write("LINES: 0\n");
-
-
-			//输出trough
-			int nline = this.features.size();
-			br.write("LINES_SYMBOL: "+nline+"\n");
-			Set<Integer> keys = this.features.keySet();
-			for(Integer i : keys){
-				br.write("0 4 "+this.features.get(i).axes.point.size());
-				for(int j=0;j<this.features.get(i).axes.point.size();j++){
-					if(j%4==0)br.write("\n");
-					float [] p1=(float[]) this.features.get(i).axes.point.get(j);
-					//新增的部分代码 判断天气系统是否存在
-					weatherResult=getLineJudge(type,level,p1);
-
-					br.write("   "+datafmt.format(p1[0]));
-					br.write("   "+datafmt.format(p1[1]));
-
-					br.write("     0.000");
-//					if(j==0){
-//						br.write("         1");
-//					}
-//					else{
-//						br.write("     0.000");
-//					}
-				}
-				br.write("\nNoLabel 0\n");
-			}
-
-
-			//输出symbol
-			//	br.write("SYMBOLS: "+0+"\n");
-
-			br.write("SYMBOLS: "+this.features.size()*1+"\n");
-
-			for(Integer i : keys){
-				br.write("  48  ");
-				br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLon));
-				br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLat));
-				br.write("  0");
-				br.write("   " +datafmt1.format(this.features.get(i).centrePoint.ptVal)+"\n");
-				//判断高低压是否适合某个天气系统
-				getPointJudge(type,level,this.features.get(i).centrePoint);
-			}
-
-			br.write("CLOSED_CONTOURS: 0\n");
-			br.write("STATION_SITUATION\n");
-			br.write("WEATHER_REGION:  0\n");
-			br.write("FILLAREA:  0\n");
-			br.write("NOTES_SYMBOL: "+0+"\n");
-
-			br.write("NOTES_SYMBOL: "+this.features.size()*1+"\n");
-			for(Integer i : keys){
-				br.write("48  ");
-				br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLon));
-				br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLat));
-				br.write("  0 5");
-				br.write("   " +datafmt1.format(this.features.get(i).centrePoint.ptVal)+" 0 10 simhei.ttf 16 1 255 255 0 0\n");
-			}
-
-			br.write("WithProp_LINESYMBOLS: "+this.features.size()+"\n");
-			for(Integer i : keys){
-				br.write("0 4 255 255 255 0 0 0\n"+this.features.get(i).axes.point.size());
-				for(int j=0;j<this.features.get(i).axes.point.size();j++){
-					if(j%4==0)br.write("\n");
-					float [] p1=(float[]) this.features.get(i).axes.point.get(j);
-					br.write("   "+datafmt.format(p1[0]));
-					br.write("   "+datafmt.format(p1[1]));
-					br.write("     0.000");
-				}
-				br.write("\nNoLabel 0\n");
-			}
-			br.flush();
-			fos.close();
-		} catch (Exception e) {
-			// TODO 自动生成的 catch 块
-			System.out.println(fileName+"写入失败");
-
-		}
-
-		return  weatherResult;
-
-	}
 
 	public void writeIds(String string,String time) {
 		if(this.ids!=null){
@@ -387,18 +315,18 @@ public class WeatherSystems {
 	
 	public void reset(){
 
-		//将网格场id（即系统的范围）和系统的特征feature 进行关联
+		//灏嗙綉鏍煎満id锛堝嵆绯荤粺鐨勮寖鍥达級鍜岀郴缁熺殑鐗瑰緛feature 杩涜鍏宠仈
 		//
 		if(this.value != null && this.ids != null){
 			if(this.features.size()==0){
-				//如果没有已经计算的系统特征属性，就根据ids的分布计算每个系统的最大值中心位置和取值
+				//濡傛灉娌℃湁宸茬粡璁＄畻鐨勭郴缁熺壒寰佸睘鎬э紝灏辨牴鎹甶ds鐨勫垎甯冭绠楁瘡涓郴缁熺殑鏈�澶у�间腑蹇冧綅缃拰鍙栧��
 				this.features = SystemIdentification.getCentreAreaStrenght(value, ids);
 			}
 			else{
 			
 				
 				Map<Integer, SystemFeature> centreFeatures;
-				//用 轴线axes 将 ids 的分区进行串联
+				//鐢� 杞寸嚎axes 灏� ids 鐨勫垎鍖鸿繘琛屼覆鑱�
 				Set<Integer> keys = this.features.keySet();	
 				Iterator<Integer> iter = keys.iterator();
 				Integer onekey = iter.next();
@@ -408,7 +336,7 @@ public class WeatherSystems {
 					for(Integer i : keys){
 						if(i>maxAxesId)maxAxesId = i;
 					}
-					//先将所有分区id设置得比轴线id大
+					//鍏堝皢鎵�鏈夊垎鍖篿d璁剧疆寰楁瘮杞寸嚎id澶�
 					for(int i=0;i<ids.gridInfo.nlon;i++){
 						for(int j=0;j<ids.gridInfo.nlat;j++){
 							if(ids.dat[i][j]>0)ids.dat[i][j]+=maxAxesId;
@@ -421,7 +349,7 @@ public class WeatherSystems {
 					Set <Integer> effectiveAxesKeys = new HashSet <Integer>();
 					
 					for(Integer i:centKeys){
-						//对于每个格点分区id的中心点，找到对应的最近的轴线，将分区id改为轴线id
+						//瀵逛簬姣忎釜鏍肩偣鍒嗗尯id鐨勪腑蹇冪偣锛屾壘鍒板搴旂殑鏈�杩戠殑杞寸嚎锛屽皢鍒嗗尯id鏀逛负杞寸嚎id
 						Point cp = centreFeatures.get(i).centrePoint;
 						mindis2=9999;
 					
@@ -437,7 +365,7 @@ public class WeatherSystems {
 								}
 							}
 						}
-						//判断最近轴线是否经过分区i
+						//鍒ゆ柇鏈�杩戣酱绾挎槸鍚︾粡杩囧垎鍖篿
 						
 						boolean cross = false;
 						for(int k=0;k<this.features.get(minj).axes.point.size();k++){
@@ -461,22 +389,22 @@ public class WeatherSystems {
 						}
 					}
 					
-					//删除无轴线的分区
+					//鍒犻櫎鏃犺酱绾跨殑鍒嗗尯
 					for(int i=0;i<ids.gridInfo.nlon;i++){
 						for(int j=0;j<ids.gridInfo.nlat;j++){
 							if(ids.dat[i][j]>maxAxesId)ids.dat[i][j]=0;
 						}
 					}
 					
-					//删除无对应分区的轴线
+					//鍒犻櫎鏃犲搴斿垎鍖虹殑杞寸嚎
 			       Iterator<Entry<Integer, SystemFeature>> it = this.features.entrySet().iterator();  
 			        while(it.hasNext()){  
 			            Entry<Integer, SystemFeature> entry = it.next();  
 			            if(!effectiveAxesKeys.contains(entry.getKey())){ 
-			                it.remove();//使用迭代器的remove()方法删除元素  
+			                it.remove();//浣跨敤杩唬鍣ㄧ殑remove()鏂规硶鍒犻櫎鍏冪礌  
 			             }
 			        }  
-			     // 删除轴线超出id范围的部分    
+			     // 鍒犻櫎杞寸嚎瓒呭嚭id鑼冨洿鐨勯儴鍒�    
 			       it = this.features.entrySet().iterator();  
 			        while(it.hasNext()){  
 			            Entry<Integer, SystemFeature> entry = it.next();  
@@ -497,9 +425,9 @@ public class WeatherSystems {
 
 			
 				
-				// 根据新的id分布计算中心点属性
+				// 鏍规嵁鏂扮殑id鍒嗗竷璁＄畻涓績鐐瑰睘鎬�
 				centreFeatures = SystemIdentification.getCentreAreaStrenght(value, ids);
-				//如果原来中心点属性不存在，则用新的替换
+				//濡傛灉鍘熸潵涓績鐐瑰睘鎬т笉瀛樺湪锛屽垯鐢ㄦ柊鐨勬浛鎹�
 				Set<Integer> newkeys = centreFeatures.keySet();
 				keys = this.features.keySet();
 				for(Integer i:newkeys){
@@ -527,18 +455,18 @@ public class WeatherSystems {
 
 	public void reset1(){
 
-		//将网格场id（即系统的范围）和系统的特征feature 进行关联
+		//灏嗙綉鏍煎満id锛堝嵆绯荤粺鐨勮寖鍥达級鍜岀郴缁熺殑鐗瑰緛feature 杩涜鍏宠仈
 		//
 		if(this.value != null && this.ids != null){
 			if(this.features.size()==0){
-				//如果没有已经计算的系统特征属性，就根据ids的分布计算每个系统的最大值中心位置和取值
+				//濡傛灉娌℃湁宸茬粡璁＄畻鐨勭郴缁熺壒寰佸睘鎬э紝灏辨牴鎹甶ds鐨勫垎甯冭绠楁瘡涓郴缁熺殑鏈�澶у�间腑蹇冧綅缃拰鍙栧��
 				this.features = SystemIdentification.getCentreAreaStrenght(value, ids);
 			}
 			else{
 			
 				
 				Map<Integer, SystemFeature> centreFeatures;
-				//用 轴线axes 将 ids 的分区进行串联
+				//鐢� 杞寸嚎axes 灏� ids 鐨勫垎鍖鸿繘琛屼覆鑱�
 				Set<Integer> keys = this.features.keySet();	
 				Iterator<Integer> iter = keys.iterator();
 				Integer onekey = iter.next();
@@ -548,7 +476,7 @@ public class WeatherSystems {
 					for(Integer i : keys){
 						if(i>maxAxesId)maxAxesId = i;
 					}
-					//先将所有分区id设置得比轴线id大
+					//鍏堝皢鎵�鏈夊垎鍖篿d璁剧疆寰楁瘮杞寸嚎id澶�
 					for(int i=0;i<ids.gridInfo.nlon;i++){
 						for(int j=0;j<ids.gridInfo.nlat;j++){
 							if(ids.dat[i][j]>0)ids.dat[i][j]+=maxAxesId;
@@ -561,7 +489,7 @@ public class WeatherSystems {
 					Set <Integer> effectiveAxesKeys = new HashSet <Integer>();
 					
 					for(Integer i:centKeys){
-						//对于每个格点分区id的中心点，找到对应的最近的轴线，将分区id改为轴线id
+						//瀵逛簬姣忎釜鏍肩偣鍒嗗尯id鐨勪腑蹇冪偣锛屾壘鍒板搴旂殑鏈�杩戠殑杞寸嚎锛屽皢鍒嗗尯id鏀逛负杞寸嚎id
 						Point cp = centreFeatures.get(i).centrePoint;
 						mindis2=9999;
 					
@@ -577,7 +505,7 @@ public class WeatherSystems {
 								}
 							}
 						}
-						//判断最近轴线是否经过分区i
+						//鍒ゆ柇鏈�杩戣酱绾挎槸鍚︾粡杩囧垎鍖篿
 						
 						boolean cross = false;
 						for(int k=0;k<this.features.get(minj).axes.point.size();k++){
@@ -601,7 +529,7 @@ public class WeatherSystems {
 						}
 					}
 					
-					//删除无轴线的分区
+					//鍒犻櫎鏃犺酱绾跨殑鍒嗗尯
 					for(int i=0;i<ids.gridInfo.nlon;i++){
 						for(int j=0;j<ids.gridInfo.nlat;j++){
 							if(ids.dat[i][j]>maxAxesId)ids.dat[i][j]=0;
@@ -614,9 +542,9 @@ public class WeatherSystems {
 
 			
 				
-				// 根据新的id分布计算中心点属性
+				// 鏍规嵁鏂扮殑id鍒嗗竷璁＄畻涓績鐐瑰睘鎬�
 				centreFeatures = SystemIdentification.getCentreAreaStrenght(value, ids);
-				//如果原来中心点属性不存在，则用新的替换
+				//濡傛灉鍘熸潵涓績鐐瑰睘鎬т笉瀛樺湪锛屽垯鐢ㄦ柊鐨勬浛鎹�
 				Set<Integer> newkeys = centreFeatures.keySet();
 				keys = this.features.keySet();
 				for(Integer i:newkeys){
@@ -652,7 +580,7 @@ public class WeatherSystems {
 	}
 
 	/**
-	 * 判断线段当中是否有符合条件的天气系统
+	 * 鍒ゆ柇绾挎褰撲腑鏄惁鏈夌鍚堟潯浠剁殑澶╂皵绯荤粺
 	 * @param type
 	 * @param level
 	 * @param p1
@@ -674,7 +602,7 @@ public class WeatherSystems {
 			weatherResult.addAll(WeatherJudgeUtil.getCodeByWind850Vortex(p1));
 		}
 
-		//1000 850 500高度场信息
+		//1000 850 500楂樺害鍦轰俊鎭�
 		if("RIDGE".equals(type))
 		{
 			switch (level){
@@ -704,7 +632,7 @@ public class WeatherSystems {
 		return  weatherResult;
 	}
 	/**
-	 * 判断点当中是否有符合条件的天气系统
+	 * 鍒ゆ柇鐐瑰綋涓槸鍚︽湁绗﹀悎鏉′欢鐨勫ぉ姘旂郴缁�
 	 * @param type
 	 * @param level
 	 * @param point
