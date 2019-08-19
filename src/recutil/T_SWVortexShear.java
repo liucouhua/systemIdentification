@@ -18,7 +18,7 @@ public class T_SWVortexShear {
 
 	int fit_num =0;
 	
-	public T_SWVortexShear(HashMap<String, WeatherSystems> wss, ArrayList<TyphoonReport> typhoons) {
+	public T_SWVortexShear(HashMap<String, WeatherSystems> wss, ArrayList<float[]> typhoons) {
 		// TODO Auto-generated constructor stub
 		WeatherSystems low_700  = wss.get("hl_700");
 		WeatherSystems hl_850 = wss.get("hl_850");

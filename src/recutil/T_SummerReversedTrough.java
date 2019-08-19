@@ -17,7 +17,7 @@ public class T_SummerReversedTrough {
 
 	int fit_num =0;
 	
-	public T_SummerReversedTrough(HashMap<String, WeatherSystems> wss, ArrayList<TyphoonReport> typhoons) {
+	public T_SummerReversedTrough(HashMap<String, WeatherSystems> wss, ArrayList<float[]> typhoons) {
 		// TODO Auto-generated constructor stub
 	
 		WeatherSystems hl_850 = wss.get("hl_850");

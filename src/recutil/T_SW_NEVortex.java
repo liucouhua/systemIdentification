@@ -16,7 +16,7 @@ public class T_SW_NEVortex {
 
 	int fit_num =0;
 	
-	public T_SW_NEVortex(HashMap<String, WeatherSystems> wss, ArrayList<TyphoonReport> typhoons) {
+	public T_SW_NEVortex(HashMap<String, WeatherSystems> wss, ArrayList<float[]> typhoons) {
 		// TODO Auto-generated constructor stub
 
 		WeatherSystems hl_850 = wss.get("hl_850");

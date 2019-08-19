@@ -16,7 +16,7 @@ public class T_Front {
 	int shear_850_id = 0;
 	int fit_num =0;
 	
-	public T_Front(HashMap<String, WeatherSystems> wss, ArrayList<TyphoonReport> typhoons) {
+	public T_Front(HashMap<String, WeatherSystems> wss, ArrayList<float[]> typhoons) {
 		// TODO Auto-generated constructor stub
 		WeatherSystems low_surface  = wss.get("low_surface");
 		WeatherSystems low_850 = wss.get("hl_850");

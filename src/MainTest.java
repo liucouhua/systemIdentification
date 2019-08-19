@@ -14,13 +14,14 @@ import recutil.SShear;
 import recutil.SSouthAsiaHigh;
 import recutil.SSubtropicalHigh;
 import recutil.STrough;
+import recutil.STyphoon;
 import recutil.SVortex;
 import recutil.SystemIdentification;
-import recutil.TyphoonReport;
 import recutil.VectorData;
 import recutil.VectorMathod;
 import recutil.WeatherSituationType;
 import recutil.WeatherSystems;
+import recutil.STyphoon;
 public class MainTest {
 	
 	static String test_data_root= "D:/develop/java/";
@@ -38,15 +39,22 @@ public class MainTest {
 	
 	private static void weathersituationtype() {
 		Calendar start = Calendar.getInstance();
-		start.set(2010, 1, 1,2,0);
+		start.set(2010,7, 6,2,0);
 		Calendar end =Calendar.getInstance();
 		end.set(2013, 1, 1,2,0);
 		Calendar time= (Calendar) start.clone();
 		String root_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
+		String root_typhoon = "D:\\develop\\java\\201905-weahter_identification\\output\\typhoon_trace\\babj";
 		while(time.before(end)){
 			
 			time.add(Calendar.HOUR, 6);
+			
+			ArrayList<float[]> typhoon_reports = STyphoon.read_typhoon_position(root_typhoon,time);
 			String fileName =MyMath.getFileNameFromCalendar(time);
+			//System.out.println(fileName);
+			//if(typhoon_reports.size() == 0)continue;
+			//System.out.println(typhoon_reports.size());
+			
 			String h1000_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/1000/"+fileName.substring(2,10)+".000";
 			GridData h1000 = new GridData(h1000_path);
 			if(h1000.gridInfo == null) {
@@ -91,9 +99,8 @@ public class MainTest {
 				continue;
 			}
 			
-			ArrayList<TyphoonReport> tythoons = new ArrayList<TyphoonReport>();
-			
-			WeatherSituationType wst = new WeatherSituationType(h1000,h850,h700,h500,w850,w700,w500,tythoons);
+		
+			WeatherSituationType wst = new WeatherSituationType(h1000,h850,h700,h500,w850,w700,w500,typhoon_reports);
 			wst.write_to_file(root_dir,time);
 			System.out.println(fileName);
 			

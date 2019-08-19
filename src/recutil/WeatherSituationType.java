@@ -22,11 +22,11 @@ public class WeatherSituationType {
 	public T_SWVortexShear tSWVortex;
 	public T_SW_NEVortex tSWNEVotex;
 	public T_SummerReversedTrough tSrTrough;
-	public T_Tythoon tTythoon;
+	public T_Typhoon tTyphoon;
 	public HashMap<String, WeatherSystems> wss = new HashMap<String,WeatherSystems>();
 
 	public WeatherSituationType(GridData hight1000,GridData hight850,GridData hight700,GridData hight500, VectorData wind850, VectorData wind700,
-			VectorData wind500,ArrayList<TyphoonReport> typhoons) {
+			VectorData wind500,ArrayList<float[]> typhoons) {
 		
 		// 识别出各层的基本天气
 		
@@ -165,6 +165,7 @@ public class WeatherSituationType {
 		tSWVortex = new T_SWVortexShear(wss,typhoons);
 		tSWNEVotex = new T_SW_NEVortex(wss,typhoons);
 		tSrTrough = new T_SummerReversedTrough(wss,typhoons);
+		tTyphoon = new T_Typhoon(wss,typhoons);
 		//tTythoon =  new T_Tythoon(wss,typhoons);
 		//System.out.println();
 	}
@@ -174,7 +175,7 @@ public class WeatherSituationType {
 		write_to_file_tSEVortexShear(root_dir,time);
 		write_to_file_tSW_NEVortex(root_dir,time);
 		write_to_file_tSummerReversedTrough(root_dir,time);
-		
+		write_to_file_tTyphoon(root_dir,time);
 	}
 	
 	public void write_to_file_tFront(String root_dir,Calendar time) {
@@ -697,7 +698,102 @@ public class WeatherSituationType {
 		
 	}
 	
-	
+
+	public void write_to_file_tTyphoon(String root_dir,Calendar time) {
+		
+		if(tTyphoon.typhoon_id ==0)return;
+		//输出锋面气旋类天气系统
+		String dir_tTyphoon = root_dir + "tTyphoon\\";
+		
+		File file = new File(dir_tTyphoon);
+		file.mkdir(); 
+		file = new File(dir_tTyphoon +"\\high_850\\");  //
+		file.mkdir(); 
+
+		file = new File(dir_tTyphoon +"\\subHigh_500\\"); //
+		file.mkdir(); 
+		
+		file = new File(dir_tTyphoon+"abstract.txt");
+		
+		String[] strs = null;
+		if(file.exists()) {
+			FileInputStream in;
+			try {
+				in = new FileInputStream(file);
+				byte[] readBytes = new byte[in.available()];
+				String zz="\\n";
+				Pattern pat=Pattern.compile(zz);
+				in.read(readBytes);
+				in.close();
+				String str = new String(readBytes);
+				strs = pat.split(str.trim());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		String filename =MyMath.getFileNameFromCalendar(time);
+		String ids_strs =tTyphoon.typhoon_id + "\t\t"+
+				tTyphoon.high_850_id +"\t\t"+
+				tTyphoon.subHigh_500_id +"\t\t" + 
+				tTyphoon.fit_num;
+		
+		HashMap<String, String> time_ids_map = new HashMap<String,String>();
+		if(strs !=null) {
+			if(strs.length >1) {
+				String zz="\\s+";
+				Pattern pat=Pattern.compile(zz);
+				for(int i=1;i<strs.length;i++) {
+					String[] time_ids = pat.split(strs[i],2);
+					time_ids_map.put(time_ids[0],time_ids[1]);
+				}
+			}			
+		}
+		time_ids_map.put(filename.substring(2,10),ids_strs);
+		
+		Collection<String> keyset=time_ids_map.keySet();		 
+		List<String> list = new ArrayList<String>(keyset);	
+		Collections.sort(list);
+		
+		file = new File(dir_tTyphoon+"abstract.txt");
+		try {
+			OutputStreamWriter fos= new OutputStreamWriter(new FileOutputStream(file),"GBK");
+			
+			BufferedWriter br=new BufferedWriter(fos);
+			String str = "datetime" + "\t" + "typhoon"+"\t\t" + "high_850"+"\t\t"+"subHigh_500" + "\t" +"fit_num"+"\n";
+			br.write(str);
+			for (int i = 0; i < list.size(); i++) {
+				str= list.get(i) + "\t" + time_ids_map.get(list.get(i)) +"\n";
+				br.write(str);
+			}
+			br.flush();
+			fos.close();
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		//输出地面低压和低涡
+		WeatherSystems ws = null;		
+		WeatherSystems ws1 = null;
+		
+		ws = wss.get("hl_850");
+		ws1 = get_relative_weatherSystems(ws,tTyphoon.high_850_id);
+		ws1.writeIds(dir_tTyphoon + "\\high_850\\ids"+ filename, filename);
+		ws1.writeValues(dir_tTyphoon + "\\high_850\\values"+ filename, filename);
+		ws1.writeFeatures(dir_tTyphoon + "\\high_850\\features"+ filename, filename);
+		
+
+		ws = wss.get("subHigh_500");
+		ws1 = get_relative_weatherSystems(ws,tTyphoon.subHigh_500_id);
+		ws1.writeIds(dir_tTyphoon + "\\subHigh_500\\ids"+ filename, filename);
+		ws1.writeValues(dir_tTyphoon + "\\subHigh_500\\values"+ filename, filename);
+		ws1.writeFeatures(dir_tTyphoon + "\\subHigh_500\\features"+ filename, filename);
+		
+	}
 	
 	public WeatherSystems get_relative_weatherSystems(WeatherSystems ws, int id) {
 		WeatherSystems ws1 = new WeatherSystems(ws.type,ws.level);
