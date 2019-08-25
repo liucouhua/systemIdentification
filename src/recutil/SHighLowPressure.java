@@ -60,7 +60,7 @@ public class SHighLowPressure {
 			sf.features.put("strenght",strenght);  // 计算强度指数，（高（低）压中心值-去高（低）压区域平均值）*面积。  
 			//sf.centrePoint.ptVal = strenght;    //为输出查看方便，将中心点值取为strength
 		}
-		
+		hl.type = "高低压";
 		return hl;
 	}
 	

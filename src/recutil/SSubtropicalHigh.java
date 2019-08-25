@@ -51,6 +51,7 @@ public class SSubtropicalHigh{
 		ridge = SystemIdentification.getLongLine(scale,ridge);
 	//	LineDealing.writeToFile("G:/data/systemIdentify/ridge1.txt",ridge);
 		WeatherSystems sh = new  WeatherSystems("SubtropicalHigh",level);//瀹氫箟鍓儹甯﹂珮鍘嬶紝骞惰繘琛岃祴鍊�
+		sh.type= "副高";
 		sh.setAxes(ridge);
 		sh.setValue(height);
 		sh.setIds(ids);

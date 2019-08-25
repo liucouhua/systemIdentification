@@ -52,7 +52,7 @@ public class WeatherSystems {
 	}
 
 	
-	
+	/*
 
 	public void writeFeatures(String fileName) {
 		DecimalFormat datafmt = new DecimalFormat("0.000");
@@ -66,40 +66,46 @@ public class WeatherSystems {
 			br.write(str);
 			//杈撳嚭lines
 			br.write("LINES: 0\n");
-			
+			Set<Integer> keys = this.features.keySet();
 			
 			//杈撳嚭trough
-			int nline0 = this.features.size();
-			Set<Integer> keys = this.features.keySet();
-			int nline1 = 0;
-			for(Integer i : keys){
-				if(this.features.get(i).axes.point.size() >0) {
-					nline1 +=1;
-				}
+			
+			if(this.type.equals("切变线")) {
+				br.write("LINES_SYMBOL: "+0+"\n");
 			}
-			
-			
-			br.write("LINES_SYMBOL: "+nline1+"\n");
-			keys = this.features.keySet();
-			for(Integer i : keys){
-				if(this.features.get(i).axes.point.size() >0) {
-					br.write("0 4 "+this.features.get(i).axes.point.size());
-					for(int j=0;j<this.features.get(i).axes.point.size();j++){
-						if(j%4==0)br.write("\n");
-						float [] p1=(float[]) this.features.get(i).axes.point.get(j);
-						br.write("   "+datafmt.format(p1[0]));
-						br.write("   "+datafmt.format(p1[1]));
-						if(j==0){
-							br.write("         1");
-						}
-						else{
-							br.write("     0.000");
-						}
+			else {
+				int nline0 = this.features.size();
+				//keys = this.features.keySet();
+				int nline1 = 0;
+				for(Integer i : keys){
+					if(this.features.get(i).axes.point.size() >0) {
+						nline1 +=1;
 					}
-					br.write("\nNoLabel 0\n");
+				}
+				
+				
+				
+				br.write("LINES_SYMBOL: "+nline1+"\n");
+				//keys = this.features.keySet();
+				for(Integer i : keys){
+					if(this.features.get(i).axes.point.size() >0) {
+						br.write("0 4 "+this.features.get(i).axes.point.size());
+						for(int j=0;j<this.features.get(i).axes.point.size();j++){
+							if(j%4==0)br.write("\n");
+							float [] p1=(float[]) this.features.get(i).axes.point.get(j);
+							br.write("   "+datafmt.format(p1[0]));
+							br.write("   "+datafmt.format(p1[1]));
+							if(j==0){
+								br.write("         1");
+							}
+							else{
+								br.write("     0.000");
+							}
+						}
+						br.write("\nNoLabel 0\n");
+					}
 				}
 			}
-
 
 			//杈撳嚭symbol
 			br.write("SYMBOLS: "+this.features.size()*1+"\n");
@@ -139,8 +145,17 @@ public class WeatherSystems {
 			//	br.write("   " +datafmt1.format(this.features.get(i).centrePoint.ptVal)+" 0 10 simhei.ttf 16 1 255 255 0 0\n");
 			//}	
 			br.write("WithProp_LINESYMBOLS: "+this.features.size()+"\n");
+			String line_type = "";
+			if (this.type.equals("槽线") || this.type.equals("副高脊线")) {
+				line_type = "0 4 255 192 0 0 0 0\n";
+			}
+			else if(this.type.equals("切变线")) {
+				line_type = "1102 2 255 255 0 0 0 0\n";
+			}
+			
+			
 			for(Integer i : keys){
-				br.write("0 4 255 255 255 0 0 0\n"+this.features.get(i).axes.point.size());
+				br.write(line_type+this.features.get(i).axes.point.size());
 				for(int j=0;j<this.features.get(i).axes.point.size();j++){
 					if(j%4==0)br.write("\n");
 					float [] p1=(float[]) this.features.get(i).axes.point.get(j);
@@ -160,7 +175,7 @@ public class WeatherSystems {
 	
 	}
 
-	
+	*/
 
 	
 	
@@ -177,8 +192,10 @@ public class WeatherSystems {
 			BufferedWriter br=new BufferedWriter(fos);
 			int end=file.getName().length();
 			int start=Math.max(0, end-16);
-			String str="diamond 14 "+file.getName().substring(start, end);
+			String header = time.substring(0,4) + "年" + time.substring(4,6) +"月" + time.substring(6,8) +"日" + time.substring(8,10) + "时" + level + "hPa" + type+"feature";
+			String str="diamond 14 "+header;
 			br.write(str);
+			
 			str="\n"+time.substring(0,4)+" "+time.substring(4,6)+" "
 					+time.substring(6,8)+" "+time.substring(8,10)+" 0\n";
 			br.write(str);
@@ -197,68 +214,141 @@ public class WeatherSystems {
 			}
 			
 
-			
-			
-			
-			//杈撳嚭trough
-			br.write("LINES_SYMBOL: "+nline1+"\n");
-			keys = this.features.keySet();
-			for(Integer i : keys){
-				if(this.features.get(i).axes.point.size() >0) {
-					br.write("0 4 "+this.features.get(i).axes.point.size());
-					for(int j=0;j<this.features.get(i).axes.point.size();j++){
-						if(j%4==0)br.write("\n");
-						float [] p1=(float[]) this.features.get(i).axes.point.get(j);
-	
-						br.write("   "+datafmt.format(p1[0]));
-						br.write("   "+datafmt.format(p1[1]));
-	
-						br.write("     0.000");
-	//					if(j==0){
-	//						br.write("         1");
-	//					}
-	//					else{
-	//						br.write("     0.000");
-	//					}
-					}
-					br.write("\nNoLabel 0\n");
-				}
+			if(this.type.equals("切变线") || this.type.equals("急流")) {
+				br.write("LINES_SYMBOL: "+0+"\n");
+			}
+			else {	
 				
+				//杈撳嚭trough
+				br.write("LINES_SYMBOL: "+nline1+"\n");
+				keys = this.features.keySet();
+				for(Integer i : keys){
+					if(this.features.get(i).axes.point.size() >0) {
+						br.write("0 4 "+this.features.get(i).axes.point.size());
+						for(int j=0;j<this.features.get(i).axes.point.size();j++){
+							if(j%4==0)br.write("\n");
+							float [] p1=(float[]) this.features.get(i).axes.point.get(j);
+		
+							br.write("   "+datafmt.format(p1[0]));
+							br.write("   "+datafmt.format(p1[1]));
+		
+							br.write("     0.000");
+		//					if(j==0){
+		//						br.write("         1");
+		//					}
+		//					else{
+		//						br.write("     0.000");
+		//					}
+						}
+						br.write("\nNoLabel 0\n");
+					}
+					
+				}
 			}
 
-
 			//杈撳嚭symbol
-		//	br.write("SYMBOLS: "+0+"\n");
+	
+			boolean need_output_centrePoint_and_strenth = false;
 
-			br.write("SYMBOLS: "+this.features.size()*1+"\n");
-
-			for(Integer i : keys){
-				br.write("  48  ");
-				br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLon));
-				br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLat));
-				br.write("  1");
-				br.write("   " +datafmt1.format(this.features.get(i).centrePoint.ptVal)+"\n");
+			if(!this.type.equals("槽线") && !this.type.equals("切变线") && !this.type.equals("急流")) {
+				need_output_centrePoint_and_strenth = true;
+			}
+			
+			if(!need_output_centrePoint_and_strenth) {	
+				br.write("SYMBOLS: "+0+"\n");
+			}
+			else {
+				if(this.type.contains("高")) {
+					br.write("SYMBOLS: "+this.features.size()*1+"\n");
+					if(this.level < 1000) {
+						for(Integer i : keys){
+							if(this.features.get(i).getFeature("strenght") >0 ) {
+								br.write("  160  ");
+							}
+							else {
+								br.write("  161  ");
+	
+							}
+							br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLon));
+							br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLat));
+							br.write("  0");
+							br.write("   " +datafmt1.format(this.features.get(i).centrePoint.ptVal)+"\n");
+						}	
+					}
+					else {
+						for(Integer i : keys){
+							if(this.features.get(i).getFeature("strenght") >0 ) {
+								br.write("  60  ");
+							}
+							else {
+								br.write("  61  ");
+	
+							}
+							br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLon));
+							br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLat));
+							br.write("  0");
+							br.write("  0\n");
+						}	
+					}
+				}
+				else {
+					br.write("SYMBOLS: "+this.features.size()*1+"\n");
+					for(Integer i : keys){
+						br.write("  48  ");
+						br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLon));
+						br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLat));
+						br.write("  1");
+						br.write("   " +datafmt1.format(this.features.get(i).centrePoint.ptVal)+"\n");
+					}
+				}
+				
 			}
 
 			br.write("CLOSED_CONTOURS: 0\n");
 			br.write("STATION_SITUATION\n");
 			br.write("WEATHER_REGION:  0\n");
 			br.write("FILLAREA:  0\n");
-			br.write("NOTES_SYMBOL: "+0+"\n");
-
-			br.write("NOTES_SYMBOL: "+this.features.size()*1+"\n");
-			for(Integer i : keys){
-				br.write("48  ");
-				br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLon));
-				br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLat));
-				br.write("  0 5");
-				br.write("   " +datafmt1.format(this.features.get(i).centrePoint.ptVal)+" 0 10 simhei.ttf 16 1 255 255 0 0\n");
+			
+			if(!need_output_centrePoint_and_strenth) {	
+				br.write("NOTES_SYMBOL: "+0+"\n");
 			}
-
+			else {
+				if(this.type.contains("高")) {
+					br.write("NOTES_SYMBOL: "+0+"\n");
+				}
+				else {
+					br.write("NOTES_SYMBOL: "+this.features.size()*1+"\n");
+					for(Integer i : keys){
+						br.write("48  ");
+						br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLon));
+						br.write("   "+datafmt.format(this.features.get(i).centrePoint.ptLat));
+						br.write("  0 5");
+						br.write("   " +datafmt1.format(this.features.get(i).centrePoint.ptVal)+" 0 10 simhei.ttf 16 1 255 255 0 0\n");
+					}
+				}
+			}
+			
 			br.write("WithProp_LINESYMBOLS: "+nline1+"\n");
+			
+			String line_type = "";
+			if (this.type.equals("槽线") || this.type.equals("副高")) {
+				line_type = "0 4 255 192 0 0 0 0\n";
+			}
+			else if(this.type.equals("切变线")) {
+				line_type = "1102 2 255 255 0 0 0 0\n";
+			}
+			else if(this.type.equals("急流")) {
+				if(this.level == 700) {
+					line_type = "1115 2 255 151 72 6 0 0\n";
+				}
+				else if(this.level == 850) {
+					line_type = "1115 2 255 255 0 0 0 0\n";
+				}
+			}
+			
 			for(Integer i : keys){
 				if(this.features.get(i).axes.point.size() >0) {
-					br.write("0 4 255 255 255 0 0 0\n"+this.features.get(i).axes.point.size());
+					br.write(line_type+this.features.get(i).axes.point.size());
 					for(int j=0;j<this.features.get(i).axes.point.size();j++){
 						if(j%4==0)br.write("\n");
 						float [] p1=(float[]) this.features.get(i).axes.point.get(j);
@@ -283,7 +373,8 @@ public class WeatherSystems {
 	public void writeIds(String string,String time) {
 		if(this.ids!=null){
 		// TODO Auto-generated method stub
-			this.ids.writeToFile(string,time);
+			String header = time.substring(0,4) + "年" + time.substring(4,6) +"月" + time.substring(6,8) +"日" + time.substring(8,10) + "时" + level + "hPa" + type+"id";
+			this.ids.writeToFile(string,header);
 		}
 	}
 
@@ -575,7 +666,8 @@ public class WeatherSystems {
 		// TODO Auto-generated method stub
 		if(this.value!=null){
 			// TODO Auto-generated method stub
-				this.value.writeToFile(string,time);
+				String header = time.substring(0,4) + "年" + time.substring(4,6) +"月" + time.substring(6,8) +"日" + time.substring(8,10) + "时" + level + "hPa" + type+"value";
+				this.value.writeToFile(string,header);
 			}
 	}
 

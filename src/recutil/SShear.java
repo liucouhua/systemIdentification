@@ -57,7 +57,7 @@ public class SShear{
 		GridData ids = SystemIdentification.getCuttedRegion(shearFeature);
 //		//ids.writeToFile("G:/data/systemIdentify/ids.txt");
 		shear.setIds(ids);
-		
+		shear.type ="切变线";
 		shear.reset();
 		
 		return shear;

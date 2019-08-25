@@ -1,7 +1,10 @@
 eclipse.preferences.version=1
+encoding//recutil/GridData.java=UTF-8
 encoding//recutil/LineDealing.java=UTF-8
 encoding//recutil/SJet.java=UTF-8
+encoding//recutil/SRidge.java=UTF-8
 encoding//recutil/SShear.java=UTF-8
+encoding//recutil/SSouthAsiaHigh.java=UTF-8
 encoding//recutil/SSubtropicalHigh.java=UTF-8
 encoding//recutil/STrough.java=UTF-8
 encoding//recutil/SVortex.java=UTF-8

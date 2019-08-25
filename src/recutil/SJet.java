@@ -45,7 +45,7 @@ public class SJet{
 		speed.smooth(5);
 		marker = speed.sign01();
 		//浠ュ瀭鐩存�ユ祦鐨勬柟鍚戝椋庨�熻繘琛屽钩娴�
-		VectorData rw = VectorMathod.rotate(wind,-90); 
+		VectorData rw = VectorMathod.rotate(wind,90); 
 		ArrayList<Line> jetLine = SystemIdentification.HighValueAreaRidge(rw,speed,level);
 		//LineDealing.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output\\jet_700\\line.txt",jetLine);
 		jetLine = LineDealing.cutLines(jetLine, marker);   //鐢ㄩ閫熷拰椋庡悜鏉′欢瀵规�ユ祦杞寸嚎杩涜瑁佸壀
@@ -57,7 +57,7 @@ public class SJet{
 		
 		ids = SystemIdentification.combineStrongConnectingRegion_2d(ids,0.8f);   //灏嗙揣閭荤殑鍒嗗尯杩涜鍚堝苟
 		
-		
+		jet.type = "急流";
 		
 		jet.setAxes(jetLine);  // 灏嗗ぉ姘旂郴缁熺殑杞寸嚎灞炴�ц缃负jetLine
 		jet.setValue(speed0);  //灏嗗ぉ姘旂郴缁熺殑value 灞炴�ц缃负speed

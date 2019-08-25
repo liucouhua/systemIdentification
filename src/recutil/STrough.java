@@ -76,7 +76,7 @@ public class STrough{
 		
 		
 		WeatherSystems troughS = new WeatherSystems("trough",level);  //瀹氫箟绯荤粺锛屽苟灏嗗垎鍖轰笌杞寸嚎鐩镐簰鍗忚皟
-	
+		troughS.type = "槽线";
 		troughS.setAxes(trough);
 		troughS.setValue(curVor.mutiply(marker));
 		troughS.setIds(ids);

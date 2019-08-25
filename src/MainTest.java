@@ -41,7 +41,7 @@ public class MainTest {
 		Calendar start = Calendar.getInstance();
 		start.set(2010,7, 6,2,0);
 		Calendar end =Calendar.getInstance();
-		end.set(2013, 1, 1,2,0);
+		end.set(2010, 9, 6,3,0);
 		Calendar time= (Calendar) start.clone();
 		String root_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		String root_typhoon = "D:\\develop\\java\\201905-weahter_identification\\output\\typhoon_trace\\babj";
@@ -99,8 +99,7 @@ public class MainTest {
 				continue;
 			}
 			
-		
-			WeatherSituationType wst = new WeatherSituationType(h1000,h850,h700,h500,w850,w700,w500,typhoon_reports);
+			WeatherSituationType wst = new WeatherSituationType(h1000,h850,h700,h500,w850,w700,w500,typhoon_reports,fileName);
 			wst.write_to_file(root_dir,time);
 			System.out.println(fileName);
 			

@@ -29,6 +29,7 @@ public class SVortex{
 		GridData cycle = getcycle(wind);  
 		GridData ids = SystemIdentification.getCuttedRegion(cycle,1);  //鐎规矮绠熷☉鈩冩缁崵绮洪敍宀冾啎缂冾喚娴夋惔鏂垮綁闁插骏绱濋獮鍫曪拷姘崇箖reset閸戣姤鏆熺拋锛勭暬濞戔剝妫嗛惃鍕厬韫囧啩缍呯純顔兼嫲閻╃鍙х仦鐐达拷锟�
 		WeatherSystems vc = new WeatherSystems("vortex",level);
+		vc.type = "涡旋";
 		vc.setValue(cycle);
 		vc.setIds(ids);
 		vc.reset();

@@ -25,7 +25,7 @@ public class GridData {
 		for(int i=0;i<gridInfo.nlon;i++){
 			for(int j=0;j<gridInfo.nlat;j++){
 				int index = 0;
-				//判断数据是高纬度到低纬度还是其他排列的
+				//鍒ゆ柇鏁版嵁鏄珮绾害鍒颁綆绾害杩樻槸鍏朵粬鎺掑垪鐨�
 				if(model.getLatstep()<0){
 					index = (gridInfo.nlat-j-1)*gridInfo.nlon+i;
 				}else{
@@ -49,7 +49,7 @@ public class GridData {
 	
 	
 	private void InitialData() {
-		// TODO �Զ����ɵķ������
+		// TODO 锟皆讹拷锟斤拷锟缴的凤拷锟斤拷锟斤拷锟�
 		dat=new float[gridInfo.nlon][gridInfo.nlat];
 		for(int i=0;i<gridInfo.nlon;i++){
 			for(int j=0;j<gridInfo.nlat;j++){
@@ -70,7 +70,7 @@ public class GridData {
 	
 
 	public GridData(Sta4Data sta4) throws Exception {
-		// TODO 自动生成的构造函数存根
+		// TODO 鑷姩鐢熸垚鐨勬瀯閫犲嚱鏁板瓨鏍�
 		float slon,slat,elon,elat;
 		float mindlon,mindlat;
 		float dlon=360,dlat=360;
@@ -90,11 +90,11 @@ public class GridData {
 			mindlat=Math.abs(sta4.dat[k][2]-sta4.dat[k-1][2]);
 			if(mindlat!=0&&mindlat<dlat)dlat=mindlat;
 		}
-		if(dlon==0||dlat==0)throw new Exception("站点序列不构成网格");
+		if(dlon==0||dlat==0)throw new Exception("绔欑偣搴忓垪涓嶆瀯鎴愮綉鏍�");
 		for(int k=1;k<sta4.nsta;k++){
 			ddlon=Math.abs(sta4.dat[k][1]-sta4.dat[k-1][1])/dlon;
 			ddlat=Math.abs(sta4.dat[k][2]-sta4.dat[k-1][2])/dlat;
-			if(ddlon!=(int)ddlon||ddlat!=(int)ddlat)throw new Exception("站点序列不构成规则网格");
+			if(ddlon!=(int)ddlon||ddlat!=(int)ddlat)throw new Exception("绔欑偣搴忓垪涓嶆瀯鎴愯鍒欑綉鏍�");
 		}
 		int nlon =(int)((elon-slon)/dlon+1);
 		int nlat=(int)((elat-slat)/dlat+1);
@@ -113,7 +113,7 @@ public class GridData {
 	
 	
 	public void linearIntepolatedFrom(GridData grid) {
-		// TODO �Զ����ɵķ������
+		// TODO 锟皆讹拷锟斤拷锟缴的凤拷锟斤拷锟斤拷锟�
 		float slon=gridInfo.startlon;
 		float slat=gridInfo.startlat;
 		float dlon=gridInfo.dlon;
@@ -219,7 +219,7 @@ public class GridData {
 	}
 
 	public void smooth(int smTimes) {
-		// TODO �Զ����ɵķ������
+		// TODO 锟皆讹拷锟斤拷锟缴的凤拷锟斤拷锟斤拷锟�
 		GridData c=this.copy();
 		for(int k=0;k<smTimes;k++){
 			for(int i=1;i<gridInfo.nlon-1;i++){
@@ -237,7 +237,7 @@ public class GridData {
 		}
 	}
 	public void smooth(float maxRoughness) {
-		// TODO �Զ����ɵķ������
+		// TODO 锟皆讹拷锟斤拷锟缴的凤拷锟斤拷锟斤拷锟�
 		boolean hasChange=true;
 		int smtime=0;
 		while(hasChange&&smtime<200){
@@ -286,7 +286,7 @@ public class GridData {
 	}
 	
 	public GridData mutiply(GridData region) {
-		// TODO �Զ����ɵķ������
+		// TODO 锟皆讹拷锟斤拷锟缴的凤拷锟斤拷锟斤拷锟�
 		GridData g=new GridData(gridInfo);
 		g.linearIntepolatedFrom(region);
 		for(int i=0;i<g.gridInfo.nlon;i++){
@@ -304,14 +304,14 @@ public class GridData {
 	}
 	
 	public GridData add(float addValue) {
-		// TODO �Զ����ɵķ������
+		// TODO 锟皆讹拷锟斤拷锟缴的凤拷锟斤拷锟斤拷锟�
 		GridData grida=new GridData(gridInfo);
 		grida.setValue(addValue);
 		return this.add(grida);		
 	}
 	
 	public GridData add(GridData addGrid) {
-		// TODO �Զ����ɵķ������
+		// TODO 锟皆讹拷锟斤拷锟缴的凤拷锟斤拷锟斤拷锟�
 		GridData g=new GridData(gridInfo);
 		g.linearIntepolatedFrom(addGrid);
 		for(int i=0;i<g.gridInfo.nlon;i++){
@@ -325,7 +325,7 @@ public class GridData {
 	
 	public GridData sub(GridData subGrid)
 	{
-		// TODO �Զ����ɵķ������
+		// TODO 锟皆讹拷锟斤拷锟缴的凤拷锟斤拷锟斤拷锟�
 		GridData g=new GridData(gridInfo);
 		g.linearIntepolatedFrom(subGrid);
 		for(int i=0;i<g.gridInfo.nlon;i++){
@@ -376,7 +376,7 @@ public class GridData {
 		return output;	
 	}
 	
-	//γȦƽ��
+	//纬圈平锟斤拷
 	public GridData lonmean()
 	{
 		GridData output=new GridData(this.gridInfo);
@@ -396,7 +396,7 @@ public class GridData {
 	    return output;
 	}
 	
-	//γ�ȴ�ƽ��
+	//纬锟饺达拷平锟斤拷
 	public GridData lonmean(float bandWidth)
 	{
 		GridData output=new GridData(gridInfo);
@@ -424,14 +424,14 @@ public class GridData {
 	
 	
 	public GridData(String fileName){
-		// TODO �Զ����ɵĹ��캯�����
+		// TODO 锟皆讹拷锟斤拷锟缴的癸拷锟届函锟斤拷锟斤拷锟�
 		File file=new File(fileName);
 		String str;
 		String[] strs;
 		String zz="\\s+";
 		Pattern pat=Pattern.compile(zz);
 		try {
-			if(!file.exists())throw new Exception("�ļ�"+file.getAbsolutePath()+"������");
+			if(!file.exists())throw new Exception("锟侥硷拷"+file.getAbsolutePath()+"锟斤拷锟斤拷锟斤拷");
 			FileInputStream in = new FileInputStream(file);
 			byte[] readBytes = new byte[in.available()];
 			in.read(readBytes);
@@ -456,14 +456,14 @@ public class GridData {
 			for (int j=0;j<gridInfo.nlat;j++){
 				for(int i=0;i<gridInfo.nlon;i++){
 					k=k+1;
-					if(k>=strs.length)throw new Exception("�ļ���С���ļ�ͷ��������");
+					if(k>=strs.length)throw new Exception("锟侥硷拷锟斤拷小锟斤拷锟侥硷拷头锟斤拷锟斤拷锟斤拷锟斤拷");
 					dat[i][j]=Float.parseFloat(strs[k]);
 				}
 			}
 			reSetXY();
 		} catch (Exception e) {
-			// TODO �Զ����ɵ� catch ��
-			System.out.println(file.getAbsolutePath()+"�ļ���ʽ�쳣");
+			// TODO 锟皆讹拷锟斤拷锟缴碉拷 catch 锟斤拷
+			System.out.println(file.getAbsolutePath()+"锟侥硷拷锟斤拷式锟届常");
 		    
 		} 
 		
@@ -471,7 +471,7 @@ public class GridData {
 	}
 
 	public GridData sign01() {
-		// TODO 自动生成的方法存根
+		// TODO 鑷姩鐢熸垚鐨勬柟娉曞瓨鏍�
 		GridData g=new GridData(gridInfo);
 		for(int i=0;i<gridInfo.nlon;i++){
 			for(int j=0;j<gridInfo.nlat;j++){
@@ -487,7 +487,7 @@ public class GridData {
 	}
 	
 	
-	public void writeToFile(String fileName,String time) {
+	public void writeToFile(String fileName,String header) {
 		
 		File file=new File(fileName);
 		
@@ -534,8 +534,7 @@ public class GridData {
 	
 				int end=file.getName().length();
 				int start=Math.max(0, end-16);
-				str="diamond 4 "+file.getName().substring(start, end)+"\n"+time.substring(0,4)+" "+time.substring(4,6)+" "
-				+time.substring(6,8)+" "+time.substring(8,10)+" 0 9999 "
+				str="diamond 4 "+ header+"\n2000 01 01 01 0 9999 "
 						+gridInfo.dlon+" "+gridInfo.dlat+" "+gridInfo.startlon+" "+gridInfo.endlon+" "
 						+gridInfo.startlat+" "+gridInfo.endlat+" "+gridInfo.nlon+" "+gridInfo.nlat+" "
 						+inte+" "+vmin+" "+vmax+" 1 0";
@@ -557,7 +556,9 @@ public class GridData {
 	}
 	
 	public void writeToFile(String fileName) {
-			String time_str = "2018010108";
-			writeToFile(fileName,time_str);
+			int end=fileName.length();
+			int start=Math.max(0, end-32);
+			String header =  fileName.substring(start, end);
+			writeToFile(fileName,header);
 	}
 }

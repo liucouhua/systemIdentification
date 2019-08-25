@@ -26,7 +26,7 @@ public class WeatherSituationType {
 	public HashMap<String, WeatherSystems> wss = new HashMap<String,WeatherSystems>();
 
 	public WeatherSituationType(GridData hight1000,GridData hight850,GridData hight700,GridData hight500, VectorData wind850, VectorData wind700,
-			VectorData wind500,ArrayList<float[]> typhoons) {
+			VectorData wind500,ArrayList<float[]> typhoons,String time) {
 		
 		// 识别出各层的基本天气
 		
@@ -38,18 +38,18 @@ public class WeatherSituationType {
 		WeatherSystems low_surface = SHighLowPressure.getHLCentres(hight1000, 1000, 1.0f,2.5f);
 		wss.put("low_surface", low_surface);
 		
-		low_surface.writeIds(output_dir +"low_surface\\ids.txt", "2010042008");
-		low_surface.writeFeatures(output_dir +"low_surface\\feature.txt", "2010042008");
-		low_surface.writeValues(output_dir + "low_surface\\value.txt", "2010042008");
+		low_surface.writeIds(output_dir +"low_surface\\ids.txt", time);
+		low_surface.writeFeatures(output_dir +"low_surface\\feature.txt", time);
+		low_surface.writeValues(output_dir + "low_surface\\value.txt", time);
 		
 		//850hpa 高低压中心
 		hight850.smooth(3);
 		hight850.writeToFile(output_dir+"low_850\\h850.txt");
 		WeatherSystems hl_850 = SHighLowPressure.getHLCentres(hight850, 850, 1.0f,4);
 		wss.put("hl_850", hl_850);
-		hl_850.writeIds(output_dir +"low_850\\ids.txt", "2010042008");
-		hl_850.writeFeatures(output_dir +"low_850\\feature.txt", "2010042008");
-		hl_850.writeValues(output_dir + "low_850\\value.txt", "2010042008");
+		hl_850.writeIds(output_dir +"low_850\\ids.txt", time);
+		hl_850.writeFeatures(output_dir +"low_850\\feature.txt", time);
+		hl_850.writeValues(output_dir + "low_850\\value.txt",time);
 		
 		
 		//700pa 高低压中心
@@ -57,108 +57,108 @@ public class WeatherSituationType {
 		hight850.writeToFile(output_dir+"low_850\\h850.txt");
 		WeatherSystems hl_700 = SHighLowPressure.getHLCentres(hight700, 700, 1.0f,4);
 		wss.put("hl_700", hl_700);
-		hl_850.writeIds(output_dir +"hl_700\\ids.txt", "2010042008");
-		hl_850.writeFeatures(output_dir +"hl_700\\feature.txt", "2010042008");
-		hl_850.writeValues(output_dir + "hl_700\\value.txt", "2010042008");
+		hl_850.writeIds(output_dir +"hl_700\\ids.txt", time);
+		hl_850.writeFeatures(output_dir +"hl_700\\feature.txt", time);
+		hl_850.writeValues(output_dir + "hl_700\\value.txt", time);
 		
 		//500hpa 高度场低涡
 		hight500.smooth(3);
 		hight500.writeToFile(output_dir+"low_500\\h500.txt");
 		WeatherSystems low_500 = SHighLowPressure.getHLCentres(hight500, 1000, 1.0f,4f);
 		wss.put("low_500", low_500);
-		low_500.writeIds(output_dir +"low_500\\ids.txt", "2010042008");
-		low_500.writeFeatures(output_dir +"low_500\\feature.txt", "2010042008");
-		low_500.writeValues(output_dir + "low_500\\value.txt", "2010042008");
+		low_500.writeIds(output_dir +"low_500\\ids.txt", time);
+		low_500.writeFeatures(output_dir +"low_500\\feature.txt", time);
+		low_500.writeValues(output_dir + "low_500\\value.txt", time);
 		
 		
 		//500副高
 		hight500.writeToFile(output_dir+"subHigh_500\\h500.txt");
 		WeatherSystems subHigh_500 = SSubtropicalHigh.getSubtropicalHigh(hight500, 500, 1.0f);
 		wss.put("subHigh_500", subHigh_500);
-		subHigh_500.writeIds(output_dir +"subHigh_500\\ids.txt", "2010042008");
-		subHigh_500.writeFeatures(output_dir +"subHigh_500\\feature.txt", "2010042008");
-		subHigh_500.writeValues(output_dir + "subHigh_500\\value.txt", "2010042008");
+		subHigh_500.writeIds(output_dir +"subHigh_500\\ids.txt", time);
+		subHigh_500.writeFeatures(output_dir +"subHigh_500\\feature.txt", time);
+		subHigh_500.writeValues(output_dir + "subHigh_500\\value.txt", time);
 	
 		//1000槽线识别（主要关注倒槽）
 		hight1000.writeToFile(output_dir+"trough_1000\\h1000.txt");
 		WeatherSystems trough_1000 = STrough.getTrough(hight1000, 1000, 1.0f);
 		wss.put("trough_1000", trough_1000);
-		trough_1000.writeIds(output_dir +"trough_1000\\ids.txt", "2010042008");
-		trough_1000.writeFeatures(output_dir +"trough_1000\\feature.txt", "2010042008");
-		trough_1000.writeValues(output_dir + "trough_1000\\value.txt", "2010042008");
+		trough_1000.writeIds(output_dir +"trough_1000\\ids.txt", time);
+		trough_1000.writeFeatures(output_dir +"trough_1000\\feature.txt", time);
+		trough_1000.writeValues(output_dir + "trough_1000\\value.txt", time);
 		
 		//500高空槽
 		hight500.writeToFile(output_dir+"trough_500\\h500.txt");
 		WeatherSystems trough_500 = STrough.getTrough(hight500, 500, 1.0f);
 		wss.put("trough_500", trough_500);
-		trough_500.writeIds(output_dir +"trough_500\\ids.txt", "2010042008");
-		trough_500.writeFeatures(output_dir +"trough_500\\feature.txt", "2010042008");
-		trough_500.writeValues(output_dir + "trough_500\\value.txt", "2010042008");
+		trough_500.writeIds(output_dir +"trough_500\\ids.txt", time);
+		trough_500.writeFeatures(output_dir +"trough_500\\feature.txt", time);
+		trough_500.writeValues(output_dir + "trough_500\\value.txt", time);
 		
 		
 		//500hpa 涡旋
-		wind500.writeToFile(output_dir +"vortex_500\\wind.txt", "2010042008");
+		wind500.writeToFile(output_dir +"vortex_500\\wind.txt", time);
 		WeatherSystems vortex_500 = SVortex.getVortexCentres(wind500, 500, 1.0f);
 		wss.put("vortex_500",vortex_500);
-		vortex_500.writeIds(output_dir +"vortex_500\\ids.txt", "2010042008");
-		vortex_500.writeFeatures(output_dir +"vortex_500\\feature.txt", "2010042008");
-		vortex_500.writeValues(output_dir + "vortex_500\\value.txt", "2010042008");
+		vortex_500.writeIds(output_dir +"vortex_500\\ids.txt", time);
+		vortex_500.writeFeatures(output_dir +"vortex_500\\feature.txt", time);
+		vortex_500.writeValues(output_dir + "vortex_500\\value.txt", time);
 		
 		
 		//850hpa 涡旋
-		wind850.writeToFile(output_dir +"vortex_850\\wind.txt", "2010042008");
+		wind850.writeToFile(output_dir +"vortex_850\\wind.txt", time);
 		WeatherSystems vortex_850 = SVortex.getVortexCentres(wind850, 850, 1.0f);
 		wss.put("vortex_850", vortex_850);
 		
 		
-		vortex_850.writeIds(output_dir +"vortex_850\\ids.txt", "2010042008");
-		vortex_850.writeFeatures(output_dir +"vortex_850\\feature.txt", "2010042008");
-		vortex_850.writeValues(output_dir + "vortex_850\\value.txt", "2010042008");
+		vortex_850.writeIds(output_dir +"vortex_850\\ids.txt", time);
+		vortex_850.writeFeatures(output_dir +"vortex_850\\feature.txt", time);
+		vortex_850.writeValues(output_dir + "vortex_850\\value.txt", time);
 		
 		//700hpa 涡旋
-		wind700.writeToFile(output_dir +"vortex_700\\wind.txt", "2010042008");
+		wind700.writeToFile(output_dir +"vortex_700\\wind.txt", time);
 		
 		WeatherSystems vortex_700 = SVortex.getVortexCentres(wind700, 700, 1.0f);
 		wss.put("vortex_700", vortex_700);
-		vortex_700.writeIds(output_dir +"vortex_700\\ids.txt", "2010042008");
-		vortex_700.writeFeatures(output_dir +"vortex_700\\feature.txt", "2010042008");
-		vortex_700.writeValues(output_dir + "vortex_700\\value.txt", "2010042008");
+		vortex_700.writeIds(output_dir +"vortex_700\\ids.txt", time);
+		vortex_700.writeFeatures(output_dir +"vortex_700\\feature.txt", time);
+		vortex_700.writeValues(output_dir + "vortex_700\\value.txt", time);
 		
 		//850切变线
 		
-		wind850.writeToFile(output_dir +"shear_850\\wind.txt", "2010042008");
+		wind850.writeToFile(output_dir +"shear_850\\wind.txt", time);
 		WeatherSystems shear_850 = SShear.getShear(wind850, 850, 1.0f);
 		wss.put("shear_850", shear_850);
-		shear_850.writeIds(output_dir +"shear_850\\ids.txt", "2010042008");
-		shear_850.writeFeatures(output_dir +"shear_850\\feature.txt", "2010042008");
-		shear_850.writeValues(output_dir + "shear_850\\value.txt", "2010042008");
+		shear_850.writeIds(output_dir +"shear_850\\ids.txt", time);
+		shear_850.writeFeatures(output_dir +"shear_850\\feature.txt", time);
+		shear_850.writeValues(output_dir + "shear_850\\value.txt", time);
 		
 		
 		//700切变线
-		wind700.writeToFile(output_dir +"shear_700\\wind.txt", "2010042008");
+		wind700.writeToFile(output_dir +"shear_700\\wind.txt", time);
 		
 		WeatherSystems shear_700 = SShear.getShear(wind700, 700, 1.0f);
 		wss.put("shear_700", shear_700);
-		shear_700.writeIds(output_dir +"shear_700\\ids.txt", "2010042008");
-		shear_700.writeFeatures(output_dir +"shear_700\\feature.txt", "2010042008");
-		shear_700.writeValues(output_dir + "shear_700\\value.txt", "2010042008");
+		shear_700.writeIds(output_dir +"shear_700\\ids.txt", time);
+		shear_700.writeFeatures(output_dir +"shear_700\\feature.txt", time);
+		shear_700.writeValues(output_dir + "shear_700\\value.txt", time);
 		
 		//850急流
-		wind850.writeToFile(output_dir +"jet_850\\wind.txt", "2010042008");
+		wind850.writeToFile(output_dir +"jet_850\\wind.txt", time);
 		WeatherSystems jet_850 = SJet.getJet(wind850, 850, 1.0f);
 		wss.put("jet_850", jet_850);
-		jet_850.writeIds(output_dir +"jet_850\\ids.txt", "2010042008");
-		jet_850.writeFeatures(output_dir +"jet_850\\feature.txt", "2010042008");
-		jet_850.writeValues(output_dir + "jet_850\\value.txt", "2010042008");
+		jet_850.writeIds(output_dir +"jet_850\\ids.txt",time);
+		jet_850.writeFeatures(output_dir +"jet_850\\feature.txt", time);
+		jet_850.writeValues(output_dir + "jet_850\\value.txt", time);
 		
 		
 		//700急流
-		wind700.writeToFile(output_dir +"jet_700\\wind.txt", "2010042008");
+		wind700.writeToFile(output_dir +"jet_700\\wind.txt", time);
 		WeatherSystems jet_700 = SJet.getJet(wind700, 700, 1.0f);
 		wss.put("jet_700", jet_700);
-		jet_700.writeIds(output_dir +"jet_700\\ids.txt", "2010042008");
-		jet_700.writeFeatures(output_dir +"jet_700\\feature.txt", "2010042008");
-		jet_700.writeValues(output_dir + "jet_700\\value.txt", "2010042008");
+		jet_700.writeIds(output_dir +"jet_700\\ids.txt", time);
+		jet_700.writeFeatures(output_dir +"jet_700\\feature.txt",time);
+		jet_700.writeValues(output_dir + "jet_700\\value.txt", time);
 		
 		
 		tFront = new T_Front (wss,typhoons);
