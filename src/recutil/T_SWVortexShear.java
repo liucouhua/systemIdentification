@@ -16,6 +16,15 @@ public class T_SWVortexShear {
 	int low_850_id = 0;
 	int high_850_id = 0;
 
+	ArrayList<Integer> low_700_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> trough_500_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> subHigh_500_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> jet_850_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> shear_850_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> trough_1000_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> low_850_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> high_850_id_list = new ArrayList<Integer>();
+	
 	int fit_num =0;
 	
 	public T_SWVortexShear(HashMap<String, WeatherSystems> wss, ArrayList<float[]> typhoons) {
@@ -57,6 +66,9 @@ public class T_SWVortexShear {
 							}
 						}
 					}
+					if(num >0) {
+						low_700_id_list.add(k);
+					}
 					if(num > max_grid_num) {
 						max_grid_num = num;
 						max_num_k = k;
@@ -84,6 +96,7 @@ public class T_SWVortexShear {
 				if(cx >=110 && cx <= 115 && cy >=28 && cy <= 32) {
 					//System.out.println("low_850:"+i+ "\n");
 					//low_850_id = i;
+					low_850_id_list.add(k);
 					int num = 0;
 					for (int i=0;i< ws.ids.gridInfo.nlon;i++) {
 						for(int j=0;j< ws.ids.gridInfo.nlat;j++) {
@@ -96,6 +109,7 @@ public class T_SWVortexShear {
 							}
 						}
 					}
+		
 					if(num > max_grid_num) {
 						max_grid_num = num;
 						max_num_k = k;
@@ -121,6 +135,7 @@ public class T_SWVortexShear {
 				float cy = ws.features.get(k).centrePoint.ptLat;
 				
 				if(cx >=110 && cx <= 120 && cy >=35 && cy <= 40) {	
+					high_850_id_list.add(k);
 					int num = 0;
 					for (int i=0;i< ws.ids.gridInfo.nlon;i++) {
 						for(int j=0;j< ws.ids.gridInfo.nlat;j++) {
@@ -166,10 +181,11 @@ public class T_SWVortexShear {
 				cy = line.point.get(0)[1];
 			}
 			//System.out.println(cx + " "+ cy);
-			if(cy >=20 && cy <= 25 && cx >=100 && cx <=130) {
+			if(cy >=20 && cy <= 25 && cx >=70 && cx <=150) {
 				System.out.println("subHigh_500:"+k+"\n");
 				subHigh_500_id = k;
 				fit_num++;
+				subHigh_500_id_list.add(k);
 				break;
 			}
 		}
@@ -192,6 +208,7 @@ public class T_SWVortexShear {
 				}
 			}
 			if(in_region) {
+				jet_850_id_list.add(k);
 				int num = 0;
 				for (int i=0;i< ws.ids.gridInfo.nlon;i++) {
 					for(int j=0;j< ws.ids.gridInfo.nlat;j++) {
@@ -239,6 +256,7 @@ public class T_SWVortexShear {
 				}
 			}
 			if(in_region) {
+				shear_850_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;
@@ -272,6 +290,7 @@ public class T_SWVortexShear {
 				}
 			}
 			if(in_region) {
+				trough_1000_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;
@@ -284,7 +303,7 @@ public class T_SWVortexShear {
 		//System.out.println("trough_1000:"+ trough_1000_id+"\n");
 		
 		
-		//判断500hPa高考槽线是否位于位置： 105°-115°E，30-40°N
+		//判断500hPa高空槽线是否位于位置： 105°-115°E，30-40°N
 		ws = trough_500;
 		keys = ws.features.keySet();
 	    max_lenght =0;
@@ -305,6 +324,7 @@ public class T_SWVortexShear {
 				}
 			}
 			if(in_region) {
+				trough_500_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;

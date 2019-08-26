@@ -363,7 +363,7 @@ public class WeatherSystems {
 			fos.close();
 		} catch (Exception e) {
 			// TODO 鑷姩鐢熸垚鐨� catch 鍧�
-			System.out.println(fileName+"鍐欏叆澶辫触");
+			System.out.println(fileName+"文件输出失败");
 
 		}
 

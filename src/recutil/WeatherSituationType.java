@@ -265,50 +265,50 @@ public class WeatherSituationType {
 		//输出地面低压和低涡
 		WeatherSystems ws = null;		
 		ws = wss.get("low_surface");
-		WeatherSystems ws1 = get_relative_weatherSystems(ws,tFront.low_surface_id);
+		WeatherSystems ws1 = get_relative_weatherSystems(ws,tFront.low_surface_id_list);
 		ws1.writeIds(dir_tFront + "\\low_1000\\ids"+ filename, filename);
 		ws1.writeValues(dir_tFront + "\\low_1000\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tFront + "\\low_1000\\features"+ filename, filename);
 		
 		ws = wss.get("hl_850");
-		ws1 = get_relative_weatherSystems(ws,tFront.low_850_id);
+		ws1 = get_relative_weatherSystems(ws,tFront.low_850_id_list);
 		ws1.writeIds(dir_tFront + "\\low_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tFront + "\\low_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tFront + "\\low_850\\features"+ filename, filename);
 
 		ws = wss.get("vortex_850");
-		ws1 = get_relative_weatherSystems(ws,tFront.vortex_850_id);
+		ws1 = get_relative_weatherSystems(ws,tFront.vortex_850_id_list);
 		ws1.writeIds(dir_tFront + "\\vortex_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tFront + "\\vortex_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tFront + "\\vortex_850\\features"+ filename, filename);
 		
 		ws = wss.get("shear_850");
-		ws1 = get_relative_weatherSystems(ws,tFront.shear_850_id);
+		ws1 = get_relative_weatherSystems(ws,tFront.shear_850_id_list);
 		ws1.writeIds(dir_tFront + "\\shear_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tFront + "\\shear_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tFront + "\\shear_850\\features"+ filename, filename);
 
 		ws = wss.get("trough_500");
-		ws1 = get_relative_weatherSystems(ws,tFront.trough_500_id);
+		ws1 = get_relative_weatherSystems(ws,tFront.trough_500_id_list);
 		ws1.writeIds(dir_tFront + "\\trough_500\\ids"+ filename, filename);
 		ws1.writeValues(dir_tFront + "\\trough_500\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tFront + "\\trough_500\\features"+ filename, filename);
 
 		ws = wss.get("trough_1000");
-		ws1 = get_relative_weatherSystems(ws,tFront.trough_1000_id);
+		ws1 = get_relative_weatherSystems(ws,tFront.trough_1000_id_list);
 		ws1.writeIds(dir_tFront + "\\trough_1000\\ids"+ filename, filename);
 		ws1.writeValues(dir_tFront + "\\trough_1000\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tFront + "\\trough_1000\\features"+ filename, filename);
 
 		ws = wss.get("subHigh_500");
-		ws1 = get_relative_weatherSystems(ws,tFront.subHigh_500_id);
+		ws1 = get_relative_weatherSystems(ws,tFront.subHigh_500_id_list);
 		ws1.writeIds(dir_tFront + "\\subHigh_500\\ids"+ filename, filename);
 		ws1.writeValues(dir_tFront + "\\subHigh_500\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tFront + "\\subHigh_500\\features"+ filename, filename);
 		
 		
 		ws = wss.get("jet_850");
-		ws1 = get_relative_weatherSystems(ws,tFront.jet_850_id);
+		ws1 = get_relative_weatherSystems(ws,tFront.jet_850_id_list);
 		ws1.writeIds(dir_tFront + "\\jet_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tFront + "\\jet_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tFront + "\\jet_850\\features"+ filename, filename);
@@ -409,53 +409,53 @@ public class WeatherSituationType {
 		//输出地面低压和低涡
 		WeatherSystems ws = null;		
 		ws = wss.get("hl_700");
-		WeatherSystems ws1 = get_relative_weatherSystems(ws,tSWVortex.low_700_id);
+		WeatherSystems ws1 = get_relative_weatherSystems(ws,tSWVortex.low_700_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\low_700\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\low_700\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\low_700\\features"+ filename, filename);
 		
 		
 		ws = wss.get("hl_850");
-		ws1 = get_relative_weatherSystems(ws,tSWVortex.low_850_id);
+		ws1 = get_relative_weatherSystems(ws,tSWVortex.low_850_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\low_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\low_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\low_850\\features"+ filename, filename);
 
 		
 		ws = wss.get("hl_850");
-		ws1 = get_relative_weatherSystems(ws,tSWVortex.high_850_id);
+		ws1 = get_relative_weatherSystems(ws,tSWVortex.high_850_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\high_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\high_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\high_850\\features"+ filename, filename);
 		
 		
 		ws = wss.get("shear_850");
-		ws1 = get_relative_weatherSystems(ws,tSWVortex.shear_850_id);
+		ws1 = get_relative_weatherSystems(ws,tSWVortex.shear_850_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\shear_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\shear_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\shear_850\\features"+ filename, filename);
 
 		ws = wss.get("trough_500");
-		ws1 = get_relative_weatherSystems(ws,tSWVortex.trough_500_id);
+		ws1 = get_relative_weatherSystems(ws,tSWVortex.trough_500_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\trough_500\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\trough_500\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\trough_500\\features"+ filename, filename);
 
 		ws = wss.get("trough_1000");
-		ws1 = get_relative_weatherSystems(ws,tSWVortex.trough_1000_id);
+		ws1 = get_relative_weatherSystems(ws,tSWVortex.trough_1000_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\trough_1000\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\trough_1000\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\trough_1000\\features"+ filename, filename);
 
 		ws = wss.get("subHigh_500");
-		ws1 = get_relative_weatherSystems(ws,tSWVortex.subHigh_500_id);
+		ws1 = get_relative_weatherSystems(ws,tSWVortex.subHigh_500_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\subHigh_500\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\subHigh_500\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\subHigh_500\\features"+ filename, filename);
 		
 		
 		ws = wss.get("jet_850");
-		ws1 = get_relative_weatherSystems(ws,tSWVortex.jet_850_id);
+		ws1 = get_relative_weatherSystems(ws,tSWVortex.jet_850_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\jet_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\jet_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\jet_850\\features"+ filename, filename);
@@ -546,31 +546,31 @@ public class WeatherSituationType {
 		WeatherSystems ws1 =null;
 
 		ws = wss.get("hl_850");
-		ws1 = get_relative_weatherSystems(ws,tSWNEVotex.low_850_id);
+		ws1 = get_relative_weatherSystems(ws,tSWNEVotex.low_850_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\low_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\low_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\low_850\\features"+ filename, filename);
 		
 		ws = wss.get("shear_850");
-		ws1 = get_relative_weatherSystems(ws,tSWNEVotex.shear_850_id);
+		ws1 = get_relative_weatherSystems(ws,tSWNEVotex.shear_850_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\shear_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\shear_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\shear_850\\features"+ filename, filename);
 
 		ws = wss.get("trough_500");
-		ws1 = get_relative_weatherSystems(ws,tSWNEVotex.trough_500_id);
+		ws1 = get_relative_weatherSystems(ws,tSWNEVotex.trough_500_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\trough_500\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\trough_500\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\trough_500\\features"+ filename, filename);
 
 		ws = wss.get("trough_1000");
-		ws1 = get_relative_weatherSystems(ws,tSWNEVotex.trough_1000_id);
+		ws1 = get_relative_weatherSystems(ws,tSWNEVotex.trough_1000_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\trough_1000\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\trough_1000\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\trough_1000\\features"+ filename, filename);
 
 		ws = wss.get("subHigh_500");
-		ws1 = get_relative_weatherSystems(ws,tSWNEVotex.subHigh_500_id);
+		ws1 = get_relative_weatherSystems(ws,tSWNEVotex.subHigh_500_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\subHigh_500\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\subHigh_500\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\subHigh_500\\features"+ filename, filename);
@@ -666,32 +666,32 @@ public class WeatherSituationType {
 		WeatherSystems ws1 = null;
 		
 		ws = wss.get("hl_850");
-		ws1 = get_relative_weatherSystems(ws,tSrTrough.high_850_id);
+		ws1 = get_relative_weatherSystems(ws,tSrTrough.high_850_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\high_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\high_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\high_850\\features"+ filename, filename);
 		
 		
 		ws = wss.get("shear_850");
-		ws1 = get_relative_weatherSystems(ws,tSrTrough.shear_850_id);
+		ws1 = get_relative_weatherSystems(ws,tSrTrough.shear_850_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\shear_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\shear_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\shear_850\\features"+ filename, filename);
 
 		ws = wss.get("trough_500");
-		ws1 = get_relative_weatherSystems(ws,tSrTrough.trough_500_id);
+		ws1 = get_relative_weatherSystems(ws,tSrTrough.trough_500_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\trough_500\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\trough_500\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\trough_500\\features"+ filename, filename);
 
 		ws = wss.get("trough_1000");
-		ws1 = get_relative_weatherSystems(ws,tSrTrough.trough_1000_id);
+		ws1 = get_relative_weatherSystems(ws,tSrTrough.trough_1000_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\trough_1000\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\trough_1000\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\trough_1000\\features"+ filename, filename);
 
 		ws = wss.get("subHigh_500");
-		ws1 = get_relative_weatherSystems(ws,tSrTrough.subHigh_500_id);
+		ws1 = get_relative_weatherSystems(ws,tSrTrough.subHigh_500_id_list);
 		ws1.writeIds(dir_tSEVortexShear + "\\subHigh_500\\ids"+ filename, filename);
 		ws1.writeValues(dir_tSEVortexShear + "\\subHigh_500\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tSEVortexShear + "\\subHigh_500\\features"+ filename, filename);
@@ -781,37 +781,47 @@ public class WeatherSituationType {
 		WeatherSystems ws1 = null;
 		
 		ws = wss.get("hl_850");
-		ws1 = get_relative_weatherSystems(ws,tTyphoon.high_850_id);
+		ws1 = get_relative_weatherSystems(ws,tTyphoon.high_850_id_list);
 		ws1.writeIds(dir_tTyphoon + "\\high_850\\ids"+ filename, filename);
 		ws1.writeValues(dir_tTyphoon + "\\high_850\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tTyphoon + "\\high_850\\features"+ filename, filename);
 		
 
 		ws = wss.get("subHigh_500");
-		ws1 = get_relative_weatherSystems(ws,tTyphoon.subHigh_500_id);
+		ws1 = get_relative_weatherSystems(ws,tTyphoon.subHigh_500_id_list);
 		ws1.writeIds(dir_tTyphoon + "\\subHigh_500\\ids"+ filename, filename);
 		ws1.writeValues(dir_tTyphoon + "\\subHigh_500\\values"+ filename, filename);
 		ws1.writeFeatures(dir_tTyphoon + "\\subHigh_500\\features"+ filename, filename);
 		
 	}
 	
-	public WeatherSystems get_relative_weatherSystems(WeatherSystems ws, int id) {
+	public WeatherSystems get_relative_weatherSystems(WeatherSystems ws, ArrayList<Integer> id_list) {
 		WeatherSystems ws1 = new WeatherSystems(ws.type,ws.level);
 		GridInfo gridInfo = ws.ids.gridInfo;
 		GridData value = new GridData(gridInfo);
 		GridData ids = new GridData(gridInfo);
+		boolean in_id_list = false;
 		for (int i=0;i<gridInfo.nlon;i++) {
 			for(int j=0;j<gridInfo.nlat;j++) {
-				if(ws.ids.dat[i][j] == id) {
-					ids.dat[i][j] = id;
+				in_id_list = false;
+				for(int k =0 ;k < id_list.size();k++) {
+					if(ws.ids.dat[i][j] == id_list.get(k)) {
+						in_id_list = true;
+						break;
+					}
+				}
+				if(in_id_list) {
+					ids.dat[i][j] = ws.ids.dat[i][j];
 					value.dat[i][j] = ws.value.dat[i][j];
 				}
 				
 			}
 		}
-		if(ws.features.containsKey(id)){
-			SystemFeature sf = ws.features.get(id);
-			ws1.features.put(id,sf);
+		for(int id : id_list) {
+			if(ws.features.containsKey(id)){
+				SystemFeature sf = ws.features.get(id);
+				ws1.features.put(id,sf);
+			}
 		}
 		ws1.ids = ids;
 		ws1.value = value;

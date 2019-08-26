@@ -5,15 +5,23 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class T_Front {
-	
-	int low_surface_id = 0;
+	int low_surface_id=0;
 	int low_850_id = 0;
-	int vortex_850_id = 0;
-	int trough_1000_id = 0;
 	int trough_500_id = 0;
+	int trough_1000_id = 0;
 	int subHigh_500_id = 0;
 	int jet_850_id = 0;
-	int shear_850_id = 0;
+	int shear_850_id =0;
+	int vortex_850_id = 0;
+	ArrayList<Integer> low_surface_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> low_850_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> trough_500_id_list= new ArrayList<Integer>();
+	ArrayList<Integer> trough_1000_id_list= new ArrayList<Integer>();
+	ArrayList<Integer> subHigh_500_id_list= new ArrayList<Integer>();
+	ArrayList<Integer> jet_850_id_list= new ArrayList<Integer>();
+	ArrayList<Integer> shear_850_id_list= new ArrayList<Integer>();
+	ArrayList<Integer> vortex_850_id_list = new ArrayList<Integer>();
+
 	int fit_num =0;
 	
 	public T_Front(HashMap<String, WeatherSystems> wss, ArrayList<float[]> typhoons) {
@@ -59,6 +67,9 @@ public class T_Front {
 							}
 						}
 					}
+					if(num >0) {
+						low_surface_id_list.add(k);
+					}
 					if(num > max_grid_num) {
 						max_grid_num = num;
 						max_num_k = k;
@@ -98,6 +109,9 @@ public class T_Front {
 								}
 							}
 						}
+					}
+					if(num >0) {
+						low_850_id_list.add(k);
 					}
 					if(num > max_grid_num) {
 						max_grid_num = num;
@@ -140,6 +154,9 @@ public class T_Front {
 						}
 					}
 				}
+				if(num>0) {
+					vortex_850_id_list.add(k);
+				}
 				if(num > max_grid_num) {
 					max_grid_num = num;
 					max_num_k = k;
@@ -172,10 +189,11 @@ public class T_Front {
 				cy = line.point.get(0)[1];
 			}
 			//System.out.println(cx + " "+ cy);
-			if(cy >=20 && cy <= 25 && cx >=100 && cx <=130) {
+			if(cy >=20 && cy <= 25 && cx >=70 && cx <=150) {
 				System.out.println("subHigh_500:"+k+"\n");
 				subHigh_500_id = k;
 				fit_num++;
+				subHigh_500_id_list.add(k);
 				break;
 			}
 		}
@@ -212,6 +230,9 @@ public class T_Front {
 							}
 						}
 					}
+				}
+				if(num >0) {
+					jet_850_id_list.add(k);
 				}
 				if(num > max_grid_num) {
 					max_grid_num = num;
@@ -250,6 +271,7 @@ public class T_Front {
 				}
 			}
 			if(in_region) {
+				shear_850_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;
@@ -283,6 +305,7 @@ public class T_Front {
 				}
 			}
 			if(in_region) {
+				trough_1000_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;
@@ -316,6 +339,7 @@ public class T_Front {
 				}
 			}
 			if(in_region) {
+				trough_500_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;

@@ -14,6 +14,13 @@ public class T_SW_NEVortex {
 	int trough_1000_id = 0;
 	int low_850_id = 0;
 
+	ArrayList<Integer> trough_500_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> subHigh_500_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> shear_850_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> trough_1000_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> low_850_id_list = new ArrayList<Integer>();
+	
+	
 	int fit_num =0;
 	
 	public T_SW_NEVortex(HashMap<String, WeatherSystems> wss, ArrayList<float[]> typhoons) {
@@ -65,6 +72,9 @@ public class T_SW_NEVortex {
 							}
 						}
 					}
+					if(num > 0) {
+						low_850_id_list.add(k);
+					}
 					if(num > max_grid_num) {
 						max_grid_num = num;
 						max_num_k = k;
@@ -99,7 +109,8 @@ public class T_SW_NEVortex {
 				cy = line.point.get(0)[1];
 			}
 			//System.out.println(cx + " "+ cy);
-			if(cy >=20 && cy <= 25 && cx >=100 && cx <=130) {
+			if(cy >=20 && cy <= 25 && cx >=70 && cx <=150) {
+				subHigh_500_id_list.add(k);
 				System.out.println("subHigh_500:"+k+"\n");
 				subHigh_500_id = k;
 				fit_num++;
@@ -132,6 +143,7 @@ public class T_SW_NEVortex {
 				}
 			}
 			if(in_region) {
+				shear_850_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;
@@ -165,6 +177,7 @@ public class T_SW_NEVortex {
 				}
 			}
 			if(in_region) {
+				trough_1000_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;
@@ -198,6 +211,7 @@ public class T_SW_NEVortex {
 				}
 			}
 			if(in_region) {
+				trough_500_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;

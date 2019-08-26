@@ -11,6 +11,9 @@ public class T_Typhoon {
 	int subHigh_500_id = 0;
 	int typhoon_id = 0;
 
+	ArrayList<Integer> high_850_id_list = new ArrayList<Integer>(); 
+	ArrayList<Integer> subHigh_500_id_list = new ArrayList<Integer>(); 
+	
 	int fit_num =0;
 	
 	public T_Typhoon(HashMap<String, WeatherSystems> wss, ArrayList<float[]> typhoons) {
@@ -50,6 +53,7 @@ public class T_Typhoon {
 				float cy = ws.features.get(k).centrePoint.ptLat;
 				
 				if(cx >=105 && cx <= 115 && cy >=35 && cy <= 40) {	
+					high_850_id_list.add(k);
 					int num = 0;
 					for (int i=0;i< ws.ids.gridInfo.nlon;i++) {
 						for(int j=0;j< ws.ids.gridInfo.nlat;j++) {
@@ -94,7 +98,8 @@ public class T_Typhoon {
 				cy = line.point.get(0)[1];
 			}
 			//System.out.println(cx + " "+ cy);
-			if(cy >=35 && cy <= 40 && cx >=90 && cx <=140) {
+			if(cy >=35 && cy <= 40 && cx >=70 && cx <=150) {
+				subHigh_500_id_list.add(k);
 				System.out.println("subHigh_500:"+k+"\n");
 				subHigh_500_id = k;
 				fit_num++;

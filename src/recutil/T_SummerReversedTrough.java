@@ -12,7 +12,11 @@ public class T_SummerReversedTrough {
 	int trough_1000_id = 0;
 	int shear_850_id = 0;
 
-
+	ArrayList<Integer> trough_500_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> high_850_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> subHigh_500_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> trough_1000_id_list = new ArrayList<Integer>();
+	ArrayList<Integer> shear_850_id_list = new ArrayList<Integer>();
 
 
 	int fit_num =0;
@@ -63,6 +67,9 @@ public class T_SummerReversedTrough {
 							}
 						}
 					}
+					if(num>0) {
+						high_850_id_list.add(k);
+					}
 					if(num > max_grid_num) {
 						max_grid_num = num;
 						max_num_k = k;
@@ -95,10 +102,11 @@ public class T_SummerReversedTrough {
 				cy = line.point.get(0)[1];
 			}
 			//System.out.println(cx + " "+ cy);
-			if(cy >=25 && cy <= 28 && cx >=100 && cx <=130) {
+			if(cy >=25 && cy <= 28 && cx >=70 && cx <=150) {
 				System.out.println("subHigh_500:"+k+"\n");
 				subHigh_500_id = k;
 				fit_num++;
+				subHigh_500_id_list.add(k);
 				break;
 			}
 		}
@@ -127,6 +135,7 @@ public class T_SummerReversedTrough {
 				}
 			}
 			if(in_region) {
+				shear_850_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;
@@ -160,6 +169,7 @@ public class T_SummerReversedTrough {
 				}
 			}
 			if(in_region) {
+				trough_1000_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;
@@ -193,6 +203,7 @@ public class T_SummerReversedTrough {
 				}
 			}
 			if(in_region) {
+				trough_500_id_list.add(k);
 				float dis = MyMath.dis(line.point.get(p0)[0], line.point.get(p0)[1], line.point.get(p1)[0], line.point.get(p1)[1]);
 				if(dis > max_lenght) {
 					max_lenght = dis;
