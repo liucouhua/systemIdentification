@@ -218,6 +218,16 @@ public class GridData {
 		}
 	}
 
+	
+	public void reSetResolution() {
+		int nlon1 = (int) ((gridInfo.nlon-1) * gridInfo.dlon /0.5) + 1;
+		int nlat1 = (int)((gridInfo.nlat-1) * gridInfo.dlat /0.5) + 1;
+		GridData gridData1 =new  GridData(nlon1,nlat1,gridInfo.startlon,gridInfo.startlat,0.5f,0.5f);
+		gridData1.linearIntepolatedFrom(this);
+		gridInfo = gridData1.gridInfo;
+		dat = gridData1.dat;
+	}
+	
 	public void smooth(int smTimes) {
 		// TODO 锟皆讹拷锟斤拷锟缴的凤拷锟斤拷锟斤拷锟�
 		GridData c=this.copy();
@@ -461,6 +471,7 @@ public class GridData {
 				}
 			}
 			reSetXY();
+			reSetResolution();
 		} catch (Exception e) {
 			// TODO 锟皆讹拷锟斤拷锟缴碉拷 catch 锟斤拷
 			System.out.println(file.getAbsolutePath()+"锟侥硷拷锟斤拷式锟届常");

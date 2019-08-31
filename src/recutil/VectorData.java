@@ -148,6 +148,8 @@ public class VectorData {
 				
 				u.reSetXY();
 				v.reSetXY();
+				u.reSetResolution();
+				v.reSetResolution();
 				this.gridInfo=u.gridInfo.copy();
 			}
 			else if(fileType == 2) {
