@@ -273,7 +273,119 @@ public class SystemIdentification {
 		
 		}
 		*/
-		public static GridData getCuttedRegion(GridData grid0, int  sm_id_window_size){
+		
+		public static GridData getCuttedRegion(GridData pgrid, int sm_id_window_size) {
+			GridInfo gf = pgrid.gridInfo;
+			GridData id0 = new GridData(gf);
+			GridData grid_i = new GridData(gf);
+			GridData grid_j = new GridData(gf);
+			
+
+			//首先将格点聚并到极值点
+			
+			int imax,jmax;
+			float max_value;
+			int pmax,qmax;
+			
+			for(int i=0;i<gf.nlon;i++) {
+				for(int j = 0;j<gf.nlat;j++) {
+					if(pgrid.dat[i][j] >0) {
+			            imax = i;
+			            jmax = j;
+			            max_value = pgrid.dat[i][j];
+			            for(int step = 1;step <20;step++){
+			                pmax = 0;
+			                qmax = 0;
+			                for(int p = -1;p < 2; p++) {	
+			                	if(imax + p >=0 && imax +p < gf.nlon) {
+				                    for(int q = -1;q <2; q++) {
+				                    	if(jmax + q >=0 && jmax +q < gf.nlat) {
+					                        if(pgrid.dat[imax + p][jmax + q] > max_value) {
+					                            max_value = pgrid.dat[imax + p][jmax + q];
+					                            pmax = p;
+					                            qmax = q;
+					                        }
+				                    	}
+				            
+				                    }
+				                 }
+			                }
+			                imax = imax + pmax;
+			                jmax = jmax + qmax;
+			            }
+			            grid_i.dat[i][j] = imax;
+			            grid_j.dat[i][j] = jmax;
+			            id0.dat[imax][jmax] = 1;
+			        }
+		        }
+			    
+			}
+			
+			GridData crId0 = getConnectRegion(id0);
+			
+			GridData crId = new GridData(gf);
+			for(int i=0 ;i<gf.nlon;i ++ ) {
+				for(int j=0;j<gf.nlat;j++) {
+					if(pgrid.dat[i][j] >0) {					       
+			            imax = (int) grid_i.dat[i][j];
+			            jmax = (int) grid_j.dat[i][j];
+			            crId.dat[i][j]= crId0.dat[imax][jmax];
+					}
+				}
+			}
+			
+			crId.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output\\id0.txt");
+			if(sm_id_window_size>1) {
+				smoothIds(crId,sm_id_window_size);
+			}
+			return crId;
+		}
+
+	
+		public static GridData getConnectRegion(GridData id0){
+	    	GridData crId = new GridData(id0.gridInfo);
+			int nobj=0;
+			int nlon=crId.gridInfo.nlon;
+			int nlat=crId.gridInfo.nlat;
+			class GrowPoint{
+				int i,j;
+				public GrowPoint(int i0,int j0){
+					i=i0;j=j0;
+				}
+			}
+			Queue<GrowPoint> queue=new LinkedList<GrowPoint>(); 
+			for(int i=0;i<nlon;i++){
+				for(int j=0;j<nlat;j++){
+			        if(crId.dat[i][j]!=0||id0.dat[i][j]==0)continue;  
+			        nobj++;
+			        crId.dat[i][j]=nobj;   //!根据一个点生长出一片
+			        queue.offer(new GrowPoint(i,j));
+			        GrowPoint gp;
+			        while((gp=queue.poll())!=null){
+			        	//从队列中取出第一个，如果它不为空则判断周围8个点
+			        	for(int p=-1;p<2;p++){
+			        		for(int q=-1;q<2;q++){
+			        			int i1=gp.i+p;
+			        			if(i1<0||i1>=nlon)continue;
+			        			int j1=gp.j+q;
+			        			if(j1<0||j1>=nlat)continue;
+			        			if(id0.dat[i1][j1]!=0&&crId.dat[i1][j1]==0){
+			        				//如果周围8个点中有未被标记的前景点
+			        				crId.dat[i1][j1]=nobj;   //对其进行标记
+			        				queue.offer(new GrowPoint(i1,j1));//并将该点标记为新的增长点，加入队列		        			
+			        			}
+			        		}
+			        	}
+			        }
+			      
+				}
+			}
+			return crId;
+	    }
+		
+		
+		/*
+		public static GridData getCuttedRegion1(GridData grid0, int  sm_id_window_size){
 			// 鏍规嵁鏍肩偣鍦哄垎甯冿紝灏嗗ぇ浜�0鐨勫尯鍩熸寜姊害涓婂崌娉曞垏鍓叉垚鍚勪釜鏋佸�肩偣鐨勮鐩栧垎鍖�
 			
 			GridData crId = new GridData(grid0.gridInfo);
@@ -578,6 +690,7 @@ public class SystemIdentification {
 			return crId;
 		}
 		
+		
 		public static GridData getCuttedRegion1(GridData grid0){
 			// 根据格点场分布，将大于0的区域按梯度上升法切割成各个极值点的覆盖分区
 			
@@ -694,6 +807,7 @@ public class SystemIdentification {
 		    smoothIds(crId);
 			return crId;
 		}
+		*/
 		
 		public static VectorData getGradsDirection(GridData grid){
 			VectorData ve=new VectorData(grid.gridInfo);

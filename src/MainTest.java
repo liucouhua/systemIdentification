@@ -38,19 +38,51 @@ public class MainTest {
 	}
 	
 	private static void weathersituationtype() {
+		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		Calendar start = Calendar.getInstance();
-		start.set(2010,1, 6,2,0);
+		start.set(2017,5, 22,18,0);
 		Calendar end =Calendar.getInstance();
-		end.set(2010, 12, 6,3,0);
+		end.set(2018, 9, 21,3,0);
 		Calendar time= (Calendar) start.clone();
 		String root_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		String root_typhoon = "D:\\develop\\java\\201905-weahter_identification\\output\\typhoon_trace\\babj";
 		while(time.before(end)){
 			
 			time.add(Calendar.HOUR, 6);
-			
-			ArrayList<float[]> typhoon_reports = STyphoon.read_typhoon_position(root_typhoon,time);
 			String fileName =MyMath.getFileNameFromCalendar(time);
+			
+			//String h500_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/500/"+fileName.substring(2,10)+".000";
+			String h500_path = test_data_root +  "201905-weahter_identification/GH/500/"+fileName.substring(0,10)+".000";
+			GridData h500 = new GridData(h500_path);
+			if(h500.gridInfo == null) {
+				continue;
+			}
+			for(int i=0;i<h500.gridInfo.nlon;i++) {
+				for(int j=0;j<h500.gridInfo.nlat;j++) {
+					h500.dat[i][j] *= 10;
+				}
+			}
+			
+			//500����
+			//h500.writeToFile(output_dir+"subHigh_500\\h500.txt");
+			WeatherSystems subHigh_500 = SSubtropicalHigh.getSubtropicalHigh(h500, 500, 1.0f);
+			
+			subHigh_500.writeIds(output_dir +"subHigh_500\\ids"+fileName+".txt", fileName);
+			subHigh_500.writeFeatures(output_dir +"subHigh_500\\feature"+fileName+".txt", fileName);
+			subHigh_500.writeValues(output_dir + "subHigh_500\\value"+fileName+".txt", fileName);
+			
+			
+			//h500.writeToFile(output_dir+"trough_500\\h500.txt");
+			WeatherSystems trough_500 = STrough.getTrough(h500, 500, 1.0f);
+			trough_500.writeIds(output_dir +"trough_500\\ids"+fileName+".txt", fileName);
+			trough_500.writeFeatures(output_dir +"trough_500\\feature"+fileName+".txt", fileName);
+			trough_500.writeValues(output_dir + "trough_500\\value"+fileName+".txt", fileName);
+		
+			if(true) {
+				continue;
+			}
+			ArrayList<float[]> typhoon_reports = STyphoon.read_typhoon_position(root_typhoon,time);
+
 			//System.out.println(fileName);
 			//if(typhoon_reports.size() == 0)continue;
 			//System.out.println(typhoon_reports.size());
@@ -72,16 +104,7 @@ public class MainTest {
 				continue;
 			}
 			
-			String h500_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/500/"+fileName.substring(2,10)+".000";
-			GridData h500 = new GridData(h500_path);
-			if(h500.gridInfo == null) {
-				continue;
-			}
-			for(int i=0;i<h500.gridInfo.nlon;i++) {
-				for(int j=0;j<h500.gridInfo.nlat;j++) {
-					h500.dat[i][j] *= 10;
-				}
-			}
+			
 			String w850_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/850/"+fileName.substring(2,10)+".000";
 			VectorData w850 = new VectorData(w850_path);
 			if(w850.gridInfo == null) {

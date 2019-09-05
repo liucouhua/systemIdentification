@@ -54,7 +54,7 @@ public class SShear{
 		WeatherSystems shear = new WeatherSystems("shear",level);         // 瀹氫箟鍒囧彉绾跨郴缁燂紝璁剧疆杞寸嚎shearLine銆佺壒寰侀噺value浠ュ強鍒嗗尯ids锛屽苟灏嗗畠浠崗璋�
 		shear.setAxes(shearLine);
 		shear.setValue(shearFeature);
-		GridData ids = SystemIdentification.getCuttedRegion(shearFeature);
+		GridData ids = SystemIdentification.getCuttedRegion(shearFeature,0);
 //		//ids.writeToFile("G:/data/systemIdentify/ids.txt");
 		shear.setIds(ids);
 		shear.type ="切变线";

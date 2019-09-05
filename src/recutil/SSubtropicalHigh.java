@@ -10,12 +10,12 @@ import java.util.Map.Entry;
 public class SSubtropicalHigh{
 	public static WeatherSystems getSubtropicalHigh(GridData height, int level, float scale) {
 		// 涓�鑸剰涔夌殑鍓珮鍦�588绾夸互鍐�
-		GridData ids = SystemIdentification.getCuttedRegion(height.mutiply(height.add(-5880).sign01()));//浠ラ珮搴﹀満鍒嗗壊鍑洪珮鍘嬪尯  
+		GridData ids = SystemIdentification.getCuttedRegion(height.mutiply(height.add(-5880).sign01()),0);//浠ラ珮搴﹀満鍒嗗壊鍑洪珮鍘嬪尯  
 		Map<Integer, SystemFeature> features = SystemIdentification.getCentreAreaStrenght(height, ids);
         Iterator<Entry<Integer, SystemFeature>> it = features.entrySet().iterator();  
         float lat;
         int ig,jg,oldId;
-      //  ids.writeToFile("G:/data/systemIdentify/ids0.txt");
+        //ids.writeToFile("G:/data/systemIdentify/ids0.txt");
         while(it.hasNext()){  
             Entry<Integer, SystemFeature> entry = it.next();  
             lat = entry.getValue().centrePoint.ptLat;
@@ -27,7 +27,7 @@ public class SSubtropicalHigh{
              }
         } 
       //  ids.writeToFile("G:/data/systemIdentify/ids1.txt");
-        ids = SystemIdentification.combineStrongConnectingRegion_2d(ids, 0.1f);  //鍚堝苟楂樺帇鍖�
+       ids = SystemIdentification.combineStrongConnectingRegion_2d(ids, 0.1f);  //鍚堝苟楂樺帇鍖�
       //  ids.writeToFile("G:/data/systemIdentify/ids2.txt");
         
 		VectorData tranDirection=new VectorData(height.gridInfo);  //骞虫祦椋庤缃鍗楅

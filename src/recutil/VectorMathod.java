@@ -135,10 +135,10 @@ public class VectorMathod {
 	
 	public static GridData getCurvatureVor(GridData grid){
 		GridData cur= getCurvature(grid);
-		GridData gradMod= VectorMathod.getMod(VectorMathod.getGeostrophicWind(grid));
+		GridData speed= VectorMathod.getMod(VectorMathod.getGeostrophicWind(grid));
 		for(int i=0;i<cur.gridInfo.nlon;i++){
 			for(int j=0;j<cur.gridInfo.nlat;j++){
-				cur.dat[i][j]*=gradMod.dat[i][j];
+				cur.dat[i][j]*=speed.dat[i][j];
 			}
 		}
 		return cur;
@@ -170,7 +170,7 @@ public class VectorMathod {
 				 rightValue = getValue(grid,rightPoint);
 				 leftGd = getValue(gradMod,leftPoint);
 				 rightGd= getValue(gradMod,rightPoint);
-				 if(leftValue!=9999 && rightValue!=9999){
+				 if(leftValue!=9999 && rightValue!=9999 && leftGd != 0 && rightGd !=0){
 					 cur.dat[i][j] = ((leftValue-grid.dat[i][j])/leftGd+(rightValue-grid.dat[i][j])/rightGd);
 				 }
 				 else{

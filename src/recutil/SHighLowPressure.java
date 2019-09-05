@@ -17,8 +17,8 @@ public class SHighLowPressure {
 		//pgrid.writeToFile("G:/data/systemIdentify/pgrid.txt");
 		//mgrid.writeToFile("G:/data/systemIdentify/mgrid.txt");
 
-		GridData pid0 = SystemIdentification.getCuttedRegion(pgrid);  // �Ը�ѹ���ķ���
-		GridData mid0 = SystemIdentification.getCuttedRegion(mgrid);  // �Ե�ѹ���ķ���
+		GridData pid0 = SystemIdentification.getCuttedRegion(pgrid,0);  // �Ը�ѹ���ķ���
+		GridData mid0 = SystemIdentification.getCuttedRegion(mgrid,0);  // �Ե�ѹ���ķ���
 		pid0.writeToFile("D:/develop/java/201905-weahter_identification/output/low_surface/pid0.txt");
 
 		

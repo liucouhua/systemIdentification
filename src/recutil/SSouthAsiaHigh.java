@@ -11,7 +11,7 @@ public class SSouthAsiaHigh {
 
 	public static WeatherSystems getSouthAsiaHigh(GridData height, int level, float scale) {
 		//鍗椾簹楂樺帇鍖轰竴鑸湪16800绛変綅鍔跨嚎浠ュ唴
-		GridData ids = SystemIdentification.getCuttedRegion(height.mutiply(height.add(-16800).sign01()));  //浠ラ珮搴﹀満鍒嗗壊鍑洪珮鍘嬪尯  
+		GridData ids = SystemIdentification.getCuttedRegion(height.mutiply(height.add(-16800).sign01()),0);  //浠ラ珮搴﹀満鍒嗗壊鍑洪珮鍘嬪尯  
 		Map<Integer, SystemFeature> features = SystemIdentification.getCentreAreaStrenght(height, ids); 
         Iterator<Entry<Integer, SystemFeature>> it = features.entrySet().iterator();  
         float lat,lon;

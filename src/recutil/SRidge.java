@@ -36,7 +36,7 @@ public class SRidge{
 		
 		ridge = SystemIdentification.getLongLine(scale,ridge);
 		
-		GridData ids = SystemIdentification.getCuttedRegion(curVor);  //浠ユ洸鐜囨丁搴︾敓鎴愬垎鍖�
+		GridData ids = SystemIdentification.getCuttedRegion(curVor,0);  //浠ユ洸鐜囨丁搴︾敓鎴愬垎鍖�
 		marker=(curVor.add(-1.0f).sign01());
 		ids = ids.mutiply(marker);                                    //淇濈暀鍒嗗尯涓殑楂橀槇鍊奸儴鍒�
 	//	ids.writeToFile("G:/data/systemIdentify/ids.txt");
