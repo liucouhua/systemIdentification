@@ -28,9 +28,9 @@ public class WeatherSituationType {
 	public WeatherSituationType(GridData hight1000,GridData hight850,GridData hight700,GridData hight500, VectorData wind850, VectorData wind700,
 			VectorData wind500,ArrayList<float[]> typhoons,String time) {
 		
-		// Ê¶±ð³ö¸÷²ãµÄ»ù±¾ÌìÆø
+		// Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		
-		// µØÃæµÍÑ¹
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹
 		
 		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		hight1000.smooth(3);
@@ -38,127 +38,128 @@ public class WeatherSituationType {
 		WeatherSystems low_surface = SHighLowPressure.getHLCentres(hight1000, 1000, 1.0f,2.5f);
 		wss.put("low_surface", low_surface);
 		
-		low_surface.writeIds(output_dir +"low_surface\\ids.txt", time);
-		low_surface.writeFeatures(output_dir +"low_surface\\feature.txt", time);
-		low_surface.writeValues(output_dir + "low_surface\\value.txt", time);
+		low_surface.writeIds(output_dir +"low_surface\\ids"+time+".txt", time);
+		low_surface.writeFeatures(output_dir +"low_surface\\feature\\"+time+".txt", time);
+		low_surface.writeValues(output_dir + "low_surface\\value\\"+time+".txt", time);
 		
-		//850hpa ¸ßµÍÑ¹ÖÐÐÄ
+		//850hpa ï¿½ßµï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½
 		hight850.smooth(3);
 		hight850.writeToFile(output_dir+"low_850\\h850.txt");
 		WeatherSystems hl_850 = SHighLowPressure.getHLCentres(hight850, 850, 1.0f,4);
 		wss.put("hl_850", hl_850);
-		hl_850.writeIds(output_dir +"low_850\\ids.txt", time);
-		hl_850.writeFeatures(output_dir +"low_850\\feature.txt", time);
-		hl_850.writeValues(output_dir + "low_850\\value.txt",time);
+		hl_850.writeIds(output_dir +"low_850\\ids"+time+".txt", time);
+		hl_850.writeFeatures(output_dir +"low_850\\feature"+time+".txt", time);
+		hl_850.writeValues(output_dir + "low_850\\value"+time+".txt",time);
 		
 		
-		//700pa ¸ßµÍÑ¹ÖÐÐÄ
+		//700pa ï¿½ßµï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½
 		hight850.smooth(3);
 		hight850.writeToFile(output_dir+"low_850\\h850.txt");
 		WeatherSystems hl_700 = SHighLowPressure.getHLCentres(hight700, 700, 1.0f,4);
 		wss.put("hl_700", hl_700);
-		hl_850.writeIds(output_dir +"hl_700\\ids.txt", time);
-		hl_850.writeFeatures(output_dir +"hl_700\\feature.txt", time);
-		hl_850.writeValues(output_dir + "hl_700\\value.txt", time);
+		hl_850.writeIds(output_dir +"hl_700\\ids"+time+".txt", time);
+		hl_850.writeFeatures(output_dir +"hl_700\\feature"+time+".txt", time);
+		hl_850.writeValues(output_dir + "hl_700\\value"+time+".txt", time);
 		
-		//500hpa ¸ß¶È³¡µÍÎÐ
+		//500hpa ï¿½ß¶È³ï¿½ï¿½ï¿½ï¿½ï¿½
 		hight500.smooth(3);
 		hight500.writeToFile(output_dir+"low_500\\h500.txt");
 		WeatherSystems low_500 = SHighLowPressure.getHLCentres(hight500, 1000, 1.0f,4f);
 		wss.put("low_500", low_500);
-		low_500.writeIds(output_dir +"low_500\\ids.txt", time);
-		low_500.writeFeatures(output_dir +"low_500\\feature.txt", time);
-		low_500.writeValues(output_dir + "low_500\\value.txt", time);
+		low_500.writeIds(output_dir +"low_500\\ids"+time+".txt", time);
+		low_500.writeFeatures(output_dir +"low_500\\feature"+time+".txt", time);
+		low_500.writeValues(output_dir + "low_500\\value"+time+".txt", time);
 		
 		
-		//500¸±¸ß
+		//500ï¿½ï¿½ï¿½ï¿½
 		hight500.writeToFile(output_dir+"subHigh_500\\h500.txt");
 		WeatherSystems subHigh_500 = SSubtropicalHigh.getSubtropicalHigh(hight500, 500, 1.0f);
 		wss.put("subHigh_500", subHigh_500);
-		subHigh_500.writeIds(output_dir +"subHigh_500\\ids.txt", time);
-		subHigh_500.writeFeatures(output_dir +"subHigh_500\\feature.txt", time);
-		subHigh_500.writeValues(output_dir + "subHigh_500\\value.txt", time);
+		subHigh_500.writeIds(output_dir +"subHigh_500\\ids"+time+".txt", time);
+		subHigh_500.writeFeatures(output_dir +"subHigh_500\\feature"+time+".txt", time);
+		subHigh_500.writeValues(output_dir + "subHigh_500\\value"+time+".txt", time);
 	
-		//1000²ÛÏßÊ¶±ð£¨Ö÷Òª¹Ø×¢µ¹²Û£©
+		//1000ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½×¢ï¿½ï¿½ï¿½Û£ï¿½
 		hight1000.writeToFile(output_dir+"trough_1000\\h1000.txt");
 		WeatherSystems trough_1000 = STrough.getTrough(hight1000, 1000, 1.0f);
 		wss.put("trough_1000", trough_1000);
-		trough_1000.writeIds(output_dir +"trough_1000\\ids.txt", time);
-		trough_1000.writeFeatures(output_dir +"trough_1000\\feature.txt", time);
-		trough_1000.writeValues(output_dir + "trough_1000\\value.txt", time);
+		trough_1000.writeIds(output_dir +"trough_1000\\ids"+time+".txt", time);
+		trough_1000.writeFeatures(output_dir +"trough_1000\\feature"+time+".txt", time);
+		trough_1000.writeValues(output_dir + "trough_1000\\value"+time+".txt", time);
 		
-		//500¸ß¿Õ²Û
+		//500ï¿½ß¿Õ²ï¿½
 		hight500.writeToFile(output_dir+"trough_500\\h500.txt");
 		WeatherSystems trough_500 = STrough.getTrough(hight500, 500, 1.0f);
 		wss.put("trough_500", trough_500);
-		trough_500.writeIds(output_dir +"trough_500\\ids.txt", time);
-		trough_500.writeFeatures(output_dir +"trough_500\\feature.txt", time);
-		trough_500.writeValues(output_dir + "trough_500\\value.txt", time);
+		trough_500.writeIds(output_dir +"trough_500\\ids"+time+".txt", time);
+		trough_500.writeFeatures(output_dir +"trough_500\\feature"+time+".txt", time);
+		trough_500.writeValues(output_dir + "trough_500\\value"+time+".txt", time);
 		
 		
-		//500hpa ÎÐÐý
-		wind500.writeToFile(output_dir +"vortex_500\\wind.txt", time);
+		//500hpa ï¿½ï¿½ï¿½ï¿½
+		wind500.writeToFile(output_dir +"vortex_500\\wind"+time+".txt", time);
 		WeatherSystems vortex_500 = SVortex.getVortexCentres(wind500, 500, 1.0f);
 		wss.put("vortex_500",vortex_500);
-		vortex_500.writeIds(output_dir +"vortex_500\\ids.txt", time);
-		vortex_500.writeFeatures(output_dir +"vortex_500\\feature.txt", time);
-		vortex_500.writeValues(output_dir + "vortex_500\\value.txt", time);
+		vortex_500.writeIds(output_dir +"vortex_500\\ids"+time+".txt", time);
+		vortex_500.writeFeatures(output_dir +"vortex_500\\feature"+time+".txt", time);
+		vortex_500.writeValues(output_dir + "vortex_500\\value"+time+".txt", time);
 		
 		
-		//850hpa ÎÐÐý
-		wind850.writeToFile(output_dir +"vortex_850\\wind.txt", time);
+		//850hpa ï¿½ï¿½ï¿½ï¿½
+		wind850.writeToFile(output_dir +"vortex_850\\wind"+time+".txt", time);
 		WeatherSystems vortex_850 = SVortex.getVortexCentres(wind850, 850, 1.0f);
 		wss.put("vortex_850", vortex_850);
 		
 		
-		vortex_850.writeIds(output_dir +"vortex_850\\ids.txt", time);
-		vortex_850.writeFeatures(output_dir +"vortex_850\\feature.txt", time);
-		vortex_850.writeValues(output_dir + "vortex_850\\value.txt", time);
+		vortex_850.writeIds(output_dir +"vortex_850\\ids"+time+".txt", time);
+		vortex_850.writeFeatures(output_dir +"vortex_850\\feature"+time+".txt", time);
+		vortex_850.writeValues(output_dir + "vortex_850\\value"+time+".txt", time);
 		
-		//700hpa ÎÐÐý
-		wind700.writeToFile(output_dir +"vortex_700\\wind.txt", time);
+		//700hpa ï¿½ï¿½ï¿½ï¿½
+		wind700.writeToFile(output_dir +"vortex_700\\wind"+time+".txt", time);
 		
 		WeatherSystems vortex_700 = SVortex.getVortexCentres(wind700, 700, 1.0f);
 		wss.put("vortex_700", vortex_700);
-		vortex_700.writeIds(output_dir +"vortex_700\\ids.txt", time);
-		vortex_700.writeFeatures(output_dir +"vortex_700\\feature.txt", time);
-		vortex_700.writeValues(output_dir + "vortex_700\\value.txt", time);
+		vortex_700.writeIds(output_dir +"vortex_700\\ids"+time+".txt", time);
+		vortex_700.writeFeatures(output_dir +"vortex_700\\feature"+time+".txt", time);
+		vortex_700.writeValues(output_dir + "vortex_700\\value"+time+".txt", time);
 		
-		//850ÇÐ±äÏß
+		//850ï¿½Ð±ï¿½ï¿½ï¿½
 		
-		wind850.writeToFile(output_dir +"shear_850\\wind.txt", time);
+		wind850.writeToFile(output_dir +"shear_850\\wind"+time+".txt", time);
 		WeatherSystems shear_850 = SShear.getShear(wind850, 850, 1.0f);
 		wss.put("shear_850", shear_850);
-		shear_850.writeIds(output_dir +"shear_850\\ids.txt", time);
-		shear_850.writeFeatures(output_dir +"shear_850\\feature.txt", time);
-		shear_850.writeValues(output_dir + "shear_850\\value.txt", time);
+		shear_850.writeIds(output_dir +"shear_850\\ids"+time+".txt", time);
+		shear_850.writeFeatures(output_dir +"shear_850\\feature"+time+".txt", time);
+		shear_850.writeValues(output_dir + "shear_850\\value"+time+".txt", time);
 		
 		
-		//700ÇÐ±äÏß
-		wind700.writeToFile(output_dir +"shear_700\\wind.txt", time);
+		//700ï¿½Ð±ï¿½ï¿½ï¿½
+		wind700.writeToFile(output_dir +"shear_700\\wind"+time+".txt", time);
 		
 		WeatherSystems shear_700 = SShear.getShear(wind700, 700, 1.0f);
 		wss.put("shear_700", shear_700);
-		shear_700.writeIds(output_dir +"shear_700\\ids.txt", time);
-		shear_700.writeFeatures(output_dir +"shear_700\\feature.txt", time);
-		shear_700.writeValues(output_dir + "shear_700\\value.txt", time);
+		shear_700.writeIds(output_dir +"shear_700\\ids"+time+".txt", time);
+		shear_700.writeFeatures(output_dir +"shear_700\\feature"+time+".txt", time);
+		shear_700.writeValues(output_dir + "shear_700\\value"+time+".txt", time);
 		
-		//850¼±Á÷
-		wind850.writeToFile(output_dir +"jet_850\\wind.txt", time);
+		//850ï¿½ï¿½ï¿½ï¿½
+		wind850.writeToFile(output_dir +"jet_850\\wind"+time+".txt", time);
 		WeatherSystems jet_850 = SJet.getJet(wind850, 850, 1.0f);
 		wss.put("jet_850", jet_850);
-		jet_850.writeIds(output_dir +"jet_850\\ids.txt",time);
-		jet_850.writeFeatures(output_dir +"jet_850\\feature.txt", time);
-		jet_850.writeValues(output_dir + "jet_850\\value.txt", time);
+		jet_850.writeIds(output_dir +"jet_850\\ids"+time+".txt",time);
+		jet_850.writeFeatures(output_dir +"jet_850\\feature"+time+".txt", time);
+		jet_850.writeValues(output_dir + "jet_850\\value"+time+".txt", time);
+		jet_850.writeAbstract(output_dir+ "jet_850\\abstract"+time+".txt", time);
 		
 		
-		//700¼±Á÷
-		wind700.writeToFile(output_dir +"jet_700\\wind.txt", time);
+		//700ï¿½ï¿½ï¿½ï¿½
+		wind700.writeToFile(output_dir +"jet_700\\wind"+time+".txt", time);
 		WeatherSystems jet_700 = SJet.getJet(wind700, 700, 1.0f);
 		wss.put("jet_700", jet_700);
-		jet_700.writeIds(output_dir +"jet_700\\ids.txt", time);
-		jet_700.writeFeatures(output_dir +"jet_700\\feature.txt",time);
-		jet_700.writeValues(output_dir + "jet_700\\value.txt", time);
+		jet_700.writeIds(output_dir +"jet_700\\ids"+time+".txt", time);
+		jet_700.writeFeatures(output_dir +"jet_700\\feature"+time+".txt",time);
+		jet_700.writeValues(output_dir + "jet_700\\value"+time+".txt", time);
 		
 		
 		tFront = new T_Front (wss,typhoons);
@@ -179,7 +180,7 @@ public class WeatherSituationType {
 	}
 	
 	public void write_to_file_tFront(String root_dir,Calendar time) {
-		//Êä³ö·æÃæÆøÐýÀàÌìÆøÏµÍ³
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³
 		String dir_tFront = root_dir + "tFront\\";
 		File file = new File(dir_tFront);
 		file.mkdir();
@@ -262,7 +263,7 @@ public class WeatherSituationType {
 		
 		
 		
-		//Êä³öµØÃæµÍÑ¹ºÍµÍÎÐ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½Íµï¿½ï¿½ï¿½
 		WeatherSystems ws = null;		
 		ws = wss.get("low_surface");
 		WeatherSystems ws1 = get_relative_weatherSystems(ws,tFront.low_surface_id_list);
@@ -316,7 +317,7 @@ public class WeatherSituationType {
 	
 
 	public void write_to_file_tSEVortexShear(String root_dir,Calendar time) {
-		//Êä³ö·æÃæÆøÐýÀàÌìÆøÏµÍ³
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³
 		String dir_tSEVortexShear = root_dir + "tSWVortexShear\\";
 		
 		File file = new File(dir_tSEVortexShear);
@@ -406,7 +407,7 @@ public class WeatherSituationType {
 		
 		
 		
-		//Êä³öµØÃæµÍÑ¹ºÍµÍÎÐ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½Íµï¿½ï¿½ï¿½
 		WeatherSystems ws = null;		
 		ws = wss.get("hl_700");
 		WeatherSystems ws1 = get_relative_weatherSystems(ws,tSWVortex.low_700_id_list);
@@ -463,7 +464,7 @@ public class WeatherSituationType {
 	
 	
 	public void write_to_file_tSW_NEVortex(String root_dir,Calendar time) {
-		//Êä³ö·æÃæÆøÐýÀàÌìÆøÏµÍ³
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³
 		String dir_tSEVortexShear = root_dir + "tSW_NEVortex\\";
 		
 		File file = new File(dir_tSEVortexShear);
@@ -580,7 +581,7 @@ public class WeatherSituationType {
 	
 	
 	public void write_to_file_tSummerReversedTrough(String root_dir,Calendar time) {
-		//Êä³ö·æÃæÆøÐýÀàÌìÆøÏµÍ³
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³
 		String dir_tSEVortexShear = root_dir + "tSummerReversedTrough\\";
 		
 		File file = new File(dir_tSEVortexShear);
@@ -661,7 +662,7 @@ public class WeatherSituationType {
 		
 		
 		
-		//Êä³öµØÃæµÍÑ¹ºÍµÍÎÐ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½Íµï¿½ï¿½ï¿½
 		WeatherSystems ws = null;		
 		WeatherSystems ws1 = null;
 		
@@ -702,7 +703,7 @@ public class WeatherSituationType {
 	public void write_to_file_tTyphoon(String root_dir,Calendar time) {
 		
 		if(tTyphoon.typhoon_id ==0)return;
-		//Êä³ö·æÃæÆøÐýÀàÌìÆøÏµÍ³
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³
 		String dir_tTyphoon = root_dir + "tTyphoon\\";
 		
 		File file = new File(dir_tTyphoon);
@@ -776,7 +777,7 @@ public class WeatherSituationType {
 		
 		
 		
-		//Êä³öµØÃæµÍÑ¹ºÍµÍÎÐ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½Íµï¿½ï¿½ï¿½
 		WeatherSystems ws = null;		
 		WeatherSystems ws1 = null;
 		
