@@ -171,12 +171,61 @@ public class WeatherSystems {
 			// TODO 鑷姩鐢熸垚鐨� catch 鍧�
 			System.out.println(fileName+"鍐欏叆澶辫触");
 			
-		}
+		}	
 	
 	}
 
 	*/
+	
+	public void writeAbstract(String fileName, String time) {
+		Set<Integer> keys = this.features.keySet();
+		String str = "id" + "\t" + "centre_x" +"\t"+ "centre_y" + "\t" + "axes_dir" + "\t" + "axes_len" + "\t" + "area" + "\t"+"strenght"+"\n";
+		for(Integer i : keys) {
+			float centre_x = this.features.get(i).centrePoint.ptLon;
+			float centre_y = this.features.get(i).centrePoint.ptLat;
+			float[] p0 = this.features.get(i).axes.point.get(0);
+			int num = this.features.get(i).axes.point.size();
+			float[] p1 = this.features.get(i).axes.point.get(num-1);
+			float axes_dir ;
+			float dx = p1[0] - p0[0];
+			float dy = p1[1] - p0[1];
+			float dis = (float) Math.sqrt(dx * dx + dy * dy);
+			
+			if(dy >=0) {
+				axes_dir = (float) (Math.acos(dx/dis)* 180 / Math.PI);
+			}
+			else{
+				axes_dir = -(float)(Math.acos(dx/dis) * 180 / Math.PI);
+			}
+			
+			float axes_lenght = dis;
+			float area = 0;
+			if(this.features.get(i).features.containsKey("area")) {
+				area = this.features.get(i).features.get("area");
+			}
+			float strenght = 0;
+			if(this.features.get(i).features.containsKey("strenght")) {
+				strenght = this.features.get(i).features.get("strenght");
+			}
+			
+			str += i + "\t" +  centre_x + "\t" + centre_y +"\t" + (int)axes_dir + "\t" + String.format("%.1f", axes_lenght) 
+			+ "\t"+ String.format("%.1f", area)+"\t" + String.format("%.1f", strenght) + "\n";
+			
+		}
+		
+		try {
+			OutputStreamWriter fos= new OutputStreamWriter(new FileOutputStream(new File(fileName)),"GBK");
+			BufferedWriter br=new BufferedWriter(fos);
+			br.write(str);
+			br.close();
+		}
+		catch (Exception e) {
+			// TODO 鑷姩鐢熸垚鐨� catch 鍧�
+			System.out.println(fileName+"文件输出失败");
 
+		}
+		
+	}
 	
 	
 	public void writeFeatures(String fileName,String time) {
@@ -437,7 +486,7 @@ public class WeatherSystems {
 					centreFeatures = SystemIdentification.getCentreAreaStrenght(value, ids);
 					Set <Integer> centKeys = centreFeatures.keySet();
 					float xx,yy,dis2,mindis2;
-					int minj=0,ig,jg;
+					int minj=0,ig,jg,ig1,jg1;
 					Set <Integer> effectiveAxesKeys = new HashSet <Integer>();
 					
 					for(Integer i:centKeys){
@@ -505,7 +554,12 @@ public class WeatherSystems {
 							yy = entry.getValue().axes.point.get(k)[1];
 							ig = (int) ((xx-ids.gridInfo.startlon)/ids.gridInfo.dlon);
 							jg = (int) ((yy-ids.gridInfo.startlat)/ids.gridInfo.dlat);
-							if(ids.dat[ig][jg] != entry.getKey()){
+							ig1 = ig+1;
+							if(ig1 >= ids.gridInfo.nlon)ig1 = ids.gridInfo.nlon - 1;
+							jg1 = jg + 1;
+							if(jg1 >= ids.gridInfo.nlat)jg1 = ids.gridInfo.nlat - 1;
+							if(ids.dat[ig][jg] != entry.getKey() && ids.dat[ig1][jg] != entry.getKey() &&
+									ids.dat[ig][jg1] != entry.getKey() && ids.dat[ig1][jg1] != entry.getKey()){
 								entry.getValue().axes.point.remove(k);
 							}
 						}
