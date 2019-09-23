@@ -27,22 +27,33 @@ public class MainTest {
 	static String test_data_root= "D:/develop/java/";
 	
 	public static void main(String[] args) throws Exception
+	
 	{
-		
-		
-
-		
-		weathersituationtype();
-		
+		creat_typhoon_report_test();
+		//weathersituationtype();
+	}
+	
+	private static void creat_typhoon_report_test(){
+		String wind850_dir = "D:\\develop\\java\\201905-weahter_identification\\gfs0\\2010\\wind\\850";
+		String report_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\typhoon_report";
+		Calendar start = Calendar.getInstance();
+		start.set(2010,6, 13,8,0);
+		Calendar end =Calendar.getInstance();
+		end.set(2016, 6, 21,3,0);
+		Calendar dati= (Calendar) start.clone();
+		while(dati.before(end)) {
+			dati.add(Calendar.HOUR, 6);
+			STyphoon.creat_typhoon_report(wind850_dir,report_dir,dati,6,6, 48);
+		}
 		
 	}
 	
 	private static void weathersituationtype() {
 		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		Calendar start = Calendar.getInstance();
-		start.set(2017,5, 22,18,0);
+		start.set(2010,6, 13,8,0);
 		Calendar end =Calendar.getInstance();
-		end.set(2018, 9, 21,3,0);
+		end.set(2012, 9, 21,3,0);
 		Calendar time= (Calendar) start.clone();
 		String root_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		String root_typhoon = "D:\\develop\\java\\201905-weahter_identification\\output\\typhoon_trace\\babj";
@@ -51,8 +62,8 @@ public class MainTest {
 			time.add(Calendar.HOUR, 6);
 			String fileName =MyMath.getFileNameFromCalendar(time);
 			
-			//String h500_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/500/"+fileName.substring(2,10)+".000";
-			String h500_path = test_data_root +  "201905-weahter_identification/GH/500/"+fileName.substring(0,10)+".000";
+			String h500_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/500/"+fileName.substring(2,10)+".000";
+			//String h500_path = test_data_root +  "201905-weahter_identification/GH/500/"+fileName.substring(0,10)+".000";
 			GridData h500 = new GridData(h500_path);
 			if(h500.gridInfo == null) {
 				continue;
@@ -62,25 +73,9 @@ public class MainTest {
 					h500.dat[i][j] *= 10;
 				}
 			}
-			
-			//500����
-			//h500.writeToFile(output_dir+"subHigh_500\\h500.txt");
-			WeatherSystems subHigh_500 = SSubtropicalHigh.getSubtropicalHigh(h500, 500, 1.0f);
-			
-			subHigh_500.writeIds(output_dir +"subHigh_500\\ids"+fileName+".txt", fileName);
-			subHigh_500.writeFeatures(output_dir +"subHigh_500\\feature"+fileName+".txt", fileName);
-			subHigh_500.writeValues(output_dir + "subHigh_500\\value"+fileName+".txt", fileName);
-			
-			
-			//h500.writeToFile(output_dir+"trough_500\\h500.txt");
-			WeatherSystems trough_500 = STrough.getTrough(h500, 500, 1.0f);
-			trough_500.writeIds(output_dir +"trough_500\\ids"+fileName+".txt", fileName);
-			trough_500.writeFeatures(output_dir +"trough_500\\feature"+fileName+".txt", fileName);
-			trough_500.writeValues(output_dir + "trough_500\\value"+fileName+".txt", fileName);
+	
 		
-			if(true) {
-				continue;
-			}
+		
 			ArrayList<float[]> typhoon_reports = STyphoon.read_typhoon_position(root_typhoon,time);
 
 			//System.out.println(fileName);
@@ -135,7 +130,7 @@ public class MainTest {
 	private static void southAsiaHighTest(){
 		int[] level = new int[]{100};  //閸楁ぞ绨规妯哄竾娑撴槒顩﹂崗铏暈100hpa
 		Calendar start = Calendar.getInstance();
-		start.set(2015, 6, 20,8,0);
+		start.set(2015, 6, 15,20,0);
 		Calendar end =Calendar.getInstance();
 		end.set(2015, 6, 20,20,0);
 		for(int i=0; i< level.length;i++){

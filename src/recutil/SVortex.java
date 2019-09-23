@@ -212,6 +212,10 @@ public class SVortex{
         			point1[0] = cent[0] + dx;
         			point1[1] = cent[1] + dy;
         			uv = VectorMathod.getValue(wind, point1);
+        			if(uv[0] ==9999) {
+        				uv[0] = 0;
+        				uv[1] = 0;
+        			}
         			cur = VectorMathod.getValue(cur_vor, point1);
         			vor = dx * uv[1] - dy *uv[0];
         			if (vor <0 || cur <0) {
@@ -246,7 +250,7 @@ public class SVortex{
         				dis2 = (lon - cent[0]) * (lon - cent[0]) + (lat - cent[1]) * (lat - cent[1]);
         				dis = (float) Math.sqrt(dis2);
         				if(dis < maxr) {
-        					output.dat[i][j] = max_cycle/(dis + maxr);
+        					output.dat[i][j] = max_cycle * (1 - (dis / maxr));
         				}
         				
         			}

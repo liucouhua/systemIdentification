@@ -920,6 +920,7 @@ public class SystemIdentification {
 			//鏍规嵁骞虫祦椋庢柟娉曡幏鍙栭珮鍊煎尯鐨勮剨绾�
 			VectorData tranDirection = VectorMathod.getDirection(tranWind);          //璁＄畻骞虫祦鏂瑰悜
 			GridData adve=VectorMathod.getAdvection(tranDirection, gridFeature);    //璁＄畻骞虫祦鍦�
+			adve.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output\\jet_850\\adve.txt");
 			ArrayList<Line> line0 = LineDealing.creatLine(0.0f, adve);  //璁＄畻骞虫祦鍦�0绾匡紝浣滀负鑴婄嚎鎴栨Ы绾�
 			VectorData adve_grad_direction = VectorMathod.getDirection(VectorMathod.getGrads(adve));
 			GridData adveOfAdve= VectorMathod.dot(tranDirection, adve_grad_direction); //
