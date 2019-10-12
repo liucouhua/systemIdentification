@@ -16,6 +16,7 @@ import recutil.SSubtropicalHigh;
 import recutil.STrough;
 import recutil.STyphoon;
 import recutil.SVortex;
+import recutil.SimilarWeatherSituation;
 import recutil.SystemIdentification;
 import recutil.VectorData;
 import recutil.VectorMathod;
@@ -29,9 +30,72 @@ public class MainTest {
 	public static void main(String[] args) throws Exception
 	
 	{
-		creat_typhoon_report_test();
+		//creat_typhoon_report_test();
 		//weathersituationtype();
+		//test09();
+		class_test();
 	}
+	
+	
+	private static void class_test() {
+		String dir_h1000 = "D:\\develop\\java\\201905-weahter_identification\\gfs0\\2010\\hgt\\1000";
+		String dir_h500 = "D:\\develop\\java\\201905-weahter_identification\\gfs0\\2010\\hgt\\500";
+		String dir_w850 = "D:\\develop\\java\\201905-weahter_identification\\gfs0\\2010\\wind\\850";
+		String dir_w700 = "D:\\develop\\java\\201905-weahter_identification\\gfs0\\2010\\wind\\700";
+		String dir_typhoon = "D:\\develop\\java\\201905-weahter_identification\\output\\typhoon_trace";
+		String dir_vectors = "D:\\develop\\java\\201905-weahter_identification\\output\\weather_para_vector";
+		String dir_classification = "D:\\develop\\java\\201905-weahter_identification\\output\\classification";
+		float centx = 114;
+		float centy = 30;
+		SimilarWeatherSituation sws = new SimilarWeatherSituation(dir_h1000, dir_w850, dir_w700, dir_h500, dir_typhoon,dir_vectors,dir_classification,centx,centy);
+		
+		Calendar start = Calendar.getInstance();
+		start.set(2010,3,20,8,0);	
+		Calendar end = Calendar.getInstance();
+		end.set(2010,11,20,20,0);
+		int dh = 6;
+		//sws.creatWeatherSituationVector_bunch(start, end, dh);
+		sws.creatClassifiationByKmeans(3);
+		Calendar time1 = (Calendar) start.clone();
+		time1.add(Calendar.HOUR_OF_DAY, 6);
+		ArrayList<String>similar_filenames =  sws.getSimilarWeatherDates(time1,5);
+		//输出识别结果
+		System.out.println("最相似的日期对应的文件名为：\n");
+		for(int i=0;i<similar_filenames.size();i++) {
+			System.out.println(similar_filenames.get(i));
+		}
+		
+		
+	}
+	
+	private static void test09() {
+		Calendar endtime = Calendar.getInstance();
+		endtime.set(2019,8,8,20,0);
+		String output_dir = "E:\\";
+		for(int i=0;i < 180; i+=12) {
+			Calendar time0 = (Calendar)endtime.clone();
+			time0.add(Calendar.HOUR_OF_DAY, -i);
+			String fileName = MyMath.getFileNameFromCalendar(time0);
+			String path = "E:\\wind\\" +fileName.substring(2,10) +"." + String.format("%03d", i);
+			VectorData wind850 = new VectorData(path);
+			WeatherSystems shear_850 = SShear.getShear(wind850, 850, 1.0f);
+			shear_850.writeIds(output_dir +"shear_850\\ids"+fileName.substring(2,10) +"." + String.format("%03d", i), fileName);
+			shear_850.writeFeatures(output_dir +"shear_850\\feature"+fileName.substring(2,10) +"." + String.format("%03d", i), fileName);
+			shear_850.writeValues(output_dir + "shear_850\\value"+fileName.substring(2,10) +"." + String.format("%03d", i), fileName);
+			shear_850.writeAbstract(output_dir+ "shear_850\\abstract"+fileName.substring(2,10) +"." + String.format("%03d", i), fileName);
+		
+			WeatherSystems jet_850 = SJet.getJet(wind850, 850, 1.0f);
+			jet_850.writeIds(output_dir +"jet_850\\ids"+fileName.substring(2,10) +"." + String.format("%03d", i),fileName);
+			jet_850.writeFeatures(output_dir +"jet_850\\feature"+fileName.substring(2,10) +"." + String.format("%03d", i), fileName);
+			jet_850.writeValues(output_dir + "jet_850\\value"+fileName.substring(2,10) +"." + String.format("%03d", i), fileName);
+			jet_850.writeAbstract(output_dir+ "jet_850\\abstract"+fileName.substring(2,10) +"." + String.format("%03d", i), fileName);
+			
+		}
+		
+	}
+	
+	
+	
 	
 	private static void creat_typhoon_report_test(){
 		String wind850_dir = "D:\\develop\\java\\201905-weahter_identification\\gfs0\\2010\\wind\\850";
@@ -48,10 +112,13 @@ public class MainTest {
 		
 	}
 	
+	
+	
+	
 	private static void weathersituationtype() {
 		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		Calendar start = Calendar.getInstance();
-		start.set(2010,6, 13,8,0);
+		start.set(2010,5, 18,20,0);
 		Calendar end =Calendar.getInstance();
 		end.set(2012, 9, 21,3,0);
 		Calendar time= (Calendar) start.clone();

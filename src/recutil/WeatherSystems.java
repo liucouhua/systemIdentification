@@ -590,7 +590,7 @@ public class WeatherSystems {
 							sf.features.put("area", centreFeatures.get(i).getFeature("area"));
 						}
 						if(!sf.features.containsKey("strenght")){
-							sf.features.put("strenght", centreFeatures.get(i).getFeature("area"));
+							sf.features.put("strenght", centreFeatures.get(i).getFeature("strenght"));
 						}
 					}
 				}

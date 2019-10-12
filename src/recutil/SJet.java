@@ -42,7 +42,7 @@ public class SJet{
 		
 		//marker.writeToFile("D:\\develop\\java\\201905-weahter_identification\\output\\marker.txt");
 		speed = speed.mutiply(marker);   //淇濈暀鎬ユ祦鍖虹殑椋庨��
-		speed.smooth(5);
+		speed.smooth(3);
 		speed = speed.add(-0.5f);
 		marker = speed.sign01();
 		//浠ュ瀭鐩存�ユ祦鐨勬柟鍚戝椋庨�熻繘琛屽钩娴�
