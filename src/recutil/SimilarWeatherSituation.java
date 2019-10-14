@@ -14,6 +14,17 @@ import java.util.regex.Pattern;
 
 public class SimilarWeatherSituation {
 	
+	//批量读取气压、风场和高度场数据，识别出各类天气系统，每一类天气系统只保留和关注点（centx,centy) 最近的一个，将其位置、面积、强度、轴向的特征输出到文件中
+	//dir_h1000,1000hPa的高度场的路径
+	//dir_w850,850hPa的风场的路径
+	//dir_w700， 700hPa的风场路径
+	//dir_h500 500hPa的高度场路径
+	//start批量计算的起始日期
+	//end 批量计算的结束日期
+	//dh 批量计算的间隔（单位 小时）
+	//centx，centy关注区域的中心点的位置
+	//dir_vector 输出属性的路径
+	
 	private String dir_h1000;
 	private String dir_w850;
 	private String dir_w700;
@@ -22,6 +33,8 @@ public class SimilarWeatherSituation {
 	private String dir_vectors;
 	private String dir_classificationModel;
 	float centx,centy;
+	
+
 	
 	public SimilarWeatherSituation(String dir_h1000, String dir_w850, String dir_w700, String dir_h500,String dir_typhoon,String dir_vectors,String dir_classificationModel,
 		float centx,float centy) {
@@ -93,16 +106,7 @@ public class SimilarWeatherSituation {
 	}
 	
 	public void creatWeatherSituationVector_bunch(Calendar start,Calendar end, int dh) {
-		//批量读取气压、风场和高度场数据，识别出各类天气系统，每一类天气系统只保留和关注点（centx,centy) 最近的一个，将其位置、面积、强度、轴向的特征输出到文件中
-		//dir_h1000,1000hPa的高度场的路径
-		//dir_w850,850hPa的风场的路径
-		//dir_w700， 700hPa的风场路径
-		//dir_h500 500hPa的高度场路径
-		//start批量计算的起始日期
-		//end 批量计算的结束日期
-		//dh 批量计算的间隔（单位 小时）
-		//centx，centy关注区域的中心点的位置
-		//dir_vector 输出属性的路径
+		//根据计算的起止时间和时间间隔，批量计算离关注点最近的天气系统的属性，每一个时刻的结果存储在一个文件中
 		
 		Calendar time= (Calendar) start.clone();
 		while(!time.after(end)){
@@ -110,9 +114,11 @@ public class SimilarWeatherSituation {
 			String fileName =MyMath.getFileNameFromCalendar(time);
 			Calendar time0 = (Calendar) time.clone();
 			time.add(Calendar.HOUR, dh);
+			
+			//地面低压系统的识别
 			String h1000_path =dir_h1000  +"\\" + fileName.substring(2,10)+".000";
 			GridData h1000 = new GridData(h1000_path);
-			String context = "system\t\t"+"centx\t"+"centy\t"+"area\t"+"strenght\t" + "direction\n";
+			String context = "system\t\t"+"centx\t"+"centy\t"+"area\t"+"strenght\t" + "direction\n";  //context用于将属性转换为string，用于输出到文件
 			float[] para = new float[5];
 			if(h1000.gridInfo == null) {
 				continue;
@@ -120,11 +126,12 @@ public class SimilarWeatherSituation {
 			else {
 				h1000.smooth(3);
 				WeatherSystems low_surface = SHighLowPressure.getHLCentres(h1000, 1000, 1.0f,2.5f);
-				para = getNearestSystemPara(low_surface,centx,centy);
+				para = getNearestSystemPara(low_surface,centx,centy);  //获取离关注区域中心点最近的天气系统的位置、面积、强度和轴线角度等属性
 				context += "low_surface\t" + String.format("%8.2f", para[0]) + "\t" + String.format("%8.2f", para[1]) + "\t" +String.format("%8.2f", para[2]) + "\t"
 						+String.format("%8.2f", para[3]) + "\t" +String.format("%8.2f", para[4]) + "\n";
 				
 			}
+			
 			
 			String w850_path = dir_w850 +"\\" +fileName.substring(2,10)+".000";
 			VectorData w850 = new VectorData(w850_path);
@@ -134,34 +141,38 @@ public class SimilarWeatherSituation {
 				continue;
 			}
 			else {
-				WeatherSystems vortex_850 = SVortex.getVortexCentres(w850, 850, 1.0f);
-				para = getNearestSystemPara(vortex_850,centx,centy);
+				
+				
+				WeatherSystems vortex_850 = SVortex.getVortexCentres(w850, 850, 1.0f); //850涡旋
+				para = getNearestSystemPara(vortex_850,centx,centy);//获取离关注区域中心点最近的天气系统的位置、面积、强度和轴线角度等属性
 				context += "vortex_850\t" + String.format("%8.2f", para[0]) + "\t" + String.format("%8.2f", para[1]) + "\t" +String.format("%8.2f", para[2]) + "\t"
 						+String.format("%8.2f", para[3]) + "\t" +String.format("%8.2f", para[4]) + "\n";
 				
-				WeatherSystems jet_850 = SJet.getJet(w850, 850, 1.0f);
+				WeatherSystems jet_850 = SJet.getJet(w850, 850, 1.0f); //850急流
 				para = getNearestSystemPara(jet_850,centx,centy);
 				context += "jet_850\t\t" + String.format("%8.2f", para[0]) + "\t" + String.format("%8.2f", para[1]) + "\t" +String.format("%8.2f", para[2]) + "\t"
 						+String.format("%8.2f", para[3]) + "\t" +String.format("%8.2f", para[4]) + "\n";			
 				
-				WeatherSystems shear_850 = SShear.getShear(w850, 850, 1.0f);
+				WeatherSystems shear_850 = SShear.getShear(w850, 850, 1.0f); //850切变
 				
 				para = getNearestSystemPara(shear_850,centx,centy);
 				context += "shear_850\t\t" + String.format("%8.2f", para[0]) + "\t" + String.format("%8.2f", para[1]) + "\t" +String.format("%8.2f", para[2]) + "\t"
 						+String.format("%8.2f", para[3]) + "\t" +String.format("%8.2f", para[4]) + "\n";
 				
 			}
+			
+			
 			String w700_path = dir_w700  +"\\" + fileName.substring(2,10)+".000";
 			VectorData w700 = new VectorData(w700_path);
 			if(w700.gridInfo == null) {
 				continue;
 			}
 			else {
-				WeatherSystems jet_700 = SJet.getJet(w700, 700, 1.0f);
+				WeatherSystems jet_700 = SJet.getJet(w700, 700, 1.0f); //700急流
 				para = getNearestSystemPara(jet_700,centx,centy);
 				context += "jet_700\t\t" + String.format("%8.2f", para[0]) + "\t" + String.format("%8.2f", para[1]) + "\t" +String.format("%8.2f", para[2]) + "\t"
 						+String.format("%8.2f", para[3]) + "\t" +String.format("%8.2f", para[4]) + "\n";
-				WeatherSystems shear_700 = SShear.getShear(w700, 700, 1.0f);
+				WeatherSystems shear_700 = SShear.getShear(w700, 700, 1.0f);  // 700切变
 				para = getNearestSystemPara(shear_700,centx,centy);
 				context += "shear_700\t\t" + String.format("%8.2f", para[0]) + "\t" + String.format("%8.2f", para[1]) + "\t" +String.format("%8.2f", para[2]) + "\t"
 						+String.format("%8.2f", para[3]) + "\t" +String.format("%8.2f", para[4]) + "\n";
@@ -172,17 +183,18 @@ public class SimilarWeatherSituation {
 				continue;
 			}
 			else {
-				WeatherSystems subHigh_500 = SSubtropicalHigh.getSubtropicalHigh(h500, 500, 1.0f);
+				WeatherSystems subHigh_500 = SSubtropicalHigh.getSubtropicalHigh(h500, 500, 1.0f);  //500副高
 				para = getNearestSystemPara(subHigh_500,centx,centy);
 				context += "subHigh_500\t" + String.format("%8.2f", para[0]) + "\t" + String.format("%8.2f", para[1]) + "\t" +String.format("%8.2f", para[2]) + "\t"
 						+String.format("%8.2f", para[3]) + "\t" +String.format("%8.2f", para[4]) + "\n";
 				
-				WeatherSystems trough_500 = STrough.getTrough(h500, 500, 1.0f);
+				WeatherSystems trough_500 = STrough.getTrough(h500, 500, 1.0f);  //500槽线
 				para = getNearestSystemPara(trough_500,centx,centy);
 				context += "trough_500\t" + String.format("%8.2f", para[0]) + "\t" + String.format("%8.2f", para[1]) + "\t" +String.format("%8.2f", para[2]) + "\t"
 						+String.format("%8.2f", para[3]) + "\t" +String.format("%8.2f", para[4]) + "\n";
 			}
 			
+			 //读取某一时刻各个台风位置
 			 ArrayList<float[]> typhoons = STyphoon.read_typhoon_position(dir_typhoon,time0);
 			 para = new float[5];
 			 float mindis2 = 999999;
@@ -198,7 +210,7 @@ public class SimilarWeatherSituation {
 				 }
 			 }
 			 if(minIndex>=0) {
-					para[0] = typhoons.get(minIndex)[1];
+					para[0] = typhoons.get(minIndex)[1]; //保留最近的一个台风的位置等属性
 					para[1] = typhoons.get(minIndex)[2];
 			 }
 			 context += "typhoon\t\t" + String.format("%8.2f",para[0] ) + "\t" + String.format("%8.2f",para[1]) + "\t" +String.format("%8.2f", 0.0f) + "\t"
@@ -222,19 +234,14 @@ public class SimilarWeatherSituation {
 	}
 	
 	public  void creatWeatherSituationVector(Calendar time0) {
-		//读取某一个时刻的读取气压、风场和高度场数据，识别出各类天气系统，每一类天气系统只保留和关注点（centx,centy) 最近的一个，将其位置、面积、强度、轴向的特征输出到文件中
-		//dir_h1000,1000hPa的高度场的路径
-		//dir_w850,850hPa的风场的路径
-		//dir_w700， 700hPa的风场路径
-		//dir_h500 500hPa的高度场路径
-		//time0 需要计算的时刻
-		//centx，centy关注区域的中心点的位置
-		//dir_vector 输出属性的路径
+		//根据当前时间，创建相应的属性矢量文件
 		creatWeatherSituationVector_bunch(time0,time0, 1);
 
 	}
 	
 	public float[] read_vector(File file) {
+		
+		//读取属性文件，重新赋值到一个数组中
 		String zz="\\n";
 		Pattern pat=Pattern.compile(zz);
 		float[] vector = new float[40];
@@ -305,10 +312,12 @@ public class SimilarWeatherSituation {
 		}
 		
 		//将矢量标准化
+		
 		ArrayList<float[]> vector_list1 = new ArrayList<float[]> ();
 		for(int i =0;i<vn;i++) {
-			float[] vector1 = new float[40];
-			vector1[0] = i;
+			float[] vector1 = new float[40]; //数组vector1中只有后39个数字是记录属性，但应分类需要增加一个值来记录历史样本编号
+			vector1[0] = i; //记录历史样本的编号，这个编号在整个计算过程中不会改变。
+			
 			for(int j=1;j<40;j++) {
 				vector1[j] = (vector_list.get(i)[j] -meanvalue[j])/(var[j]);
 			}
@@ -401,8 +410,10 @@ public class SimilarWeatherSituation {
 	
 	public ArrayList<String> getSimilarWeatherDates(Calendar time0,int nearNum) {
 		//dir_veoctor 天气形势矢量的存储路径
-		//time0 待识别的日期
-		//分类模型文件
+		//time0 当前日期和时间，程序将从历史数据中找到和time0形势参数最接近的nearNum各时刻
+		
+		
+		//读取分类模型文件，包括数据集的平均方差、分类中心的位置、各标准化后的历史数据对应得属性矢量、以及训练模型时用到的属性矢量的文件名列表
 		//读取数据集的平均和方差
 		float[] meanvalue = new float[40];
 		float[] var = new float[40];
