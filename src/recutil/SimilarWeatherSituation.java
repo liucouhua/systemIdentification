@@ -116,7 +116,7 @@ public class SimilarWeatherSituation {
 			time.add(Calendar.HOUR, dh);
 			
 			//地面低压系统的识别
-			String h1000_path =dir_h1000  +"\\" + fileName.substring(2,10)+".000";
+			String h1000_path =dir_h1000  +"\\" + fileName.substring(0,10)+".000";
 			GridData h1000 = new GridData(h1000_path);
 			String context = "system\t\t"+"centx\t"+"centy\t"+"area\t"+"strenght\t" + "direction\n";  //context用于将属性转换为string，用于输出到文件
 			float[] para = new float[5];
@@ -133,7 +133,7 @@ public class SimilarWeatherSituation {
 			}
 			
 			
-			String w850_path = dir_w850 +"\\" +fileName.substring(2,10)+".000";
+			String w850_path = dir_w850 +"\\" +fileName.substring(0,10)+".000";
 			VectorData w850 = new VectorData(w850_path);
 			w850.u.smooth(1);
 			w850.v.smooth(1);
@@ -162,7 +162,7 @@ public class SimilarWeatherSituation {
 			}
 			
 			
-			String w700_path = dir_w700  +"\\" + fileName.substring(2,10)+".000";
+			String w700_path = dir_w700  +"\\" + fileName.substring(0,10)+".000";
 			VectorData w700 = new VectorData(w700_path);
 			if(w700.gridInfo == null) {
 				continue;
@@ -177,13 +177,20 @@ public class SimilarWeatherSituation {
 				context += "shear_700\t\t" + String.format("%8.2f", para[0]) + "\t" + String.format("%8.2f", para[1]) + "\t" +String.format("%8.2f", para[2]) + "\t"
 						+String.format("%8.2f", para[3]) + "\t" +String.format("%8.2f", para[4]) + "\n";
 			}
-			String h500_path = dir_h500 +"\\"  +fileName.substring(2,10)+".000";
+			String h500_path = dir_h500 +"\\"  +fileName.substring(0,10)+".000";
 			GridData h500 = new GridData(h500_path);
 			if(h500.gridInfo == null) {
 				continue;
 			}
 			else {
+				for(int i=0;i<h500.gridInfo.nlon;i++) {
+					for(int j=0;j<h500.gridInfo.nlat;j++) {
+					//	h500.dat[i][j] *= 10;
+					}
+				}
+				
 				WeatherSystems subHigh_500 = SSubtropicalHigh.getSubtropicalHigh(h500, 500, 1.0f);  //500副高
+				
 				para = getNearestSystemPara(subHigh_500,centx,centy);
 				context += "subHigh_500\t" + String.format("%8.2f", para[0]) + "\t" + String.format("%8.2f", para[1]) + "\t" +String.format("%8.2f", para[2]) + "\t"
 						+String.format("%8.2f", para[3]) + "\t" +String.format("%8.2f", para[4]) + "\n";
@@ -192,6 +199,8 @@ public class SimilarWeatherSituation {
 				para = getNearestSystemPara(trough_500,centx,centy);
 				context += "trough_500\t" + String.format("%8.2f", para[0]) + "\t" + String.format("%8.2f", para[1]) + "\t" +String.format("%8.2f", para[2]) + "\t"
 						+String.format("%8.2f", para[3]) + "\t" +String.format("%8.2f", para[4]) + "\n";
+				trough_500.writeFeatures("D:\\develop\\java\\201905-weahter_identification\\output\\trough_500\\features"+ fileName+".txt", fileName);
+				
 			}
 			
 			 //读取某一时刻各个台风位置

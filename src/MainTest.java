@@ -41,10 +41,10 @@ public class MainTest {
 		
 		//
 		
-		String dir_h1000 = "D:\\develop\\java\\201905-weahter_identification\\gfs0\\2010\\hgt\\1000";
-		String dir_h500 = "D:\\develop\\java\\201905-weahter_identification\\gfs0\\2010\\hgt\\500";
-		String dir_w850 = "D:\\develop\\java\\201905-weahter_identification\\gfs0\\2010\\wind\\850";
-		String dir_w700 = "D:\\develop\\java\\201905-weahter_identification\\gfs0\\2010\\wind\\700";
+		String dir_h1000 = "D:\\develop\\java\\201905-weahter_identification\\excu\\GH\\1000";
+		String dir_h500 = "D:\\develop\\java\\201905-weahter_identification\\excu\\GH\\500";
+		String dir_w850 = "D:\\develop\\java\\201905-weahter_identification\\excu\\WIND\\850";
+		String dir_w700 = "D:\\develop\\java\\201905-weahter_identification\\excu\\WIND\\700";
 		String dir_typhoon = "D:\\develop\\java\\201905-weahter_identification\\output\\typhoon_trace";
 		String dir_vectors = "D:\\develop\\java\\201905-weahter_identification\\output\\weather_para_vector";
 		String dir_classification = "D:\\develop\\java\\201905-weahter_identification\\output\\classification";
@@ -62,11 +62,11 @@ public class MainTest {
 		//dir_vectors天气系统属性计算结果保存目录，文件名命名格式为YYMMDDHH.txt。centx，centy为关注区域的中心点位置，例如关注武汉附件区域时，centx = 114;centy = 30;
 		//当有新的历史样本增加时，start和end只需要覆盖新资料的日期就行，不需要把所有日期的都重新运行一遍
 		Calendar start = Calendar.getInstance();
-		start.set(2010,3,20,8,0);	
+		start.set(2014,4,24,12,0);	
 		Calendar end = Calendar.getInstance();
-		end.set(2010,11,20,20,0);
-		int dh = 6;
-		//sws.creatWeatherSituationVector_bunch(start, end, dh);
+		end.set(2014,4,25,12,0);
+		int dh = 12;
+		sws.creatWeatherSituationVector_bunch(start, end, dh);
 		
 		
 		//step3:从dir_vecotrs目录里读取所有的时刻的属性文件，设文件有N个，读取后的数据数据是N * 39的二维数组。用这些数据训练kmean分类模型，将模型有关的各类结果存储在dir_classification中
