@@ -25,22 +25,24 @@ public class WeatherSituationType {
 	public T_Typhoon tTyphoon;
 	public HashMap<String, WeatherSystems> wss = new HashMap<String,WeatherSystems>();
 
-	public WeatherSituationType(GridData hight1000,GridData hight850,GridData hight700,GridData hight500, VectorData wind850, VectorData wind700,
+	public WeatherSituationType(GridData hight925,GridData hight850,GridData hight700,GridData hight500, VectorData wind850, VectorData wind700,
 			VectorData wind500,ArrayList<float[]> typhoons,String time) {
 		
 		// ʶ�������Ļ�������
 		
 		// �����ѹ
 		
-		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
-		hight1000.smooth(3);
-		hight1000.writeToFile(output_dir+"low_surface\\h1000.txt");
-		WeatherSystems low_surface = SHighLowPressure.getHLCentres(hight1000, 1000, 1.0f,2.5f);
+		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\dec\\result\\all_china\\";
+		hight925.smooth(3);
+		hight925.writeToFile(output_dir+"low_surface\\h1000.txt");
+		WeatherSystems low_surface = SHighLowPressure.getHLCentres(hight925, 925, 1.0f,2.5f);
 		wss.put("low_surface", low_surface);
 		
 		low_surface.writeIds(output_dir +"low_surface\\ids"+time+".txt", time);
-		low_surface.writeFeatures(output_dir +"low_surface\\feature\\"+time+".txt", time);
-		low_surface.writeValues(output_dir + "low_surface\\value\\"+time+".txt", time);
+		low_surface.writeFeatures(output_dir +"low_surface\\feature"+time+".txt", time);
+		low_surface.writeValues(output_dir + "low_surface\\value"+time+".txt", time);
+		
+		
 		
 		//850hpa �ߵ�ѹ����
 		hight850.smooth(3);
@@ -53,8 +55,8 @@ public class WeatherSituationType {
 		
 		
 		//700pa �ߵ�ѹ����
-		hight850.smooth(3);
-		hight850.writeToFile(output_dir+"low_850\\h850.txt");
+		hight700.smooth(3);
+		hight700.writeToFile(output_dir+"hl_700\\700.txt");
 		WeatherSystems hl_700 = SHighLowPressure.getHLCentres(hight700, 700, 1.0f,4);
 		wss.put("hl_700", hl_700);
 		hl_850.writeIds(output_dir +"hl_700\\ids"+time+".txt", time);
@@ -62,7 +64,7 @@ public class WeatherSituationType {
 		hl_850.writeValues(output_dir + "hl_700\\value"+time+".txt", time);
 		
 		//500hpa �߶ȳ�����
-		hight500.smooth(3);
+		hight500.smooth(10);
 		hight500.writeToFile(output_dir+"low_500\\h500.txt");
 		WeatherSystems low_500 = SHighLowPressure.getHLCentres(hight500, 1000, 1.0f,4f);
 		wss.put("low_500", low_500);
@@ -80,16 +82,17 @@ public class WeatherSituationType {
 		subHigh_500.writeValues(output_dir + "subHigh_500\\value"+time+".txt", time);
 	
 		//1000����ʶ����Ҫ��ע���ۣ�
-		hight1000.writeToFile(output_dir+"trough_1000\\h1000.txt");
-		WeatherSystems trough_1000 = STrough.getTrough(hight1000, 1000, 1.0f);
+		hight925.writeToFile(output_dir+"trough_1000\\h1000.txt");
+		WeatherSystems trough_1000 = STrough_reverse.getTrough(hight925, 925, 2.0f);
 		wss.put("trough_1000", trough_1000);
 		trough_1000.writeIds(output_dir +"trough_1000\\ids"+time+".txt", time);
 		trough_1000.writeFeatures(output_dir +"trough_1000\\feature"+time+".txt", time);
 		trough_1000.writeValues(output_dir + "trough_1000\\value"+time+".txt", time);
 		
 		//500�߿ղ�
+		hight500.smooth(10);
 		hight500.writeToFile(output_dir+"trough_500\\h500.txt");
-		WeatherSystems trough_500 = STrough.getTrough(hight500, 500, 1.0f);
+		WeatherSystems trough_500 = STrough.getTrough(hight500, 500, 2.0f);
 		wss.put("trough_500", trough_500);
 		trough_500.writeIds(output_dir +"trough_500\\ids"+time+".txt", time);
 		trough_500.writeFeatures(output_dir +"trough_500\\feature"+time+".txt", time);

@@ -31,11 +31,54 @@ public class MainTest {
 	
 	{
 		//creat_typhoon_report_test();
-		//weathersituationtype();
+		weathersituationtype();
 		//test09();
-		class_test();
+		//class_test();
+		
+		//jet_925();
 	}
-	
+	private static void jet_925() {
+		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
+		String dir_w850 = "D:\\develop\\java\\201905-weahter_identification\\WIND2014-2018\\WIND\\850\\20";
+		String dir_w925 = "D:\\develop\\java\\201905-weahter_identification\\WIND2014-2018\\WIND\\925\\20";
+		Calendar start = Calendar.getInstance();
+		start.set(2017,4,1,0,0);	
+		Calendar end = Calendar.getInstance();
+		end.set(2017,5,1,2,0);
+		
+		Calendar time= (Calendar) start.clone();
+
+		while(time.before(end)){	
+			time.add(Calendar.HOUR, 12);
+			String fileName =MyMath.getFileNameFromCalendar(time);
+			String w850_path =dir_w850+fileName.substring(2,10)+".000";
+			VectorData w850 = new VectorData(w850_path);
+			if(w850.gridInfo == null) {
+				continue;
+			}
+			
+			String w925_path =dir_w925+fileName.substring(2,10)+".000";
+			VectorData w925 = new VectorData(w925_path);
+			if(w925.gridInfo == null) {
+				continue;
+			}
+			
+			w850.writeToFile(output_dir +"jet_850\\wind"+fileName+".txt", fileName);
+			WeatherSystems jet_850 = SJet.getJet(w850, 850, 1.0f);
+			jet_850.writeIds(output_dir +"jet_850\\ids"+fileName+".txt",fileName);
+			jet_850.writeFeatures(output_dir +"jet_850\\feature"+fileName+".txt",fileName);
+			jet_850.writeValues(output_dir + "jet_850\\value"+fileName+".txt", fileName);
+			//jet_850.writeAbstract(output_dir+ "jet_850\\abstract"+fileName+".txt", fileName);
+			
+			w925.writeToFile(output_dir +"jet_925\\wind"+fileName+".txt", fileName);
+			WeatherSystems jet_925= SJet.getJet(w925, 925, 1.0f);
+			jet_925.writeIds(output_dir +"jet_925\\ids"+fileName+".txt",fileName);
+			jet_925.writeFeatures(output_dir +"jet_925\\feature"+fileName+".txt",fileName);
+			jet_925.writeValues(output_dir + "jet_925\\value"+fileName+".txt", fileName);
+			//jet_925.writeAbstract(output_dir+ "jet_925\\abstract"+time+".txt", fileName);
+			System.out.println(fileName);
+		}
+	}
 	
 	private static void class_test() {
 		
@@ -141,18 +184,18 @@ public class MainTest {
 	private static void weathersituationtype() {
 		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		Calendar start = Calendar.getInstance();
-		start.set(2010,5, 18,20,0);
+		start.set(2008,3, 2,2,0);
 		Calendar end =Calendar.getInstance();
-		end.set(2012, 9, 21,3,0);
+		end.set(2014, 1, 21,3,0);
 		Calendar time= (Calendar) start.clone();
-		String root_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
+		String root_dir = "D:\\develop\\java\\201905-weahter_identification\\dec\\result\\all_china\\";
 		String root_typhoon = "D:\\develop\\java\\201905-weahter_identification\\output\\typhoon_trace\\babj";
 		while(time.before(end)){
 			
 			time.add(Calendar.HOUR, 6);
 			String fileName =MyMath.getFileNameFromCalendar(time);
 			
-			String h500_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/500/"+fileName.substring(2,10)+".000";
+			String h500_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\hgt\\500\\"+fileName.substring(2,10)+".000";
 			//String h500_path = test_data_root +  "201905-weahter_identification/GH/500/"+fileName.substring(0,10)+".000";
 			GridData h500 = new GridData(h500_path);
 			if(h500.gridInfo == null) {
@@ -172,42 +215,43 @@ public class MainTest {
 			//if(typhoon_reports.size() == 0)continue;
 			//System.out.println(typhoon_reports.size());
 			
-			String h1000_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/1000/"+fileName.substring(2,10)+".000";
-			GridData h1000 = new GridData(h1000_path);
-			if(h1000.gridInfo == null) {
+			String h925_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\hgt\\925\\"+fileName.substring(2,10)+".000";
+			GridData h925 = new GridData(h925_path);
+			h925.smooth(20);
+			if(h925.gridInfo == null) {
 				continue;
 			}
-			String h850_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/850/"+fileName.substring(2,10)+".000";
+			String h850_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\hgt\\850\\"+fileName.substring(2,10)+".000";
 			GridData h850 = new GridData(h850_path);
 			if(h850.gridInfo == null) {
 				continue;
 			}
 			
-			String h700_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/hgt/700/"+fileName.substring(2,10)+".000";
+			String h700_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\hgt\\700\\"+fileName.substring(2,10)+".000";
 			GridData h700 = new GridData(h700_path);
 			if(h850.gridInfo == null) {
 				continue;
 			}
 			
 			
-			String w850_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/850/"+fileName.substring(2,10)+".000";
+			String w850_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\wind\\850\\"+fileName.substring(2,10)+".000";
 			VectorData w850 = new VectorData(w850_path);
 			if(w850.gridInfo == null) {
 				continue;
 			}
 			
-			String w700_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/700/"+fileName.substring(2,10)+".000";
+			String w700_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\wind\\700\\"+fileName.substring(2,10)+".000";
 			VectorData w700 = new VectorData(w700_path);
 			if(w700.gridInfo == null) {
 				continue;
 			}
-			String w500_path = test_data_root +  "201905-weahter_identification/gfs0/"+fileName.substring(0,4)+"/wind/500/"+fileName.substring(2,10)+".000";
+			String w500_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\wind\\500\\"+fileName.substring(2,10)+".000";
 			VectorData w500 = new VectorData(w500_path);
 			if(w500.gridInfo == null) {
 				continue;
 			}
 			
-			WeatherSituationType wst = new WeatherSituationType(h1000,h850,h700,h500,w850,w700,w500,typhoon_reports,fileName);
+			WeatherSituationType wst = new WeatherSituationType(h925,h850,h700,h500,w850,w700,w500,typhoon_reports,fileName);
 			wst.write_to_file(root_dir,time);
 			System.out.println(fileName);
 			
