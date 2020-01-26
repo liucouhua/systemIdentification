@@ -184,7 +184,7 @@ public class MainTest {
 	private static void weathersituationtype() {
 		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		Calendar start = Calendar.getInstance();
-		start.set(2008,3, 2,2,0);
+		start.set(2008,1, 1,20,0);
 		Calendar end =Calendar.getInstance();
 		end.set(2014, 1, 21,3,0);
 		Calendar time= (Calendar) start.clone();

@@ -185,7 +185,7 @@ public class SimilarWeatherSituation {
 			else {
 				for(int i=0;i<h500.gridInfo.nlon;i++) {
 					for(int j=0;j<h500.gridInfo.nlat;j++) {
-					//	h500.dat[i][j] *= 10;
+						h500.dat[i][j] *= 10;
 					}
 				}
 				

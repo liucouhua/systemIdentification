@@ -13,8 +13,8 @@ public class STrough{
 		String fileName = output_dir + "\\trough_1000\\h1000.txt";
 		height.writeToFile(fileName);
 		GridData curVor=VectorMathod.getCurvatureVor(height);  //璁＄畻鏇茬巼娑″害锛屽洜涓鸿剨鍖哄搴旀鐨勬洸鐜囨丁搴�
-
-		curVor.smooth(30);
+		//e GridData curVor=VectorMathod.getCurvature(height); 
+		curVor.smooth(10);
 
 		VectorData wind = VectorMathod.getGeostrophicWind(height);   //璁＄畻鍦拌浆椋�
 		//wind.writeToFile(output_dir +  "\\trough_1000\\wind.txt","2018010108");

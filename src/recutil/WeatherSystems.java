@@ -183,6 +183,7 @@ public class WeatherSystems {
 		for(Integer i : keys) {
 			float centre_x = this.features.get(i).centrePoint.ptLon;
 			float centre_y = this.features.get(i).centrePoint.ptLat;
+			if(this.features.get(i).axes.point.size()==0)continue;
 			float[] p0 = this.features.get(i).axes.point.get(0);
 			int num = this.features.get(i).axes.point.size();
 			float[] p1 = this.features.get(i).axes.point.get(num-1);
@@ -310,6 +311,7 @@ public class WeatherSystems {
 				if(this.type.contains("高")) {
 					br.write("SYMBOLS: "+this.features.size()*1+"\n");
 					if(this.level < 1000) {
+						//System.out.println("*");
 						for(Integer i : keys){
 							if(this.features.get(i).getFeature("strenght") >0 ) {
 								br.write("  160  ");
@@ -393,6 +395,9 @@ public class WeatherSystems {
 				}
 				else if(this.level == 850) {
 					line_type = "1115 2 255 255 0 0 0 0\n";
+				}
+				else {
+					line_type = "1115 2 255 0 255 0 0 0\n";
 				}
 			}
 			
