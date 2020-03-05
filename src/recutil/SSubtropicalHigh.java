@@ -214,10 +214,12 @@ public class SSubtropicalHigh{
 			dis = MyMath.dis(cx, cy, ex, ey);
 			idPro.put("scale", dis);	
 		}
+		 
 		
 		return idPros;
 	}
 
+	
 	
 	 private static  void combineEastmax(GridData height,GridData ids){			
 		//濡傛灉涓や釜鐩搁偦鐨勭郴缁熻竟鐣岀嚎寰堥暱锛岃�岄潰绉笉澶э紝鍒欏畠浠簲璇ュ睘浜庡悓涓�涓郴缁�
