@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.sun.javafx.collections.MappingChange.Map;
+//import com.sun.javafx.collections.MappingChange.Map;
 
 public class WeatherSituationType {
 	
