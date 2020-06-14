@@ -13,6 +13,7 @@ public class Line implements Serializable{
 	public ArrayList<float[]> point;
 	public boolean iscycle;
 	public float lenght;
+	public int cold_or_warm;
 	public Line(){
 		point=new ArrayList<float[]>();
 	}

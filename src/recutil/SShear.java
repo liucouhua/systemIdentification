@@ -46,9 +46,27 @@ public class SShear{
 		marker = VV.add(-0.3f).sign01().mutiply(minShear.add(0.3f).sign01()).mutiply(shearFeature.sign01()); //鏋勫缓娑堢┖鏉′欢
 		//shearFeature.writeToFile("G:/data/systemIdentify/shearFeature.txt");
 		//marker.writeToFile("G:/data/systemIdentify/marker.txt");
-
+		
 		shearLine = LineDealing.cutLines(shearLine, marker);              //娑堢┖
 		shearLine = SystemIdentification.getLongLine(scale,shearLine);		//鍘荤煭
+		
+		for(int i=0;i<shearLine.size();i++) {
+			Line line1= shearLine.get(i);
+			float add_v = 0;
+			for(int j=0;j< line1.point.size();j++) {
+				float[] point = line1.point.get(j);
+				float v1 = VectorMathod.getValue(wind.v, point);
+				add_v = add_v+v1;
+			}
+			
+			
+			if(add_v>0) {
+				line1.cold_or_warm = 1;
+			}
+			else {
+				line1.cold_or_warm = -1;
+			}
+		}
 		
 		//LineDealing.writeToFile("G:/data/systemIdentify/shearLine2.txt",shearLine);	
 		WeatherSystems shear = new WeatherSystems("shear",level);         // 瀹氫箟鍒囧彉绾跨郴缁燂紝璁剧疆杞寸嚎shearLine銆佺壒寰侀噺value浠ュ強鍒嗗尯ids锛屽苟灏嗗畠浠崗璋�

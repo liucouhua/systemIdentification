@@ -387,6 +387,7 @@ public class WeatherSystems {
 				line_type = "0 4 255 192 0 0 0 0\n";
 			}
 			else if(this.type.equals("切变线")) {
+				
 				line_type = "1102 2 255 255 0 0 0 0\n";
 			}
 			else if(this.type.equals("急流")) {
@@ -403,6 +404,12 @@ public class WeatherSystems {
 			
 			for(Integer i : keys){
 				if(this.features.get(i).axes.point.size() >0) {
+					if(this.features.get(i).axes.cold_or_warm>0) {
+						line_type = "1102 4 255 255 0 0 0 0\n";
+					}
+					else if(this.features.get(i).axes.cold_or_warm<0){
+						line_type = "1102 4 255 0 0 255 0 0\n";
+					}
 					br.write(line_type+this.features.get(i).axes.point.size());
 					for(int j=0;j<this.features.get(i).axes.point.size();j++){
 						if(j%4==0)br.write("\n");
