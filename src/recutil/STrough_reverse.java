@@ -18,7 +18,7 @@ public class STrough_reverse {
 		ArrayList<Line> trough = SystemIdentification.HighValueAreaRidge(wind,curVor,level);  //閫氳繃骞虫祦娉曡幏寰楁Ы绾�
 		LineDealing.writeToFile(output_dir + "\\trough_1000\\markLine0.txt", trough);
 
-		GridData marker=(curVor.add(-0.2f).sign01());   //鏇茬巼娑″害闃堝��
+		GridData marker=(curVor.add(-0.1f).sign01());   //鏇茬巼娑″害闃堝��
 	
 		
 		

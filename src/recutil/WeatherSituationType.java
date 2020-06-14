@@ -32,7 +32,7 @@ public class WeatherSituationType {
 		
 		// �����ѹ
 		
-		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\dec\\result\\all_china\\";
+		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\sum\\result\\all_china\\";
 		hight925.smooth(3);
 		hight925.writeToFile(output_dir+"low_surface\\h1000.txt");
 		WeatherSystems low_surface = SHighLowPressure.getHLCentres(hight925, 925, 1.0f,2.5f);

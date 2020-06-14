@@ -184,18 +184,18 @@ public class MainTest {
 	private static void weathersituationtype() {
 		String output_dir = "D:\\develop\\java\\201905-weahter_identification\\output\\";
 		Calendar start = Calendar.getInstance();
-		start.set(2008,1, 1,20,0);
+		start.set(2010,6, 15,14,0);
 		Calendar end =Calendar.getInstance();
 		end.set(2014, 1, 21,3,0);
 		Calendar time= (Calendar) start.clone();
-		String root_dir = "D:\\develop\\java\\201905-weahter_identification\\dec\\result\\all_china\\";
+		String root_dir = "D:\\develop\\java\\201905-weahter_identification\\sum\\result\\all_china\\";
 		String root_typhoon = "D:\\develop\\java\\201905-weahter_identification\\output\\typhoon_trace\\babj";
 		while(time.before(end)){
 			
 			time.add(Calendar.HOUR, 6);
 			String fileName =MyMath.getFileNameFromCalendar(time);
 			
-			String h500_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\hgt\\500\\"+fileName.substring(2,10)+".000";
+			String h500_path = "D:\\develop\\java\\201905-weahter_identification\\sum\\hgt\\500\\"+fileName.substring(2,10)+".000";
 			//String h500_path = test_data_root +  "201905-weahter_identification/GH/500/"+fileName.substring(0,10)+".000";
 			GridData h500 = new GridData(h500_path);
 			if(h500.gridInfo == null) {
@@ -215,37 +215,37 @@ public class MainTest {
 			//if(typhoon_reports.size() == 0)continue;
 			//System.out.println(typhoon_reports.size());
 			
-			String h925_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\hgt\\925\\"+fileName.substring(2,10)+".000";
+			String h925_path = "D:\\develop\\java\\201905-weahter_identification\\sum\\hgt\\925\\"+fileName.substring(2,10)+".000";
 			GridData h925 = new GridData(h925_path);
 			h925.smooth(20);
 			if(h925.gridInfo == null) {
 				continue;
 			}
-			String h850_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\hgt\\850\\"+fileName.substring(2,10)+".000";
+			String h850_path = "D:\\develop\\java\\201905-weahter_identification\\sum\\hgt\\850\\"+fileName.substring(2,10)+".000";
 			GridData h850 = new GridData(h850_path);
 			if(h850.gridInfo == null) {
 				continue;
 			}
 			
-			String h700_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\hgt\\700\\"+fileName.substring(2,10)+".000";
+			String h700_path = "D:\\develop\\java\\201905-weahter_identification\\sum\\hgt\\700\\"+fileName.substring(2,10)+".000";
 			GridData h700 = new GridData(h700_path);
 			if(h850.gridInfo == null) {
 				continue;
 			}
 			
 			
-			String w850_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\wind\\850\\"+fileName.substring(2,10)+".000";
+			String w850_path = "D:\\develop\\java\\201905-weahter_identification\\sum\\wind\\850\\"+fileName.substring(2,10)+".000";
 			VectorData w850 = new VectorData(w850_path);
 			if(w850.gridInfo == null) {
 				continue;
 			}
 			
-			String w700_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\wind\\700\\"+fileName.substring(2,10)+".000";
+			String w700_path = "D:\\develop\\java\\201905-weahter_identification\\sum\\wind\\700\\"+fileName.substring(2,10)+".000";
 			VectorData w700 = new VectorData(w700_path);
 			if(w700.gridInfo == null) {
 				continue;
 			}
-			String w500_path = "D:\\develop\\java\\201905-weahter_identification\\dec\\wind\\500\\"+fileName.substring(2,10)+".000";
+			String w500_path = "D:\\develop\\java\\201905-weahter_identification\\sum\\wind\\500\\"+fileName.substring(2,10)+".000";
 			VectorData w500 = new VectorData(w500_path);
 			if(w500.gridInfo == null) {
 				continue;
